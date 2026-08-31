@@ -1,0 +1,23 @@
+<header>
+
+<h1>
+<a href="/">
+sabinonweb stdout
+</a>
+</h1>
+
+<h3>
+म र मलाई
+</h3>
+
+  <nav class="nav">
+    {{$page := .}}
+    {{ range .Site.Menus.main }}
+    <a href="{{ .URL }}"
+      {{ if $page.IsMenuCurrent  "main" . }} class="active"{{end}}
+      >{{.Name}}</a>
+    {{end}}
+  </nav>
+
+
+</header>

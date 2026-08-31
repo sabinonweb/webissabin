@@ -1,0 +1,34 @@
+baseURL = 'https://sabinranabhat.com.np/'
+locale = 'en-us'
+title = 'sabinonweb'
+
+# hugo.toml
+[[menu.main]]
+name = "about"
+pageRef = "/about"
+weight = 10
+
+[[menu.main]]
+name = "projects"
+url = "/projects"   
+weight = 20
+
+[[menu.main]]
+name = "musings"
+pageRef = "/musings"
+weight = 30
+
+[[menu.main]]
+name = "a week of curiosity ↗"
+pageRef = "/curiosity"   
+weight = 40
+
+[[menu.main]]
+name = "books"
+pageRef = "/books"
+weight = 50
+
+[[menu.main]]
+name = "gallery"
+pageRef = "/gallery"
+weight = 60

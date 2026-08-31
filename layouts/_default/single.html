@@ -1,0 +1,21 @@
+{{ define "main" }}
+
+{{ if .Params.back }}
+<a class="back" href="/musings/">← back to all musings</a>
+{{ end }}
+
+{{ if .Params.project }}
+<a class="back" href="/projects/">← back to all projects</a>
+{{ end }}
+
+{{ if .Params.curious }}
+<a class="back" href="/curiosity/">← back to all curiosities</a>
+{{ end }}
+
+
+
+<h1>{{ .Title }}</h1>
+
+{{ .Content }}
+
+{{ end }}

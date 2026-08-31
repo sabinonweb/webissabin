@@ -1,0 +1,50 @@
+{{ define "main" }}
+<h1> {{ .Title }} </h1>
+
+<h2>reading now</h2>
+<ul>
+  {{ range site.Data.books.reading }}
+  <li>
+    <span> {{ .title }} </span>
+    -
+    <span> {{ .author }} </span>
+  </li>
+  {{end}}
+</ul>
+
+<h2>completed reading</h2>
+<ul>
+  {{ range site.Data.books.read }}
+  <li>
+    <span> {{ .title }} </span>
+    -
+    <span> {{ .author }} </span>
+  </li>
+  {{ end }}
+</ul>
+
+<h2>on the way</h2>
+<ul>
+  {{ range site.Data.books.incomplete }}
+  <li>
+    <span> {{ .title }} </span>
+    -
+    <span> {{ .author }} </span>
+  </li>
+  {{ end }}
+</ul>
+
+<h2>want to read</h2>
+<ul>
+  {{ range site.Data.books.want }}
+  <li>
+    <span> {{ .title }} </span>
+    -
+    <span> {{ .author }} </span>
+  </li>
+  {{ end }}
+</ul>
+
+
+
+{{end}}

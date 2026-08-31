@@ -1,0 +1,116 @@
+[[projects]]
+name = "TheCipherBureau"
+description = "A browser playground for classical ciphers — encode, decode, break."
+link = "/projects/thecipherbureau"
+stack = ["javascript", "html", "cryptography"]
+year = 2026
+highlight = false
+project = true
+
+[[projects]]
+name = "PlantGO"
+description = "A decentralized NFT-based plant card game on the Solana blockchain."
+link = "/projects/plantgo"
+stack = ["rust", "solana", "blockchain", "spl"]
+year = 2026
+highlight = true
+project = true
+
+[[projects]]
+name = "Operations Research Visualizer"
+description = "Animated MP4 visualizations of Operations Research problems — LP, Transportation, and TSP — rendered with Manim behind a FastAPI API."
+link = "/projects/graphics-mini"
+stack = ["python", "fastapi", "manim"]
+year = 2026
+highlight = true
+project = true
+
+[[projects]]
+name = "Silicactus Web"
+description = "The Silicactus website — a Next.js app with TypeScript and Tailwind CSS."
+link = "/projects/silicactus-web"
+stack = ["nextjs", "typescript", "tailwind"]
+year = 2026
+highlight = false
+project = true
+
+[[projects]]
+name = "Decentralized AI (DAI)"
+description = "A P2P blockchain AI platform in Rust — distributed AI tasks with on-chain data integrity."
+link = "/projects/dai"
+stack = ["rust", "tokio", "blockchain", "p2p"]
+year = 2025
+highlight = true
+project = true
+
+[[projects]]
+name = "SEAS"
+description = "A snake recognition system — a machine-learning model that identifies snakes, with a server and web frontend."
+link = "/projects/seas"
+stack = ["python", "machine-learning"]
+year = 2025
+highlight = true
+project = true
+
+[[projects]]
+name = "Yuck Premium"
+description = "Command-line app to download tracks, playlists and albums from Spotify."
+link = "/projects/yuck-premium"
+stack = ["rust", "cli"]
+year = 2024
+highlight = true
+project = true
+
+[[projects]]
+name = "MediVault"
+description = "A medicine management system with reminders, inventory tracking and email alerts — built at DeerHack."
+link = "/projects/medivault"
+stack = ["rust", "actix", "react", "node-mcu"]
+year = 2024
+highlight = true
+project = true
+
+[[projects]]
+name = "StudyBuddy"
+description = "A video-based learning platform connecting students through subject codes."
+link = "/projects/studybuddy"
+stack = ["rust", "axum", "react", "typescript"]
+year = 2024
+highlight = true
+project = true
+
+[[projects]]
+name = "sabinnylol"
+description = "A lightweight URL command shortener in Rust + Actix-web, inspired by Bunnylol."
+link = "/projects/sabinnylol"
+stack = ["rust", "actix-web"]
+year = 2024
+highlight = false
+project = true
+
+[[projects]]
+name = "Don't Spill the Tea"
+description = "A browser extension that grabs images off the screen and flags violent or NSFW content."
+link = "/projects/dont-spill-the-tea"
+stack = ["javascript", "browser-extension", "ml"]
+year = 2024
+highlight = false
+project = true
+
+[[projects]]
+name = "pngme"
+description = "A CLI encoder that hides secret messages inside PNG files using the least significant bits."
+link = "/projects/pngme"
+stack = ["rust", "cli", "steganography"]
+year = 2023
+highlight = false
+project = true
+
+[[projects]]
+name = "BuzzGREP"
+description = "A lightweight implementation of the Unix grep utility in Rust."
+link = "/projects/buzzgrep"
+stack = ["rust", "cli"]
+year = 2023
+highlight = false
+project = true
