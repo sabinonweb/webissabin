@@ -1,6 +1,6 @@
 +++
 date = '2026-08-31T13:48:45+05:45'
-draft = true
+draft = false
 title = 'म / About'
 back = false
 +++
