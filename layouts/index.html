@@ -1,12 +1,19 @@
 {{define "main"}}
+
+ 
+
   <section>
   <p> I build things, break things, and try to understand why they work. </p>
 
   <p> Currently interested in Rust, distributed systems, machine learning, and whatever catches my curiosity. </p>
+
+ 
 <div class="player">
   <span class="player-label">jheli - uniq poet & kavi g</span>
   <audio controls src="/music/jheli.mp3"></audio>
 </div></section>
+
+
 
 <hr>
 
@@ -20,6 +27,7 @@
 
 <hr>
 <section class="projects"> <h2>projects</h2> {{ range first 3 (where site.RegularPages "Section" "projects").ByDate.Reverse }} <article> <h3> <a href="{{ .RelPermalink }}">{{ .Title }}</a> </h3> <p> {{ .Description }} </p> </article> {{ end }} <p> <a href="/projects/">→ all projects</a> </p> </section>
+<hr>
 
 <section class="curiosity"> <h2>this week's curiosity</h2> {{ range first 5 (where site.RegularPages "Section" "curiosity").ByDate.Reverse }} <article><h3> <a href="{{ .RelPermalink }}">{{ .Title }}</a>   </h3><p> {{ .Description }} </p></article> {{ end }} <p> <a href="/curiosity/">→ curiosity archive</a> </p> </section>
 

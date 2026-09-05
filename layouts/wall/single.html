@@ -1,0 +1,10 @@
+{{ define "main" }}
+<h1>{{ .Title }}</h1>
+<div class="gallery">
+  {{ range .Resources.ByType "image" }}
+  <figure class="shot" data-full="{{ (.Resize "1600x").RelPermalink }}">
+    <img src="{{ (.Resize "800x").RelPermalink }}" alt="{{ .Name }}" loading="lazy">
+  </figure>
+  {{ end }}
+</div>
+{{ end }}

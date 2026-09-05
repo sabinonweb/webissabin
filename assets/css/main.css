@@ -55,7 +55,7 @@ header { margin-bottom: 1rem; }
   margin: 1.5rem 0 2.5rem;
   font-size: 0.85rem;
 }
-.nav a { color: var(--muted); }
+.nav a { color: black; }
 .nav a:hover { color: var(--gold); }
 
 /* ── interactive post browser ─────────────────────────────── */
@@ -227,3 +227,15 @@ footer a:hover {
   height: 36px;
   border-radius: 6px;
 }
+
+/* ── hero kicker ──────────────────────────────────── */
+.hero-prompt {
+  margin: 0 0 0.35rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.hero-prompt a {
+  color: var(--gold);
+  text-decoration: none;
+}
+.hero-prompt a:hover { text-decoration: underline; }
