@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <style>
+    .silk { stroke: #1c1917; fill: none; stroke-width: 3; stroke-linecap: round; }
+    .drop { fill: #1c1917; }
+    .ring { stroke: #1c1917; fill: none; stroke-width: 3; }
+    @media (prefers-color-scheme: dark) {
+      .silk { stroke: #fafaf9; }
+      .drop { fill: #fafaf9; }
+      .ring { stroke: #fafaf9; }
+    }
+  </style>
+  <!-- one silk strand, slightly bowed -->
+  <path class="silk" d="M 16 28 Q 50 56 84 72"/>
+  <!-- thoughts caught on the web: one formed, one forming, one arriving -->
+  <circle class="drop" cx="37.4" cy="45.7" r="6.5"/>
+  <circle class="ring" cx="57.1" cy="59.3" r="6"/>
+  <circle class="drop" cx="77.2" cy="70.7" r="4"/>
+  <!-- the one that got away -->
+  <circle class="drop" cx="64" cy="84" r="2.5"/>
+</svg>
