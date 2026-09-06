@@ -8,6 +8,7 @@
   --faint: #a8a29e;
   --gold: #8c6d31;
   --line: #e7e5e4;
+  --card: #ffffff;
 }
 
 * { box-sizing: border-box; }
@@ -64,7 +65,7 @@ header { margin-bottom: 1rem; }
   width: 100%;
   font: inherit;
   color: inherit;
-  background: #fff;
+  background: var(--card);
   border: 1px solid var(--line);
   border-radius: 6px;
   padding: 0.6rem 0.9rem;
@@ -133,7 +134,7 @@ header { margin-bottom: 1rem; }
   color: var(--muted);
 }
 .article img { max-width: 100%; }
-.article code { background: #fff; border: 1px solid var(--line); border-radius: 4px; padding: 0 0.3rem; }
+.article code { background: var(--card); border: 1px solid var(--line); border-radius: 4px; padding: 0 0.3rem; }
 
 .like {
   font: inherit;
@@ -210,7 +211,7 @@ footer a:hover {
   align-items: center;
   gap: 0.75rem;
   padding: 0.55rem 0.9rem;
-  background: #fff;
+  background: var(--card);
   border: 1px solid var(--line);
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(28, 25, 23, 0.07);
@@ -228,14 +229,28 @@ footer a:hover {
   border-radius: 6px;
 }
 
-/* ── hero kicker ──────────────────────────────────── */
-.hero-prompt {
-  margin: 0 0 0.35rem;
-  font-size: 0.78rem;
-  color: var(--muted);
+/* ── intro links stay quiet ───────────────────────── */
+section p a { color: var(--gold); }
+
+/* ── terminal intro card ──────────────────────────── */
+.term {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  background: #1c1917;
+  color: #fafaf9;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  margin: 0 0 1.25rem;
 }
-.hero-prompt a {
-  color: var(--gold);
+.term p { margin: 0; }
+.term .cmd { color: var(--gold); font-weight: 700; }
+.term-out a {
+  color: #fafaf9;
   text-decoration: none;
+  border-bottom: 1px dotted rgba(250, 250, 249, 0.45);
 }
-.hero-prompt a:hover { text-decoration: underline; }
+.term-out a:hover { border-bottom-style: solid; }
+.term-out a[title] { cursor: help; }

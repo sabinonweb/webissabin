@@ -3,6 +3,13 @@
  
 
   <section>
+  <div class="term">
+    <p class="term-line"><span class="cmd">$</span> ls ./loving_it_at</p>
+    <p class="term-out"><a href="https://ampixa.com/">ampixa-labs/</a>&nbsp;&nbsp;<a href="https://github.com/weftlab">weft-labs/</a>&nbsp;&nbsp;<a href="https://www.instagram.com/async.bananas" title="the one with the guitar">async-bananas/</a></p>
+      </div>
+
+<p>Trying to put my nation and it's languages with the pen and the pad.</p>
+
   <p> I build things, break things, and try to understand why they work. </p>
 
   <p> Currently interested in Rust, distributed systems, machine learning, and whatever catches my curiosity. </p>
@@ -30,5 +37,8 @@
 <hr>
 
 <section class="curiosity"> <h2>this week's curiosity</h2> {{ range first 5 (where site.RegularPages "Section" "curiosity").ByDate.Reverse }} <article><h3> <a href="{{ .RelPermalink }}">{{ .Title }}</a>   </h3><p> {{ .Description }} </p></article> {{ end }} <p> <a href="/curiosity/">→ curiosity archive</a> </p> </section>
+
+<hr>
+<section class="bookmarks"> <h2>recent bookmarks</h2> {{ range first 3 (sort hugo.Data.bookmarks.links "date" "desc") }} <article><h3> <a href="{{ .url }}" target="_blank" rel="noopener">{{ .title }} ↗</a> </h3> {{ with .note }}<p> {{ . }} </p>{{ end }} </article> {{ end }} <p> <a href="/bookmarks/">→ all bookmarks</a> </p> </section>
 
 <hr> <section class="thought"> <h2>a thought</h2> <blockquote> “When I understand myself, I understand you, and out of that understanding comes love.” </blockquote> <p class="quote-author"> — J.K. </p> </section>{{end}}

@@ -19,8 +19,8 @@ pageRef = "/musings"
 weight = 30
 
 [[menu.main]]
-name = "a week of curiosity ↗"
-pageRef = "/curiosity"   
+name = "curiosity ↗"
+pageRef = "/curiosity"
 weight = 40
 
 [[menu.main]]
@@ -38,6 +38,11 @@ weight = 60
 name = "gallery"
 pageRef = "/gallery"
 weight = 70
+
+[[menu.main]]
+name = "bookmarks"
+pageRef = "/bookmarks"
+weight = 80
 
 # [[menu.main]]
 # name = "wall"

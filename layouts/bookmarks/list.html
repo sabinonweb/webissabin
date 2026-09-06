@@ -1,0 +1,12 @@
+{{ define "main" }}
+<h1 class="page-title">{{ .Title }}</h1>
+
+<ul class="post-list">
+  {{ range sort hugo.Data.bookmarks.links "date" "desc" }}
+  <li class="post-card">
+    <a class="post-title" href="{{ .url }}" target="_blank" rel="noopener">{{ .title }} ↗</a>
+        {{ with .note }}<p class="post-desc">{{ . }}</p>{{ end }}
+  </li>
+  {{ end }}
+</ul>
+{{ end }}

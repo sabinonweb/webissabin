@@ -1,0 +1,31 @@
+# one bookmark per [[links]] block — newest date shows first
+
+[[links]]
+title = "How Discord Stores Trillions of Messages"
+url = "https://discord.com/blog/how-discord-stores-trillions-of-messages"
+note = "mongodb to cassandra to scylladb — why each one broke at scale"
+date = 2026-09-06
+
+[[links]]
+title = "Falsehoods Programmers Believe About Time"
+url = "https://infiniteundo.com/post/25326999628/falsehoods-programmers-believe-about-time"
+note = "time is a lie and this is the receipt"
+date = 2026-09-05
+
+[[links]]
+title = "The Law of Leaky Abstractions"
+url = "https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/"
+note = "all abstractions leak. plan for the day yours does"
+date = 2026-09-04
+
+[[links]]
+title = "The cost of JavaScript in 2019"
+url = "https://v8.dev/blog/cost-of-javascript-2019"
+note = "what your bundle actually costs, in milliseconds"
+date = 2026-09-03
+
+[[links]]
+title = "The Twelve-Factor App"
+url = "https://12factor.net"
+note = "the old testament of services — still mostly true"
+date = 2026-09-02
