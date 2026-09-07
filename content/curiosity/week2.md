@@ -1,7 +1,7 @@
 ---
 title: "Week #2 of Curiosity"
 date: 2026-09-07
-description: "A week of understanding noise, reading and knowing thyself a hell lot of music."
+description: "A week of understanding noise, reading and knowing thyself and a hell lot of music."
 tags: ["essays"]
 curious: true
 ---
