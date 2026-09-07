@@ -6,7 +6,7 @@
   --ink: #1c1917;
   --muted: #78716c;
   --faint: #a8a29e;
-  --gold: #8c6d31;
+  --accent: #1c1917;
   --line: #e7e5e4;
   --card: #ffffff;
 }
@@ -28,7 +28,7 @@ body {
   padding: 4rem 1.5rem 3rem;
 }
 
-a { color: var(--gold); text-decoration: none; }
+a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
 /* reading progress bar — fixed at top, width set by JS on scroll */
@@ -37,7 +37,7 @@ a:hover { text-decoration: underline; }
   top: 0; left: 0;
   height: 3px;
   width: 0;
-  background: var(--gold);
+  background: var(--accent);
   z-index: 10;
   transition: width 0.05s linear;
 }
@@ -57,7 +57,7 @@ header { margin-bottom: 1rem; }
   font-size: 0.85rem;
 }
 .nav a { color: black; }
-.nav a:hover { color: var(--gold); }
+.nav a:hover { color: var(--accent); }
 
 /* ── interactive post browser ─────────────────────────────── */
 
@@ -71,7 +71,7 @@ header { margin-bottom: 1rem; }
   padding: 0.6rem 0.9rem;
   outline: none;
 }
-.search:focus { border-color: var(--gold); }
+.search:focus { border-color: var(--accent); }
 
 .chips {
   display: flex;
@@ -89,8 +89,8 @@ header { margin-bottom: 1rem; }
   padding: 0.25rem 0.75rem;
   cursor: pointer;
 }
-.chip:hover { border-color: var(--gold); color: var(--gold); }
-.chip.active { background: var(--gold); border-color: var(--gold); color: #fff; }
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
 .post-list { list-style: none; margin: 0; padding: 0; }
 .post-card {
@@ -126,9 +126,9 @@ header { margin-bottom: 1rem; }
   margin-bottom: 2rem;
 }
 
-.article h2, .article h3 { color: var(--gold); }
+.article h2, .article h3 { color: var(--accent); }
 .article blockquote {
-  border-left: 3px solid var(--gold);
+  border-left: 3px solid var(--accent);
   margin-left: 0;
   padding-left: 1rem;
   color: var(--muted);
@@ -146,7 +146,7 @@ header { margin-bottom: 1rem; }
   color: var(--muted);
   cursor: pointer;
 }
-.like.liked { color: var(--gold); border-color: var(--gold); }
+.like.liked { color: var(--accent); border-color: var(--accent); }
 
 footer {
   border-top: 1px solid var(--line);
@@ -181,7 +181,7 @@ header h3 {
   color: var(--muted);
   background: var(--card);
 }
-.back:hover { color: var(--gold); border-color: var(--gold); }
+.back:hover { color: var(--accent); border-color: var(--accent); }
 
 footer svg {
   width: 16px;
@@ -230,7 +230,7 @@ footer a:hover {
 }
 
 /* ── intro links stay quiet ───────────────────────── */
-section p a { color: var(--gold); }
+section p a { color: var(--accent); }
 
 /* ── terminal intro card ──────────────────────────── */
 .term {
@@ -246,7 +246,7 @@ section p a { color: var(--gold); }
   margin: 0 0 1.25rem;
 }
 .term p { margin: 0; }
-.term .cmd { color: var(--gold); font-weight: 700; }
+.term .cmd { color: var(--muted); font-weight: 700; }
 .term-out a {
   color: #fafaf9;
   text-decoration: none;
