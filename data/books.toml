@@ -15,36 +15,8 @@ title = "Surely You're Joking, Mr. Feynman!"
 author = "Richard P. Feynman"
 
 [[read]]
-title = "The Subtle Art of Not Giving a F*ck"
-author = "Mark Manson"
-
-[[read]]
-title = "Inner Engineering"
-author = "Sadhguru"
-
-[[read]]
 title = "The Alchemist"
 author = "Paulo Coelho"
-
-[[read]]
-title = "21 Lessons for the 21st Century"
-author = "Yuval Noah Harari"
-
-[[read]]
-title = "Homo Deus"
-author = "Yuval Noah Harari"
-
-[[read]]
-title = "The First and Last Freedom"
-author = "J. Krishnamurti"
-
-[[read]]
-title = "Autobiography of a Yogi"
-author = "Paramahansa Yogananda"
-
-[[read]]
-title = "Start With Why"
-author = "Simon Sinek"
 
 [[read]]
 title = "The Compound Effect"
@@ -55,12 +27,8 @@ title = "Atomic Habits"
 author = "James Clear"
 
 [[read]]
-title = "Learn Blockchain by Building One"
-author = "Daniel van Flymen"
-
-[[read]]
-title = "Mastering Blockchain"
-author = "Imran Bashir"
+title = "Inner Engineering"
+author = "Sadhguru"
 
 [[read]]
 title = "Youth and Truth"
@@ -75,12 +43,52 @@ title = "Death: An Inside Story"
 author = "Sadhguru"
 
 [[read]]
+title = "Autobiography of a Yogi"
+author = "Paramahansa Yogananda"
+
+[[read]]
 title = "Everything Is F*cked"
+author = "Mark Manson"
+
+[[read]]
+title = "The Subtle Art of Not Giving a F*ck"
 author = "Mark Manson"
 
 [[read]]
 title = "The Psychology of Money"
 author = "Morgan Housel"
+
+[[read]]
+title = "Start With Why"
+author = "Simon Sinek"
+
+[[read]]
+title = "Sapiens"
+author = "Yuval Noah Harari"
+
+[[read]]
+title = "21 Lessons for the 21st Century"
+author = "Yuval Noah Harari"
+
+[[read]]
+title = "Homo Deus"
+author = "Yuval Noah Harari"
+
+[[read]]
+title = "The First and Last Freedom"
+author = "J. Krishnamurti"
+
+[[read]]
+title = "Learn Blockchain by Building One"
+author = "Daniel van Flymen"
+
+[[read]]
+title = "Mastering Blockchain"
+author = "Imran Bashir"
+
+[[read]]
+title = "Animal Farm"
+author = "George Orwell"
 
 [[want]]
 title = "Notes from Underground"
@@ -97,7 +105,3 @@ author = "Nivedita Menon"
 [[want]]
 title = "Designing Data Intensive Applications"
 author = "Martin Kleppmann"
-
-[[read]]
-title = "Animal Farm"
-author = "George Orwell"

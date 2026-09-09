@@ -14,7 +14,11 @@
 
 <h2>completed reading</h2>
 <ul>
+  {{ $read := slice }}
   {{ range site.Data.books.read }}
+    {{ $read = slice . | append $read }}
+  {{ end }}
+  {{ range $read }}
   <li>
     <span> {{ .title }} </span>
     -
