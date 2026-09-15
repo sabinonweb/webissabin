@@ -1,7 +1,7 @@
 ---
 title: "Week #3 of Curiosity"
 date: 2026-09-15
-description: "A week of understanding noise, reading and knowing thyself and a hell lot of music."
+description: "A week of understanding problem solving and new ways of life."
 tags: ["essays"]
 curious: true
 ---
