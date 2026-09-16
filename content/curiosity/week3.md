@@ -1,6 +1,6 @@
 ---
 title: "Week #3 of Curiosity"
-date: 2026-09-15
+date: 2026-09-14
 description: "A week of understanding problem solving and new ways of life."
 tags: ["essays"]
 curious: true

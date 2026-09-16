@@ -136,6 +136,10 @@ header { margin-bottom: 1rem; }
 .article img { max-width: 100%; }
 .article code { background: var(--card); border: 1px solid var(--line); border-radius: 4px; padding: 0 0.3rem; }
 
+/* in-post links stand out from body text via a dotted underline */
+.article a { border-bottom: 1px dotted var(--muted); }
+.article a:hover { text-decoration: none; border-bottom-style: solid; border-bottom-color: var(--accent); }
+
 .like {
   font: inherit;
   margin-top: 2.5rem;
