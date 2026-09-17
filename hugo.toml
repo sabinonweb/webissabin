@@ -4,47 +4,48 @@ title = 'sabinonweb'
 
 # hugo.toml
 [[menu.main]]
-name = "about"
+name = "about ↗"
 pageRef = "/about"
 weight = 10
 
 [[menu.main]]
-name = "projects"
+name = "projects ↗"
 url = "/projects"   
 weight = 20
 
 [[menu.main]]
-name = "musings"
-pageRef = "/musings"
+name = "curiosity ↗"
+pageRef = "/curiosity"
 weight = 30
 
 [[menu.main]]
-name = "curiosity ↗"
-pageRef = "/curiosity"
+name = "musings ↗"
+pageRef = "/musings"
 weight = 40
 
 [[menu.main]]
-name = "resume"
-pageRef = "/resume"   
+name = "experiments ↗"
+pageRef = "/experiments"
 weight = 50
 
-
 [[menu.main]]
-name = "books"
-pageRef = "/books"
+name = "resume ↗"
+pageRef = "/resume"   
 weight = 60
 
 [[menu.main]]
-name = "gallery"
-pageRef = "/gallery"
+name = "books ↗"
+pageRef = "/books"
 weight = 70
 
 [[menu.main]]
-name = "bookmarks"
-pageRef = "/bookmarks"
+name = "gallery ↗"
+pageRef = "/gallery"
 weight = 80
 
-# [[menu.main]]
-# name = "wall"
-# pageRef = "/wall"
-# weight = 80
+[[menu.main]]
+name = "bookmarks ↗"
+pageRef = "/bookmarks"
+weight = 90
+
+

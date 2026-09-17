@@ -23,7 +23,7 @@ body {
 }
 
 .wrap {
-  max-width: 42rem;
+  max-width: 60rem;
   margin: 0 auto;
   padding: 4rem 1.5rem 3rem;
 }
@@ -276,3 +276,5 @@ section p a { color: var(--accent); }
 }
 .term-out a:hover { border-bottom-style: solid; }
 .term-out a[title] { cursor: help; }
+
+
