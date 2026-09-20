@@ -97,23 +97,6 @@ header { margin-bottom: 1rem; }
   padding: 1.25rem 0;
 }
 .post-title { font-weight: 700; }
-.post-date { color: var(--faint); font-size: 0.75rem; margin-left: 0.6rem; }
-.post-desc { color: var(--muted); font-size: 0.85rem; margin: 0.35rem 0 0; }
-.post-meta {
-  display: inline-flex;
-  gap: 0.5rem;
-  color: var(--faint);
-  font-size: 0.75rem;
-  margin-top: 0.35rem;
-}
-.post-tag {
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 0 0.35rem;
-}
-
-.empty { color: var(--faint); text-align: center; padding: 2rem 0; }
-
 /* ── article page ─────────────────────────────────────────── */
 
 .page-title { font-size: 1.6rem; margin: 0 0 0.5rem; }
@@ -277,4 +260,6 @@ section p a { color: var(--accent); }
 .term-out a:hover { border-bottom-style: solid; }
 .term-out a[title] { cursor: help; }
 
-
+.quote-author {
+ margin-left: 735px; 
+}
