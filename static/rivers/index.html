@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rivers of Nepal — Sapta Gandaki · Saptakoshi · Karnali</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root {
+    --ink:#0a0a0a; --paper:#ffffff; --panel:#fcfcfc;
+    --line:#000000; --hair:#e2e2e2; --muted:#555555; --soft:#999999; --faint:#c9c9c9;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; height:100%; font-family:-apple-system,'Helvetica Neue',Arial,sans-serif; background:var(--paper); color:var(--ink); }
+  #app { display:flex; height:100%; }
+
+  /* ============ SIDEBAR ============ */
+  #side { width:410px; min-width:410px; background:var(--panel); overflow-y:auto; border-right:2.5px solid var(--line); }
+  #side::-webkit-scrollbar { width:9px; }
+  #side::-webkit-scrollbar-thumb { background:#000; border:3px solid var(--panel); border-radius:6px; }
+  .top { position:sticky; top:0; z-index:10; background:var(--panel); padding:22px 20px 14px; border-bottom:2.5px solid var(--line); }
+  .kicker { font-size:10.5px; font-weight:800; letter-spacing:2.2px; color:var(--muted); }
+  h1 { font-family:Georgia,'Times New Roman',serif; font-size:30px; font-weight:700; margin:2px 0 6px; letter-spacing:.2px; }
+  .sub { color:var(--muted); font-size:12.5px; line-height:1.55; margin:0 0 14px; }
+  .searchrow { display:flex; gap:8px; margin-bottom:10px; }
+  #q { flex:1; border:1.8px solid var(--line); background:#fff; padding:9px 12px; font-size:13.5px; border-radius:0; outline:none; font-family:inherit; }
+  #q:focus { box-shadow:3px 3px 0 rgba(0,0,0,.9); }
+  #q::placeholder { color:var(--soft); }
+  #resetview { border:1.8px solid var(--line); background:#fff; padding:9px 12px; font-size:12px; font-weight:800; cursor:pointer; letter-spacing:.5px; border-radius:0; }
+  #resetview:hover { background:var(--ink); color:#fff; }
+  .chips { display:flex; gap:7px; flex-wrap:wrap; }
+  .chip { border:1.8px solid var(--line); background:#fff; color:var(--ink); padding:6px 12px; font-size:12px; font-weight:700; cursor:pointer; letter-spacing:.3px; border-radius:0; }
+  .chip .cnt { color:var(--soft); font-weight:600; margin-left:5px; font-size:10.5px; }
+  .chip.on { background:var(--ink); color:#fff; }
+  .chip.on .cnt { color:#bbb; }
+  .chip:hover:not(.on) { box-shadow:2.5px 2.5px 0 rgba(0,0,0,.9); }
+  .lineslbl { display:flex; align-items:center; gap:7px; font-size:11.5px; color:var(--muted); margin-top:11px; cursor:pointer; user-select:none; }
+  .lineslbl input { accent-color:#000; width:14px; height:14px; }
+
+  .body { padding:6px 20px 50px; }
+  .sysblock { margin-top:22px; }
+  .syshead { display:flex; align-items:baseline; gap:8px; border-bottom:3px solid var(--line); padding-bottom:6px; margin-bottom:4px; }
+  .syshead .no { font-family:Georgia,serif; font-size:20px; color:var(--faint); font-weight:700; }
+  .syshead .t { font-size:16px; font-weight:900; text-transform:uppercase; letter-spacing:1.2px; }
+  .syshead .tag { font-size:10.5px; color:var(--soft); margin-left:auto; letter-spacing:.6px; text-transform:uppercase; }
+  .mainstem { font-size:12.5px; color:#333; line-height:1.6; padding:10px 2px 12px; border-bottom:1px solid var(--hair); margin-bottom:4px; }
+  .mainstem b { font-weight:800; }
+
+  .trib { display:grid; grid-template-columns:34px 1fr; column-gap:10px; width:100%; text-align:left; background:none; border:0; border-bottom:1px solid var(--hair); color:var(--ink); padding:10px 2px; cursor:pointer; font-size:13px; line-height:1.5; transition:background .12s,color .12s; }
+  .trib .ix { grid-row:1 / span 3; font-family:Georgia,serif; font-size:17px; font-weight:700; color:var(--faint); padding-top:1px; }
+  .trib .n { font-weight:800; font-size:13.5px; letter-spacing:.2px; }
+  .trib .o { display:block; color:var(--muted); font-size:11.5px; margin-top:1px; }
+  .trib .m { display:block; font-size:11.5px; margin-top:3px; color:#222; }
+  .trib .m .arr { font-weight:900; }
+  .place { display:inline-block; background:#000; color:#fff; padding:2px 8px 3px; font-weight:800; font-size:10px; letter-spacing:.8px; margin-left:5px; vertical-align:1px; transition:background .12s,color .12s; }
+  .trib:hover { background:var(--ink); color:#fff; }
+  .trib:hover .o, .trib:hover .m { color:#cfcfcf; }
+  .trib:hover .ix { color:#777; }
+  .trib:hover .place { background:#fff; color:#000; }
+  .approx { color:var(--soft); font-style:italic; font-weight:400; }
+  .nomatch { padding:26px 4px; color:var(--soft); font-size:13px; font-style:italic; }
+
+  .foot { margin-top:30px; border-top:2.5px solid var(--line); padding-top:12px; color:var(--muted); font-size:10.8px; line-height:1.7; }
+  .foot a { color:var(--ink); font-weight:800; text-decoration:underline; }
+  .foot .made { margin-top:9px; font-size:11px; letter-spacing:.3px; }
+  .foot .made b { color:var(--ink); font-weight:800; }
+  #errdbg { display:none; background:#000; color:#fff; font-size:11px; padding:6px 10px; margin-top:10px; }
+
+  /* ============ MAP ============ */
+  #map { flex:1; height:100%; background:#dcdcdc; }
+  .leaflet-bar, .leaflet-bar a { border-radius:0 !important; }
+  .leaflet-bar { border:1.8px solid #000 !important; box-shadow:3px 3px 0 rgba(0,0,0,.85) !important; }
+  .leaflet-bar a { background:#fff !important; color:#000 !important; border-bottom:1.5px solid #000 !important; font-weight:800; }
+  .leaflet-bar a:hover { background:#000 !important; color:#fff !important; }
+  .leaflet-control-layers { border:1.8px solid #000 !important; border-radius:0 !important; box-shadow:3px 3px 0 rgba(0,0,0,.85) !important; background:#fff !important; }
+  .leaflet-control-attribution { background:rgba(255,255,255,.92) !important; border-top:1.5px solid #000; color:#444 !important; font-size:9.5px !important; }
+  .leaflet-control-attribution a { color:#000 !important; }
+  .leaflet-popup-content-wrapper { background:#fff; color:var(--ink); border-radius:0; border:2px solid #000; box-shadow:5px 5px 0 rgba(0,0,0,.9); }
+  .leaflet-popup-tip { background:#fff; border:2px solid #000; box-shadow:none; }
+  .leaflet-popup-close-button { color:#000 !important; font-weight:900 !important; }
+  .pop { min-width:235px; max-width:300px; }
+  .pop .kick { font-size:9.5px; font-weight:800; letter-spacing:1.8px; color:var(--muted); margin-bottom:4px; }
+  .pop h3 { font-family:Georgia,serif; font-size:17.5px; margin:0 0 4px; line-height:1.25; }
+  .pop.big h3 { display:inline-block; background:#000; color:#fff; padding:3px 9px 4px; }
+  .pop .rv { color:#222; font-size:12.5px; margin:7px 0 5px; line-height:1.5; }
+  .pop .rv b { font-weight:900; }
+  .pop .pl { font-weight:900; font-size:12px; letter-spacing:.4px; border-top:1.5px solid #000; border-bottom:1.5px solid #000; padding:5px 0; margin-bottom:7px; }
+  .pop .ds { color:var(--muted); font-size:10.5px; margin-bottom:8px; font-family:Menlo,Consolas,monospace; letter-spacing:-.2px; }
+  .pop .nt { font-size:11.5px; color:#333; line-height:1.55; margin-bottom:8px; }
+  .pop img { width:100%; margin-bottom:9px; border:1.5px solid #000; display:block; }
+  .pop .lnks { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:7px; }
+  .pop .lnks a { border:1.5px solid #000; background:#fff; color:#000; padding:4px 9px; font-size:10.5px; font-weight:800; text-decoration:none; letter-spacing:.3px; }
+  .pop .lnks a:hover { background:#000; color:#fff; }
+  .pop .crd { color:var(--soft); font-size:9.5px; }
+  .legend { background:#fff; color:#000; padding:10px 13px; border:2px solid #000; box-shadow:4px 4px 0 rgba(0,0,0,.85); font-size:11.5px; line-height:1.95; border-radius:0; }
+  .legend b { font-size:10.5px; letter-spacing:1.4px; text-transform:uppercase; }
+  .lg-dot { display:inline-block; width:11px; height:11px; border-radius:50%; margin-right:8px; vertical-align:-1px; border:2px solid #000; }
+  .lg-dot.black { background:#000; }
+  .lg-dot.white { background:#fff; }
+  .lg-dot.gray { background:#999; }
+  .legend .sw { display:inline-block; width:17px; height:3.5px; background:#000; margin-right:8px; vertical-align:3px; }
+  .legend .dt { display:inline-block; width:17px; border-top:3px dashed #777; height:0; margin-right:8px; vertical-align:3px; }
+
+  #togglebtn { position:absolute; z-index:1000; top:10px; left:10px; background:#000; color:#fff; border:2px solid #000; padding:8px 13px; font-size:13px; cursor:pointer; display:none; font-weight:800; letter-spacing:.5px; }
+  @media (max-width: 820px) {
+    #side { position:absolute; z-index:1100; height:100%; transform:translateX(-100%); transition:transform .25s; }
+    #side.open { transform:translateX(0); }
+    #togglebtn { display:block; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="side">
+    <div class="top">
+      <div class="kicker">FIELD GUIDE · CONFLUENCES OF NEPAL</div>
+      <h1>Where the Rivers Meet</h1>
+      <p class="sub">Sapta Gandaki · Saptakoshi · Karnali — every tributary, its origin, and the
+      <b>named meeting place</b> where it joins its parent. Click a row to fly there; click markers for photos &amp; links.</p>
+      <div class="searchrow">
+        <input id="q" type="text" placeholder="search rivers, origins, places…" autocomplete="off">
+        <button id="resetview" title="reset map view">RESET VIEW</button>
+      </div>
+      <div class="chips" id="chips"></div>
+      <label class="lineslbl"><input type="checkbox" id="lines" checked> show river courses</label>
+    </div>
+    <div class="body" id="syslist"></div>
+    <div class="body footwrap" style="padding-top:0">
+      <div class="foot">
+        Satellite: Esri World Imagery (Esri, Maxar, Earthstar Geographics). River lines: OpenStreetMap
+        (ODbL) where solid; dashed = approximate course. Photos: Wikimedia Commons, CC BY / CC BY-SA
+        (authors in README). Facts: Wikipedia + OSM.
+        <a href="https://sabinranabhat.com.np/">&larr; sabinranabhat.com.np</a> &nbsp;·&nbsp; <a href="README.md" target="_blank">full notes &amp; credits</a>
+        <div class="made">Made using <b>GLM 5.3</b> for exploration.</div>
+        <div id="errdbg"></div>
+      </div>
+    </div>
+  </aside>
+  <div id="map"></div>
+</div>
+<button id="togglebtn">☰ RIVERS</button>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="rivers-explorer-data.js"></script>
+<script>
+window.addEventListener('error', function (e) {
+  var d = document.getElementById('errdbg');
+  d.style.display = 'block';
+  d.textContent = 'JS error: ' + (e.message || e.type);
+});
+const D = window.RIVERS_DATA;
+const SYS_LABEL = { koshi: 'SAPTA KOSHI', gandaki: 'SAPTA GANDAKI', karnali: 'KARNALI' };
+const PHOTO_PAGES = {
+  'devghat_sangam.jpg': 'https://commons.wikimedia.org/wiki/File:Sangam_Devghat.jpg',
+  'benighat_sunkoshi_tamakoshi.jpg': 'https://commons.wikimedia.org/wiki/File:Meeting_point_of_Sunkoshi_and_Tamakoshi_River_from_Beni_Ghat.jpg',
+  'barahakshetra_temple.jpg': 'https://commons.wikimedia.org/wiki/File:Barahakshetra_Temple_Main_Gate.jpg',
+  'kaligandaki_gorge_kowang.jpg': 'https://commons.wikimedia.org/wiki/File:Kowang,_Kali_Gandaki_Gorge,_Nepal.jpg',
+  'karnali_bridge_chisapani.jpg': 'https://commons.wikimedia.org/wiki/File:Karnali_Bridge_Karnali_River_Chisapani_Kailali_Pradesh_7_Nepal_Rajesh_Dhungana_(22).jpg',
+  'koshi_barrage.jpg': 'https://commons.wikimedia.org/wiki/File:Koshi_Barrage_-00003921.jpg',
+  'seti_pokhara.jpg': 'https://commons.wikimedia.org/wiki/File:Seti_Gandaki_River_at_Pokhara.jpg',
+  'marsyangdi_pisang.jpg': 'https://commons.wikimedia.org/wiki/File:The_Marsyangdi_river_near_Pisang.jpg',
+  'tukuche_riverbank.jpg': 'https://commons.wikimedia.org/wiki/File:Riverbank_of_the_Kali_Gandaki_River_in_Tukuche,_Mustang_District,_Nepal.jpg'
+};
+const GREAT = new Set(['c_devghat', 'c_tribenighat', 'c_galwa', 'c_chisapani']);
+const HOME = { center: [28.05, 84.4], zoom: 7 };
+
+const map = L.map('map', { zoomControl: true }).setView(HOME.center, HOME.zoom);
+const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  maxZoom: 17, attribution: 'Imagery © Esri, Maxar, Earthstar Geographics'
+}).addTo(map);
+const labels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
+  maxZoom: 17, attribution: 'Labels © CARTO © OpenStreetMap', opacity: 0.85
+}).addTo(map);
+L.control.layers({ 'Satellite': sat, 'Streets (OSM)': L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  { maxZoom: 17, attribution: '© OpenStreetMap' }) }, { 'Place labels': labels }).addTo(map);
+
+function popupHtml(c) {
+  let h = '<div class="pop' + (GREAT.has(c.id) ? ' big' : '') + '">';
+  h += '<div class="kick">' + SYS_LABEL[c.sys] + (c.approx ? ' · APPROX.' : '') + '</div>';
+  h += '<h3>' + c.name + (c.approx ? ' ≈' : '') + '</h3>';
+  h += '<div class="pl">📍 ' + c.place + '</div>';
+  h += '<div class="rv">' + c.rivers + '</div>';
+  h += '<div class="ds">' + c.districts + ' · ' + c.lat.toFixed(4) + ', ' + c.lon.toFixed(4) + '</div>';
+  const img = c.photo ? 'photos/' + c.photo : (c.still ? 'sat/' + c.still : null);
+  if (img) h += '<img src="' + img + '" loading="lazy" alt="">';
+  if (c.note) h += '<div class="nt">' + c.note + '</div>';
+  h += '<div class="lnks">'
+    + '<a href="https://www.google.com/maps/search/?api=1&query=' + c.lat + ',' + c.lon + '" target="_blank">MAPS ↗</a>';
+  if (c.photo && PHOTO_PAGES[c.photo]) h += '<a href="' + PHOTO_PAGES[c.photo] + '" target="_blank">PHOTO SOURCE ↗</a>';
+  if (c.still) h += '<a href="sat/' + c.still + '" target="_blank">BIG STILL ↗</a>';
+  h += '</div><div class="crd">satellite: Esri World Imagery</div></div>';
+  return h;
+}
+
+function markerStyle(c) {
+  if (GREAT.has(c.id)) return { radius: 11, color: '#000000', weight: 3, fillColor: '#000000', fillOpacity: 1 };
+  if (c.approx) return { radius: 6.5, color: '#000000', weight: 2, fillColor: '#999999', fillOpacity: 1 };
+  return { radius: 7, color: '#000000', weight: 2.5, fillColor: '#ffffff', fillOpacity: 1 };
+}
+
+const markers = {};
+D.confluences.forEach(c => {
+  const base = markerStyle(c);
+  const big = Object.assign({}, base, { radius: base.radius + 2 });
+  const m = L.circleMarker([c.lat, c.lon], base)
+    .bindPopup(popupHtml(c), { maxWidth: 310 })
+    .bindTooltip(c.place + ' — ' + c.name, { direction: 'top' });
+  m.on('mouseover', () => m.setStyle(big));
+  m.on('mouseout', () => m.setStyle(base));
+  m.addTo(map);
+  markers[c.id] = m;
+});
+
+const MAINSTEMS = { 'Koshi (Saptakoshi)': 1, 'Narayani': 1, 'Karnali': 1, 'Trishuli': 1, 'Kali Gandaki': 1, 'Sun Koshi (with Bhote Koshi)': 1 };
+let riverLayers = [];
+function drawRivers(sysFilter) {
+  riverLayers.forEach(l => map.removeLayer(l));
+  riverLayers = [];
+  D.rivers.forEach(r => {
+    if (sysFilter !== 'all' && r.sys !== sysFilter) return;
+    const isMain = MAINSTEMS[r.name];
+    const l = L.polyline(r.coords, {
+      color: r.dashed ? '#777777' : (isMain ? '#000000' : '#333333'),
+      weight: isMain ? 4.5 : 2.5,
+      opacity: 0.95,
+      dashArray: r.dashed ? '7 7' : null
+    }).bindTooltip(r.name + (r.dashed ? ' (approx.)' : ''));
+    l.addTo(map);
+    riverLayers.push(l);
+  });
+}
+
+function flyTo(c) {
+  map.flyTo([c.lat, c.lon], Math.max(map.getZoom(), c.zoom || 12), { duration: 1.0 });
+  map.once('moveend', function () { setTimeout(function () { markers[c.id].openPopup(); }, 80); });
+  setTimeout(function () {
+    if (map.hasLayer(markers[c.id]) && !markers[c.id].isPopupOpen()) markers[c.id].openPopup();
+  }, 1600);
+}
+
+/* ---------- sidebar ---------- */
+const confById = {}; D.confluences.forEach(c => confById[c.id] = c);
+let filter = 'all', q = '';
+const chipsEl = document.getElementById('chips');
+const sysEl = document.getElementById('syslist');
+const qEl = document.getElementById('q');
+
+function chip(label, key) {
+  const cnt = key === 'all' ? D.confluences.length : D.confluences.filter(c => c.sys === key).length;
+  const b = document.createElement('button');
+  b.className = 'chip' + (filter === key ? ' on' : '');
+  b.innerHTML = label + '<span class="cnt">' + cnt + '</span>';
+  b.onclick = () => { filter = key; buildSidebar(); applyFilter(); };
+  chipsEl.appendChild(b);
+}
+function buildChips() {
+  chipsEl.innerHTML = '';
+  chip('ALL', 'all'); chip('KOSHI', 'koshi'); chip('GANDAKI', 'gandaki'); chip('KARNALI', 'karnali');
+}
+function rowHtml(t, i) {
+  return '<span class="ix">' + String(i).padStart(2, '0') + '</span>'
+    + '<span class="n">' + t.n + (t.approx ? ' <span class="approx">≈</span>' : '') + '</span>'
+    + '<span class="o">' + t.o + '</span>'
+    + '<span class="m"><span class="arr">→</span> ' + t.m + ' <span class="place">' + t.p.toUpperCase() + '</span></span>';
+}
+function buildSidebar() {
+  buildChips();
+  sysEl.innerHTML = '';
+  let any = false;
+  D.systems.forEach((s, si) => {
+    if (filter !== 'all' && s.key !== filter) return;
+    const rows = D.tributaries[s.key].filter(t =>
+      !q || (t.n + ' ' + t.o + ' ' + t.m + ' ' + t.p).toLowerCase().includes(q));
+    if (!rows.length) return;
+    any = true;
+    const block = document.createElement('div'); block.className = 'sysblock';
+    block.innerHTML = '<div class="syshead"><span class="no">' + (si + 1) + '</span>'
+      + '<span class="t">' + s.name + '</span><span class="tag">' + s.tag + '</span></div>'
+      + '<div class="mainstem">' + s.main + '</div>';
+    rows.forEach(t => {
+      const i = D.tributaries[s.key].indexOf(t) + 1;
+      const b = document.createElement('button'); b.className = 'trib';
+      b.innerHTML = rowHtml(t, i);
+      const c = confById[t.c];
+      b.onclick = () => flyTo(c);
+      b.onmouseenter = () => { if (c) markers[c.id].setStyle({ radius: 12 }); };
+      b.onmouseleave = () => { if (c) markers[c.id].setStyle(markerStyle(c)); };
+      block.appendChild(b);
+    });
+    sysEl.appendChild(block);
+  });
+  if (!any) sysEl.innerHTML = '<div class="nomatch">No rivers match “' + q + '”.</div>';
+}
+function applyFilter() {
+  D.confluences.forEach(c => {
+    const show = filter === 'all' || c.sys === filter;
+    if (show) { if (!map.hasLayer(markers[c.id])) markers[c.id].addTo(map); }
+    else if (map.hasLayer(markers[c.id])) map.removeLayer(markers[c.id]);
+  });
+  drawRivers(filter);
+}
+
+qEl.addEventListener('input', () => { q = qEl.value.trim().toLowerCase(); buildSidebar(); });
+qEl.addEventListener('keydown', e => { if (e.key === 'Escape') { qEl.value = ''; q = ''; buildSidebar(); } });
+document.getElementById('resetview').onclick = () => { map.flyTo(HOME.center, HOME.zoom, { duration: 0.8 }); map.closePopup(); };
+document.getElementById('lines').onchange = e => {
+  if (e.target.checked) drawRivers(filter);
+  else { riverLayers.forEach(l => map.removeLayer(l)); riverLayers = []; }
+};
+document.getElementById('togglebtn').onclick = () => document.getElementById('side').classList.toggle('open');
+
+const legend = L.control({ position: 'bottomright' });
+legend.onAdd = function () {
+  const d = L.DomUtil.create('div', 'legend');
+  d.innerHTML = '<b>Nepal · three systems</b><br>'
+    + '<span class="lg-dot black"></span>great sangam<br>'
+    + '<span class="lg-dot white"></span>confluence (named place)<br>'
+    + '<span class="lg-dot gray"></span>approximate (≈)<br>'
+    + '<span class="sw"></span>river course &nbsp;&nbsp;<span class="dt"></span>approx. course';
+  return d;
+};
+legend.addTo(map);
+
+buildSidebar(); drawRivers('all');
+</script>
+</body>
+</html>
