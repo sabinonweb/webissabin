@@ -59,3 +59,14 @@ ls -la .../Frameworks/Python.framework/Versions/3.13/bin/python3.13
 - Great thing about it? I always thought everything is learnable. Not saying I am great for thinking this but yes. I can change the situation I am in. How? By finding the people who are good at it, observe, learn from them. This is an experiment-based statement for me. It might sound like an anecdote, but for me it has happened. Use Neovim inspired from people who got taste, learn rust, write blogs, read books. There is lot more to explore on this part. [Agency > Intelligence](https://x.com/karpathy/status/1894099637218545984)
 
 - Another great thing about Agency is it runs in it's own core principle i.e. everything is learnable and so is agency.
+
+- I was always curious about river systems of Nepal. Tried to quench that thirst. Check it out: [Rivers](https://sabinranabhat.com.np/rivers)
+
+## Music This week
+- [Easy On the Eye - Texas Hill](https://open.spotify.com/track/05sAlUgaYqtyCMB8DIEZgu)
+- [Twenty Two - JD Clayton](https://open.spotify.com/track/5yEKnoRfCiI2G6Yjdl9LjR)
+- [Sabai Sakyo - Chumbak](https://open.spotify.com/track/6x8sccmvaKxngXpqPr68qR)
+
+## Quote of the week
+You kill me and I kill you. What have we solved?
+
