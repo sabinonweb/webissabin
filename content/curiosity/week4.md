@@ -1,7 +1,7 @@
 ---
 title: "Week #4 of Curiosity"
 date: 2026-09-21
-description: ""
+description: "Agency and Rivers"
 tags: ["essays"]
 curious: true
 ---
