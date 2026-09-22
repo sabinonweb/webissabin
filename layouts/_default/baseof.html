@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    (function () {
+      var t = localStorage.getItem("theme");
+      if (t !== "dark" && t !== "light") {
+        t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.dataset.theme = t;
+    })();
+  </script>
+
   <title>
       {{if .IsHome}} 
         {{.Site.Title}}
@@ -19,14 +29,35 @@
 <body>
   <div class="wrap">
 
-      {{ partial "header.html" .}}
+    {{ if and (not .IsHome) (not (and (eq .Kind "page") (in (slice "curiosity" "musings") .Section))) }}
+    <nav class="topnav">
+      <a href="/" class="back">← home</a>
+    </nav>
+    {{ end }}
 
     <main>
         {{block "main" . }} {{end}}    <!-- ⬅ THE HOLE -->
     </main>
 
-      {{partial "footer.html" .}}
     </div>
+
+    <button class="theme-toggle" id="theme-toggle" type="button">dark</button>
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var btn = document.getElementById("theme-toggle");
+        function label() {
+          btn.textContent = root.dataset.theme === "dark" ? "light" : "dark";
+        }
+        label();
+        btn.addEventListener("click", function () {
+          var next = root.dataset.theme === "dark" ? "light" : "dark";
+          root.dataset.theme = next;
+          localStorage.setItem("theme", next);
+          label();
+        });
+      })();
+    </script>
 
 </body>
 </html>

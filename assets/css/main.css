@@ -1,7 +1,36 @@
 
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Anonymous+Pro:wght@400;700&family=Azeret+Mono:wght@400;700&family=Chivo+Mono:wght@400;500;700&family=DM+Mono:wght@400;500&family=Fira+Code:wght@400;500;700&family=Fragment+Mono&family=Geist+Mono:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Inconsolata:wght@400;700&family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&family=Kode+Mono:wght@400;500;700&family=Major+Mono+Display&family=Manrope:wght@400;500;700&family=Martian+Mono:wght@400;500;700&family=Red+Hat+Mono:wght@400;500;700&family=Recursive:wght@400;500;700&family=Sono:wght@400;700&family=Source+Code+Pro:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&family=Syne+Mono&display=swap");
 
 :root {
+  color-scheme: light;
+
+  /* ── font playground: uncomment ONE line to try a font ── */
+  --font-main: "Kode Mono", monospace;   /* current */
+  /* --font-main: "IBM Plex Mono", monospace; */ 
+
+  /* --font-main: "Geist Mono", monospace;    */ 
+ /* --font-main: "Space Mono", monospace;       */
+  /* --font-main: "Fira Code", monospace;        — classic neutral code font    */
+  /* --font-main: "Martian Mono", monospace;     — wide + technical, big        */
+  /* --font-main: "Recursive", monospace;        — variable: mono↔casual        */
+  /* --font-main: "Inter", sans-serif;           — proportional, for long posts */
+
+  /* ── round two ── */
+  /* --font-main: "DM Mono", monospace;           — elegant, spartan, quiet        */
+  /* --font-main: "Source Code Pro", monospace;   — Adobe workhorse, very safe     */
+  /* --font-main: "Fragment Mono", monospace;     — Helvetica-as-mono, neutral     */
+  /* --font-main: "Red Hat Mono", monospace;      — friendly, rounded technical    */
+  /* --font-main: "Chivo Mono", monospace;        — compact neo-grotesque          */
+  /* --font-main: "Inconsolata", monospace;       — the beloved terminal classic   */
+  /* --font-main: "Anonymous Pro", monospace;     — old-school hacker terminal     */
+  /* --font-main: "Kode Mono", monospace;         — Google's new dev font          */
+  /* --font-main: "Sono", monospace;              — soft, rounded, unusual         */
+  /* --font-main: "Azeret Mono", monospace;       — sturdy grotesk mono            */
+  /* --font-main: "Syne Mono", monospace;         — artsy, gallery-vibe            */
+  /* --font-main: "Major Mono Display", monospace;— display-only gimmick, fun      */
+  /* --font-main: "Space Grotesk", sans-serif;    — techy sans, pairs w/ Space Mono*/
+  /* --font-main: "Manrope", sans-serif;          — modern geometric sans          */
+
   --bg: #fafaf9;
   --ink: #1c1917;
   --muted: #78716c;
@@ -17,19 +46,62 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--font-main);
   font-size: 15px;
   line-height: 1.7;
+  }
+
+/* dark palette — applied when OS prefers dark (unless user chose light)
+   or when the toggle sets data-theme="dark" explicitly */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg:     #1c1917;
+    --ink:    #fafaf9;
+    --muted:  #a8a29e;
+    --faint:  #78716c;
+    --accent: #fafaf9;
+    --line:   #44403c;
+    --card:   #292524;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg:     #1c1917;
+  --ink:    #fafaf9;
+  --muted:  #a8a29e;
+  --faint:  #78716c;
+  --accent: #fafaf9;
+  --line:   #44403c;
+  --card:   #292524;
 }
 
 .wrap {
   max-width: 60rem;
   margin: 0 auto;
   padding: 4rem 1.5rem 3rem;
-}
+  }
 
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
+
+/* dark/light toggle — fixed top-right, themed via variables */
+.theme-toggle {
+  position: fixed;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 20;
+  font: inherit;
+  font-size: 0.75rem;
+  color: var(--muted);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.25rem 0.7rem;
+  cursor: pointer;
+}
+.theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
 
 /* reading progress bar — fixed at top, width set by JS on scroll */
 .progress {
@@ -48,16 +120,22 @@ header { margin-bottom: 1rem; }
 
 .nav {
   display: flex;
-  justify-content: center;
-  gap: 1.25rem;
-  flex-wrap: wrap;
-  border-bottom: 1px solid var(--line);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  
   padding: 0.75rem 0;
-  margin: 1.5rem 0 2.5rem;
+  margin: 0.75rem 0 2.5rem;
   font-size: 0.85rem;
 }
-.nav a { color: black; }
+.nav a { color: var(--ink); }
 .nav a:hover { color: var(--accent); }
+.nav a::before { content: "→ "; color: var(--muted); }
+
+/* non-home pages: small back-to-home nav at the top */
+.topnav { font-size: 0.85rem; margin: 0 0 2rem; }
+.topnav a { color: var(--muted); }
+.topnav a:hover { color: var(--accent); }
 
 /* ── interactive post browser ─────────────────────────────── */
 
@@ -161,12 +239,8 @@ header h3 {
 
 .back {
   display: inline-flex;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  padding: 0.4rem 0.9rem;
   margin-bottom: 2.5rem;
   color: var(--muted);
-  background: var(--card);
 }
 .back:hover { color: var(--accent); border-color: var(--accent); }
 .back.fwd { margin: 2rem 0 0; }
@@ -242,18 +316,18 @@ section p a { color: var(--accent); }
   display: block;
   width: 100%;
   box-sizing: border-box;
-  background: #1c1917;
-  color: #fafaf9;
+  background: var(--ink);
+  color: var(--muted);
   border-radius: 8px;
   padding: 1rem 1.25rem;
   font-size: 0.85rem;
   line-height: 1.7;
   margin: 0 0 1.25rem;
 }
-.term p { margin: 0; }
+.term p { margin: 0; color: var(--muted); }
 .term .cmd { color: var(--muted); font-weight: 700; }
 .term-out a {
-  color: #fafaf9;
+  color:var(--muted);
   text-decoration: none;
   border-bottom: 1px dotted rgba(250, 250, 249, 0.45);
 }
