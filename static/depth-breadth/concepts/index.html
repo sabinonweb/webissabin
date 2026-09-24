@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<title>Ampixa Reading Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F5F6F8; --surface:#FFFFFF; --sunk:#ECEEF2; --ink:#15171C; --muted:#5A6170; --rule:#DADEE5;
+  --accent:#C4163A; --accent-soft:#FBE7EB;
+  --sys:#2A5DB0; --sys-soft:#E4ECF8; --ml:#7A3FB0; --ml-soft:#F0E7F8; --both:#1F7A4D; --both-soft:#E3F3EA;
+  --warn:#9A6200; --warn-soft:#FBF0DB;
+  --display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){color-scheme:dark;
+    --bg:#101217; --surface:#171A21; --sunk:#1E222B; --ink:#E6E8ED; --muted:#9CA3B0; --rule:#2B303B;
+    --accent:#FF5B74; --accent-soft:#3A1720;
+    --sys:#7FA8F0; --sys-soft:#18233A; --ml:#C39BF0; --ml-soft:#2A1C3A; --both:#5CC98E; --both-soft:#15291F;
+    --warn:#E7B04A; --warn-soft:#2E2412;}
+}
+:root[data-theme="dark"]{color-scheme:dark;
+    --bg:#101217; --surface:#171A21; --sunk:#1E222B; --ink:#E6E8ED; --muted:#9CA3B0; --rule:#2B303B;
+    --accent:#FF5B74; --accent-soft:#3A1720;
+    --sys:#7FA8F0; --sys-soft:#18233A; --ml:#C39BF0; --ml-soft:#2A1C3A; --both:#5CC98E; --both-soft:#15291F;
+    --warn:#E7B04A; --warn-soft:#2E2412;}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6;padding-inline:16px;padding-block:0 64px}
+.wrap{max-width:1120px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(30px,5vw,44px);font-weight:700}
+h2{font-size:24px;font-weight:700}
+h3{font-size:16.5px;font-weight:600}
+p{margin:0;max-width:70ch}
+a{color:var(--accent)}
+code{font-family:var(--mono);font-size:.86em;background:var(--sunk);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:600}
+.stack{display:flex;flex-direction:column;gap:14px}
+header{padding-block:36px 22px;display:flex;flex-direction:column;gap:12px}
+.lede{font-size:16.5px;color:var(--muted)}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.how div{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:11px 14px;font-size:14px}
+.how b{display:block;font-family:var(--display);font-size:15px}
+
+.chip{display:inline-block;font-size:11.5px;font-weight:600;border-radius:99px;padding:1px 8px;white-space:nowrap}
+.t-sys{background:var(--sys-soft);color:var(--sys)} .t-ml{background:var(--ml-soft);color:var(--ml)} .t-both{background:var(--both-soft);color:var(--both)}
+.r{background:var(--sunk);color:var(--muted);font-family:var(--mono);font-weight:500}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--rule);padding-block:10px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-inline:-16px;padding-inline:16px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button,.btn{font:inherit;font-size:13px;background:var(--surface);color:var(--muted);border:1px solid var(--rule);border-radius:99px;padding:4px 11px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.prog{margin-left:auto;display:flex;gap:10px;align-items:center;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.meter{width:120px;height:6px;border-radius:99px;background:var(--sunk);overflow:hidden;display:flex}
+.meter i{display:block;height:100%}
+.meter .m2{background:var(--both)} .meter .m1{background:var(--warn)}
+
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:24px;align-items:start;padding-top:24px}
+@media (max-width:860px){.layout{grid-template-columns:1fr}}
+aside{position:sticky;top:64px;display:flex;flex-direction:column;gap:10px}
+@media (max-width:860px){aside{position:static}}
+.problems{display:flex;flex-direction:column;gap:6px}
+.pb{font:inherit;text-align:left;background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:9px 12px;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;gap:2px}
+.pb small{color:var(--muted);font-size:12.5px}
+.pb[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.route{background:var(--surface);border:1px solid var(--accent);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.route ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.route li{font-size:14px}
+.route li a{cursor:pointer}
+.route .why{color:var(--muted);font-size:13px;display:block}
+
+.layer{display:flex;flex-direction:column;gap:12px;margin-bottom:30px}
+.layer-h{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:8px}
+.layer-h span{color:var(--muted);font-size:13.5px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:9px;scroll-margin-top:80px}
+.card.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.card.dim{opacity:.38}
+.card .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.card .tags{display:flex;gap:5px;flex-wrap:wrap}
+.why{font-size:13.5px;color:var(--muted)}
+.reads{display:flex;flex-direction:column;gap:5px;font-size:14px}
+.reads div{display:grid;grid-template-columns:52px minmax(0,1fr);gap:8px}
+.reads .k{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600;padding-top:3px}
+.q{font-size:13.5px;border-left:3px solid var(--warn);background:var(--warn-soft);padding:7px 10px;border-radius:0 6px 6px 0}
+.state{font:inherit;font-size:12px;border:1px solid var(--rule);background:var(--sunk);color:var(--muted);border-radius:99px;padding:2px 9px;cursor:pointer;white-space:nowrap}
+.state[data-s="1"]{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.state[data-s="2"]{background:var(--both-soft);color:var(--both);border-color:transparent}
+footer{margin-top:36px;color:var(--muted);font-size:13px;border-top:1px solid var(--rule);padding-top:14px}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Ampixa · sanoTTS · saanoTTS · nsl</div>
+  <h1>Reading map: breadth first, then depth by problem</h1>
+  <p class="lede">28 concepts that the three repos actually depend on, each tied to the file or number in the repo that needs it. Go wide first: one short read per card and the recall question. When you hit a real problem, pick it on the left and go deep along that path.</p>
+  <div class="how">
+    <div><b>BFS pass</b>Read only the "Wide" link on each card, layer by layer. Mark it "skimmed".</div>
+    <div><b>Recall check</b>Answer the yellow question in your own words, without the tab open. Only then mark "can explain".</div>
+    <div><b>DFS pass</b>Pick a problem. Follow its path, reading the "Deep" links and the repo pointer.</div>
+    <div><b>Already in nsl</b><code>nsl/docs/CONCEPTS.html</code> has one-line concept cards. This page is the reading layer behind them.</div>
+  </div>
+</header>
+
+<div class="bar">
+  <div class="seg" id="trackSeg">
+    <button data-t="all" aria-pressed="true">All</button>
+    <button data-t="sys" aria-pressed="false">Systems / embedded</button>
+    <button data-t="ml" aria-pressed="false">AI / ML</button>
+  </div>
+  <div class="seg" id="repoSeg">
+    <button data-r="all" aria-pressed="true">Any repo</button>
+    <button data-r="tts" aria-pressed="false">sanoTTS</button>
+    <button data-r="nsl" aria-pressed="false">nsl</button>
+  </div>
+  <div class="prog"><span id="progTxt"></span><div class="meter" aria-hidden="true"><i class="m2" id="m2"></i><i class="m1" id="m1"></i></div></div>
+</div>
+
+<div class="layout">
+  <aside>
+    <div class="eyebrow">Go deep on a problem</div>
+    <div class="problems" id="problems"></div>
+    <div class="route" id="route" hidden></div>
+  </aside>
+  <main id="layers"></main>
+</div>
+
+<footer>Every link was checked on 2026-09-24: arXiv IDs against their titles, other pages for a 200 response (gnu.org blocks automated checks). Repo pointers come from reading the code, not running it. Companion: <a href="/depth-breadth/sanotts-guide/">sanoTTS field guide</a>.</footer>
+</div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const ax=id=>`https://arxiv.org/abs/${id}`;
+const L=(t,u)=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`;
+
+const LAYERS=[
+ ['1','Shared ground','Needed by all three repos. Do this layer first.'],
+ ['2','Core mechanisms','How each system actually works.'],
+ ['3','Specific architectures and open problems','Where the repos are today, and where they are stuck.'],
+];
+
+const N=[
+/* layer 1 */
+{id:'fp',l:1,t:'sys',r:['tts','nsl'],title:'Floating point and numerical parity',
+ why:'Every port is gated on correlation with PyTorch (<code>corr &gt; 0.98</code>), not exact equality. There\'s a <code>-fastmath</code> variant, and trellis uses double reductions. nsl: device-parity checks in <code>scripts/</code>.',
+ wide:L('Comparing floating point numbers (Bruce Dawson)','https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/'),
+ deep:L('What every computer scientist should know about floating-point (Goldberg)','https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html'),
+ q:'Why can the same C code give different output with and without -ffast-math, and why is correlation a better gate here than bit equality?'},
+{id:'dsp',l:1,t:'ml',r:['tts','nsl'],title:'Signals: sampling, FFT, STFT',
+ why:'22.05 / 24 kHz audio; <code>n_fft 1024</code>, <code>hop 256</code>; iSTFT decoders. nsl uses STFT for alignment (<code>src/align_stft.py</code>) and HPSS clap detection.',
+ wide:L('An interactive guide to the Fourier transform','https://betterexplained.com/articles/an-interactive-guide-to-the-fourier-transform/')+'<br>'+L('HF audio course: audio as data','https://huggingface.co/learn/audio-course/chapter1/audio_data'),
+ deep:L('Understanding the FFT algorithm (Jake VanderPlas)','https://jakevdp.github.io/blog/2013/08/28/understanding-the-fft/')+'<br>'+L('Spectral Audio Signal Processing (J. O. Smith)','https://ccrma.stanford.edu/~jos/sasp/'),
+ q:'If hop is 256 at 24 kHz, how many frames per second does the decoder produce, and what does that imply for how long one duration unit is?'},
+{id:'seq',l:1,t:'ml',r:['tts','nsl'],title:'Sequence models and attention',
+ why:'TTS: the <code>token_context</code> acoustic student and duration models. nsl: the pose encoder with the mT5 decoder in SignMT5, and the Uni-Sign encoder.',
+ wide:L('The Illustrated Transformer (Jay Alammar)','https://jalammar.github.io/illustrated-transformer/'),
+ deep:L('Understanding LSTMs (Chris Olah)','https://colah.github.io/posts/2015-08-Understanding-LSTMs/')+'<br>'+L('mT5 paper',ax('2010.11934')),
+ q:'In an encoder-decoder model, what path lets the decoder use the input, and what happens to outputs if that path carries almost no information?'},
+{id:'recipe',l:1,t:'ml',r:['tts','nsl'],title:'Training discipline',
+ why:'Both repos\' method rules: sanoTTS\'s smoke12 / eval128 held-out split, nsl\'s frozen eval sets and <code>docs/HANDOFF_PLAN.md</code> rules.',
+ wide:L('A recipe for training neural networks (Karpathy)','https://karpathy.github.io/2019/04/25/recipe/'),
+ deep:'<code>nsl/docs/DELIBERATION_20260715.md</code>, <code>saanoTTS/docs/FEEDBACK-LOOP.md</code>',
+ q:'Name two things Karpathy says to check before training anything, and which of them would have caught the Run 5 blank collapse early.'},
+{id:'leak',l:1,t:'ml',r:['tts','nsl'],title:'Evaluation hygiene: leakage and selection',
+ why:'nsl\'s published adapter gain turned out to be ≈0: the checkpoint had been selected on the test set. Run 6 was pre-registered to prevent this. sanoTTS: "an empty cell means unmeasured"; the README is careful to separate claims.',
+ wide:L('Troubling trends in ML scholarship (Lipton, Steinhardt)',ax('1807.03341')),
+ deep:L('Leakage and the reproducibility crisis in ML-based science (Kapoor, Narayanan)',ax('2207.07048')),
+ q:'Why does picking the best checkpoint by test-set score inflate the reported number, even though you never trained on the test set?'},
+{id:'gpl',l:1,t:'sys',r:['tts'],title:'Licence boundaries (GPL vs MIT)',
+ why:'espeak-ng is GPL-3.0, and it\'s the reason sanoTTS has four G2P implementations. The runtime is MIT (<code>LICENSE.MIT</code>). nsl: dictionary content is NDFN\'s, with no open licence.',
+ wide:L('GNU GPL FAQ','https://www.gnu.org/licenses/gpl-faq.html'),
+ deep:'<code>sanoTTS/LICENSE.MIT</code> (lists every covered file and the reasoning)',
+ q:'Why can the C runtime be MIT while the browser demo that bundles espeak-ng in WASM cannot?'},
+
+/* layer 2: systems */
+{id:'mem',l:2,t:'sys',r:['tts'],title:'Memory hierarchy and caches',
+ why:'On ESP32-S3, the SIMD path is used only when weights are RAM-resident. Flash-XIP reads silently give corr 0.011. The ~7 s utterance limit comes from the PSRAM buffer.',
+ wide:L('Algorithmica: Algorithms for Modern Hardware','https://en.algorithmica.org/hpc/'),
+ deep:L('What every programmer should know about memory (Drepper)','https://people.freebsd.org/~lstewart/articles/cpumemory.pdf'),
+ q:'Why would a kernel that reads weights through a flash cache be slower, and how could it end up producing wrong values rather than just slow ones?'},
+{id:'esp',l:2,t:'sys',r:['tts'],title:'ESP32-S3 memory types: IRAM, DRAM, PSRAM, flash',
+ why:'The runtime arena, the PSRAM synthesis buffer, espeak data on SPIFFS, and the 62 KB internal SRAM that got the espeak ESPHome component rejected.',
+ wide:L('ESP-IDF: memory types (ESP32-S3)','https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-guides/memory-types.html'),
+ deep:L('ESP-IDF: external RAM','https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-guides/external-ram.html')+'<br>'+L('ESP-IDF: maximizing speed','https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-guides/performance/speed.html'),
+ q:'What is the difference between internal SRAM and PSRAM for a matvec kernel, and why would you still put the synthesis buffer in PSRAM?'},
+{id:'simd',l:2,t:'sys',r:['tts'],title:'SIMD kernels and alignment contracts',
+ why:'<code>snt_port.h</code> contract: len a multiple of 16, 16-byte aligned, exact int32 accumulation. The LX7 PIE kernels are in <code>snt_matvec_esp32s3.S</code>. RTF is 0.383 with SIMD and 1.58 with scalar code.',
+ wide:'Algorithmica, SIMD chapters: '+L('en.algorithmica.org/hpc','https://en.algorithmica.org/hpc/'),
+ deep:L('CMSIS-NN (Arm\'s reference int8 kernels)','https://github.com/ARM-software/CMSIS-NN')+'<br><code>mcu/src/snt_kernels_ref.c</code> (the semantics)',
+ q:'Why does the contract demand len % 16 == 0 and tail padding, instead of handling leftovers in the kernel?'},
+{id:'int',l:2,t:'sys',r:['tts'],title:'Integer-only inference',
+ why:'R7 and nano: int8 weights, dynamic int8 activations, int32 accumulation, <code>act_scales.h</code>; piperlite_q8 is W8/A12.',
+ wide:L('Neural network quantization (Lei Mao)','https://leimao.github.io/article/Neural-Networks-Quantization/'),
+ deep:L('Quantization and training for integer-arithmetic-only inference (Jacob et al.)',ax('1712.05877')),
+ q:'Write the affine mapping from a float to int8 using a scale and zero point, and explain why the accumulator must be int32.'},
+{id:'rtf',l:2,t:'sys',r:['tts'],title:'Real-time factor and honest benchmarking',
+ why:'The same model gives 0.383 on ESP32-S3 with SIMD and xRT 1.718 on an AtomS3 port. "Real-time on a $3 chip" is a claim about one model, one chip and one kernel set.',
+ wide:L('ESP-IDF: maximizing execution speed','https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-guides/performance/speed.html'),
+ deep:'<code>BOARDS.md</code>, <code>arduino/examples/BoardBenchmark</code>',
+ q:'RTF 0.383 for the kernel vs ~1.1 for the standalone app. What is in the second number that isn\'t in the first?'},
+{id:'audio',l:2,t:'sys',r:['tts'],title:'Getting audio out of an MCU',
+ why:'The ESP32-S3 app plays through LEDC-PWM on GPIO 17 into an LM386 amplifier.',
+ wide:L('ESP-IDF: LEDC (PWM)','https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-reference/peripherals/ledc.html'),
+ deep:L('ESP-IDF: I2S','https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-reference/peripherals/i2s.html'),
+ q:'How does a PWM pin plus a filter act as a DAC, and what limits its resolution at 22.05 kHz?'},
+{id:'wasm',l:2,t:'sys',r:['tts'],title:'WebAssembly and Emscripten',
+ why:'<code>snt_g2p.wasm</code> is espeak-ng compiled to WASM with a preloaded <code>.data</code> file; <code>_snt_g2p_init()</code>; the CSP needs <code>wasm-unsafe-eval</code>.',
+ wide:L('MDN: WebAssembly concepts','https://developer.mozilla.org/en-US/docs/WebAssembly/Guides/Concepts'),
+ deep:L('Emscripten: interacting with code','https://emscripten.org/docs/porting/connecting_cpp_and_javascript/Interacting-with-code.html'),
+ q:'How does JavaScript pass a string into a C function compiled to WASM, and who owns that memory afterwards?'},
+{id:'tinyml',l:2,t:'sys',r:['tts'],title:'Portable runtimes for microcontrollers',
+ why:'<code>mcu/</code> is dependency-free C99 with a port layer: host, esp32s3, esp32c3, rp2040, riscv-rvv and wasm.',
+ wide:L('LiteRT for microcontrollers: overview','https://ai.google.dev/edge/litert/microcontrollers/overview'),
+ deep:'<code>docs/mcu-classes-and-porting.md</code>, <code>mcu/include/snt_port.h</code>',
+ q:'What does sanoTTS gain by hand-writing a C runtime instead of using a general runtime like LiteRT Micro, and what does it give up?'},
+
+/* layer 2: ML */
+{id:'ttsov',l:2,t:'ml',r:['tts'],title:'The neural TTS pipeline',
+ why:'text → G2P → duration → acoustic → decoder → PCM is the whole of sanoTTS.',
+ wide:L('HF audio course: text-to-speech','https://huggingface.co/learn/audio-course/chapter6/pre-trained_models'),
+ deep:L('A survey on neural speech synthesis (Tan et al.)',ax('2106.15561')),
+ q:'Why predict durations explicitly instead of letting attention learn the alignment?'},
+{id:'g2p',l:2,t:'ml',r:['tts'],title:'G2P, phonemes and IPA',
+ why:'<code>piper_g2p.module_for</code>, <code>phoneme_id_map</code>, the 62-symbol misaki vocab, tashkeel (Arabic went from 44.55% to 100% id match), and Russian lexicon shards.',
+ wide:L('espeak-ng guide','https://github.com/espeak-ng/espeak-ng/blob/master/docs/guide.md'),
+ deep:L('misaki (Kokoro\'s G2P)','https://github.com/hexgrad/misaki')+'<br><code>pypkg/sanotts/vi_g2p.py</code> (a from-scratch rule G2P)',
+ q:'Why must a new G2P emit exactly the codepoints the teacher saw, even when those are not the "correct" IPA?'},
+{id:'kd',l:2,t:'ml',r:['tts','nsl'],title:'Knowledge distillation',
+ why:'Every sanoTTS voice is a student of a Piper or Kokoro teacher; students are scored as retention against the teacher. nsl uses a teacher-anchor term in Run 5.',
+ wide:L('Distilling the knowledge in a neural network (Hinton et al.)',ax('1503.02531')),
+ deep:'<code>saanoTTS/docs/distillation-recipe.md</code>, <code>docs/piper-latent-distillation-playbook.md</code>',
+ q:'sanoTTS distils intermediate tensors (the 192-ch latent), not just outputs. What does that buy you, and what does it lock you into?'},
+{id:'quant',l:2,t:'ml',r:['tts'],title:'Quantization and QAT',
+ why:'<code>tools/qat_ste.py</code> fake-quant faithful to the C code. heart int8 fails the gate at 0.951, so it ships f32; heart-nano ships int8.',
+ wide:L('A visual guide to quantization (Maarten Grootendorst)','https://www.maartengrootendorst.com/blog/quantization/'),
+ deep:L('A white paper on neural network quantization (Nagel et al.)',ax('2106.08295'))+'<br>'+L('Straight-through estimator (Bengio et al.)',ax('1308.3432'))+'<br>'+L('PyTorch: quantization in practice','https://pytorch.org/blog/quantization-in-practice/'),
+ q:'What does the straight-through estimator pretend during backprop, and why is that good enough to train through rounding?'},
+{id:'speval',l:2,t:'ml',r:['tts'],title:'Evaluating speech: WER, CER, MOS predictors',
+ why:'Whisper WER/CER, SCOREQ, UTMOS, DNSMOS. Chinese WER depends on the jieba segmenter; SCOREQ isn\'t valid across languages; no listening test has been run on non-English voices.',
+ wide:L('Whisper (Radford et al.)',ax('2212.04356')),
+ deep:L('SCOREQ',ax('2410.06675'))+'<br>'+L('UTMOS',ax('2204.02152'))+'<br>'+L('DNSMOS',ax('2010.15258')),
+ q:'heart-nano and heart have near-equal WER but very different SCOREQ. What does each metric actually measure?'},
+{id:'pose',l:2,t:'ml',r:['nsl'],title:'Pose estimation',
+ why:'RTMPose-133 wholebody at 15 fps: <code>kpts (N,133,2)</code>, <code>scores</code>, <code>ts</code> for 112 hours of parliament video.',
+ wide:L('RTMPose in MMPose','https://github.com/open-mmlab/mmpose/tree/main/projects/rtmpose'),
+ deep:L('RTMPose paper',ax('2303.07399')),
+ q:'At 15 fps, how many frames does a 0.3 s handshape change span, and what happens to fingerspelling at that rate?'},
+{id:'ctc',l:2,t:'ml',r:['nsl'],title:'CTC',
+ why:'Run 5 blank collapse: student blank mass 0.8815 vs teacher 0.0007, with the CTC term 60-250× underweighted. Run 6 Arm A collapsed again.',
+ wide:L('Sequence modeling with CTC (Distill)','https://distill.pub/2017/ctc/'),
+ deep:'<code>nsl/paper/draft_v0/06_training_negative_results.md</code>, <code>src/train_pose_level.py</code>',
+ q:'What does the blank token let CTC do, and why can a model reduce the loss early on by predicting blank almost everywhere?'},
+{id:'contr',l:2,t:'ml',r:['nsl'],title:'Contrastive learning and retrieval',
+ why:'Gallery retrieval over 3,653 entries (top-5, MRR), and the pose-text retriever, localizer and hard negatives in <code>src/train_pose_text_*</code>.',
+ wide:L('Contrastive representation learning (Lilian Weng)','https://lilianweng.github.io/posts/2021-05-31-contrastive/'),
+ deep:L('CPC / InfoNCE',ax('1807.03748'))+'<br>'+L('CLIP',ax('2103.00020'))+'<br>'+L('SimCLR',ax('2002.05709')),
+ q:'What is the chance-level top-5 against a 3,653-way gallery, and why is 0.054 on continuous signing worrying but not zero?'},
+
+/* layer 3 */
+{id:'vits',l:3,t:'ml',r:['tts'],title:'VITS and Piper (the teacher)',
+ why:'The 192-ch generator latent, the decoder cut (<code>extract_piper_vits_decoder_cut.py</code>), and the preflight that rejects conv_pre ≠ 256.',
+ wide:L('Piper','https://github.com/rhasspy/piper'),
+ deep:L('VITS (Kim et al.)',ax('2106.06103')),
+ q:'Where in VITS does the 192-ch latent come from, and why is cutting the graph there a good distillation target?'},
+{id:'voc',l:3,t:'ml',r:['tts'],title:'Vocoders: HiFi-GAN → iSTFTNet → Vocos',
+ why:'The piperlite time-domain decoder, the R7 int8 iSTFT decoder, and nano\'s TinyVocos. "Quality lives in the decoder": 1.09M → 1.84M moves SCOREQ from 3.70 to 4.16.',
+ wide:L('Mel compression and inversion (Tim Sainburg)','https://timsainburg.com/python-mel-compression-inversion.html'),
+ deep:L('HiFi-GAN',ax('2010.05646'))+'<br>'+L('iSTFTNet',ax('2203.02395'))+'<br>'+L('Vocos',ax('2306.00814')),
+ q:'Why is predicting STFT magnitude and phase, then running an iSTFT, cheaper than upsampling in the time domain?'},
+{id:'kokoro',l:3,t:'ml',r:['tts'],title:'Kokoro / StyleTTS 2 (the nano teacher)',
+ why:'<code>af_heart</code> at 24 kHz, mel + F0 + voicing packs (80/82/83 ch), <code>build_kokoro_corpus.py</code>.',
+ wide:L('Kokoro','https://github.com/hexgrad/kokoro'),
+ deep:L('StyleTTS 2',ax('2306.07691')),
+ q:'Why do the 82- and 83-channel packs add F0 and voicing next to the mel, instead of letting the decoder infer pitch?'},
+{id:'slt',l:3,t:'ml',r:['nsl'],title:'Sign language translation',
+ why:'The frozen Uni-Sign encoder behind E_iso (top-5 0.301). Isolated signs work; continuous broadcast signing does not.',
+ wide:L('Neural sign language translation (Camgoz et al., CVPR 2018)','https://openaccess.thecvf.com/content_cvpr_2018/html/Camgoz_Neural_Sign_Language_CVPR_2018_paper.html'),
+ deep:L('Uni-Sign',ax('2501.15187')),
+ q:'Why would an encoder that recognises isolated dictionary signs fail on interpreter signing of the same vocabulary?'},
+{id:'prior',l:3,t:'ml',r:['nsl'],title:'Collapse to the language-model prior',
+ why:'SignMT5 scored chrF 4.9 with 0/591 exact matches, giving one boilerplate output whatever the input.',
+ wide:L('chrF (Popović 2015)','https://aclanthology.org/W15-3049/'),
+ deep:L('mT5',ax('2010.11934'))+'<br>'+L('sacrebleu','https://github.com/mjpost/sacrebleu')+'<br><code>nsl/HANDOFF_CODEX.md</code>',
+ q:'Design one cheap test that shows whether a translator uses its input at all. Hint: nsl already has a "swap gate".'},
+{id:'weak',l:3,t:'ml',r:['nsl'],title:'Weak supervision and alignment',
+ why:'Interpreters sign the gist, not a verbatim transcript. Speech-to-sign offsets are +0.89 s in parliament and -0.77 s in teaching video. Every caption-derived label is weak.',
+ wide:L('Whisper as large-scale weak supervision',ax('2212.04356')),
+ deep:L('Montreal Forced Aligner','https://montreal-forced-aligner.readthedocs.io/en/latest/')+'<br><code>src/force_align.py</code>, <code>src/mine_lag_model.py</code>',
+ q:'If the speech-to-sign offset has opposite signs in two domains, why can\'t one global lag fix the labels?'},
+];
+
+const P=[
+ {k:'slow',t:'A new board is slower than real time',s:'systems',path:[['mem','Where do the weights live when the kernel runs?'],['esp','Which memory type, and what it costs'],['simd','Is the fast path actually taken?'],['rtf','Measure the kernel separately from the app'],['tinyml','Port-layer shape']]},
+ {k:'gate',t:'int8 export fails the 0.98 golden gate',s:'heart got 0.951',path:[['fp','Is the reference itself stable?'],['int','Where does precision go'],['quant','QAT vs post-training'],['simd','Is accumulation exact?']]},
+ {k:'ids',t:'Browser ids differ from Python',s:'e.g. Arabic 44.55%',path:[['g2p','What text reaches espeak'],['wasm','Data files and string passing'],['gpl','What you are allowed to ship']]},
+ {k:'wer',t:'A new voice has OK WER but sounds bad',s:'SCOREQ vs WER',path:[['speval','Which metric is lying'],['dsp','Look at the spectrogram'],['voc','Decoder capacity'],['kd','Is the student matching the right thing?']]},
+ {k:'lang',t:'Adding a language',s:'teacher to browser',path:[['ttsov','Where the language lives'],['g2p','Frontend contract'],['vits','Teacher constraints'],['speval','Define "working"'],['gpl','Licence route']]},
+ {k:'blank',t:'CTC blank collapse',s:'Run 5, Run 6 Arm A',path:[['ctc','What blank does'],['seq','What the encoder can represent'],['recipe','Loss weighting and sanity checks'],['leak','Gate validity']]},
+ {k:'priorp',t:'Translator ignores its input',s:'SignMT5',path:[['prior','Detecting it'],['seq','Encoder-decoder information flow'],['weak','Are the labels even aligned?'],['leak','Is the eval fair?']]},
+ {k:'cont',t:'Continuous signing near baseline',s:'top-5 0.054',path:[['contr','What retrieval scores mean'],['pose','What 15 fps keeps and loses'],['slt','Isolated vs continuous'],['weak','Label noise'],['leak','Selection effects']]},
+ {k:'good',t:'A result looks too good',s:'before you publish',path:[['leak','Leakage checklist'],['recipe','Baselines and ablations'],['fp','Is it a numerics artefact?']]},
+];
+
+let st=store.get('rmState',{}),ft='all',fr='all',sel=null;
+function render(){
+  const route=sel?P.find(p=>p.k===sel):null, onSet=new Set(route?route.path.map(x=>x[0]):[]);
+  $('#layers').innerHTML=LAYERS.map(([l,name,sub])=>{
+    const cards=N.filter(n=>n.l==+l&&(ft==='all'||n.t===ft)&&(fr==='all'||n.r.includes(fr)));
+    if(!cards.length)return'';
+    return `<section class="layer"><div class="layer-h"><div class="eyebrow">Layer ${l}</div><h2>${name}</h2><span>${sub}</span></div><div class="cards">${cards.map(n=>{
+      const s=st[n.id]||0,lab=['not read','skimmed','can explain'][s];
+      const tc=n.t==='sys'?'t-sys':'t-ml',tl=n.t==='sys'?'systems':'AI / ML';
+      return `<article class="card${onSet.has(n.id)?' on':''}${route&&!onSet.has(n.id)?' dim':''}" id="c-${n.id}">
+        <div class="top"><h3>${n.title}</h3><button class="state" data-id="${n.id}" data-s="${s}" aria-label="Status: ${lab}">${lab}</button></div>
+        <div class="tags"><span class="chip ${tc}">${tl}</span>${n.r.map(r=>`<span class="chip r">${r==='tts'?'sanoTTS':'nsl'}</span>`).join('')}</div>
+        <p class="why">${n.why}</p>
+        <div class="reads"><div><span class="k">Wide</span><span>${n.wide}</span></div><div><span class="k">Deep</span><span>${n.deep}</span></div></div>
+        <div class="q"><b>Can you answer?</b> ${n.q}</div></article>`}).join('')}</div></section>`}).join('');
+  $$('.state').forEach(b=>b.onclick=()=>{const id=b.dataset.id;st[id]=((st[id]||0)+1)%3;store.set('rmState',st);render()});
+  const vis=N.filter(n=>(ft==='all'||n.t===ft)&&(fr==='all'||n.r.includes(fr)));
+  const c2=vis.filter(n=>st[n.id]===2).length,c1=vis.filter(n=>st[n.id]===1).length;
+  $('#progTxt').textContent=`${c2} can explain · ${c1} skimmed · ${vis.length} shown`;
+  $('#m2').style.width=(c2/vis.length*100)+'%';$('#m1').style.width=(c1/vis.length*100)+'%';
+  $('#problems').innerHTML=P.map(p=>`<button class="pb" data-k="${p.k}" aria-pressed="${p.k===sel}">${p.t}<small>${p.s}</small></button>`).join('');
+  $$('.pb').forEach(b=>b.onclick=()=>{sel=sel===b.dataset.k?null:b.dataset.k;render()});
+  const R=$('#route');
+  if(route){R.hidden=false;R.innerHTML=`<div class="eyebrow">Depth path</div><h3>${route.t}</h3><ol>${route.path.map(([id,why])=>{const n=N.find(x=>x.id===id);return `<li><a data-go="${id}" tabindex="0">${n.title}</a><span class="why">${why}</span></li>`}).join('')}</ol><button class="btn" id="clr">Show all cards</button>`;
+    $$('#route [data-go]').forEach(a=>{const go=()=>{const el=$('#c-'+a.dataset.go);if(el)el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})};a.onclick=go;a.onkeydown=e=>{if(e.key==='Enter')go()}});
+    $('#clr').onclick=()=>{sel=null;render()};
+  } else R.hidden=true;
+}
+$$('#trackSeg button').forEach(b=>b.onclick=()=>{ft=b.dataset.t;$$('#trackSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
+$$('#repoSeg button').forEach(b=>b.onclick=()=>{fr=b.dataset.r;$$('#repoSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
+render();
+</script>
+
+</body>
+</html>

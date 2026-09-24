@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<title>sanoTTS Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F5F6F8; --surface:#FFFFFF; --sunk:#ECEEF2; --ink:#15171C; --muted:#5A6170; --rule:#DADEE5;
+  --accent:#C4163A; --accent-soft:#FBE7EB; --ok:#1F7A4D; --ok-soft:#E3F3EA; --warn:#9A6200; --warn-soft:#FBF0DB;
+  --crit:#B3122F; --crit-soft:#FBE3E7; --info:#2A5DB0; --info-soft:#E4ECF8;
+  --display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#101217; --surface:#171A21; --sunk:#1E222B; --ink:#E6E8ED; --muted:#9CA3B0; --rule:#2B303B;
+    --accent:#FF5B74; --accent-soft:#3A1720; --ok:#5CC98E; --ok-soft:#15291F; --warn:#E7B04A; --warn-soft:#2E2412;
+    --crit:#FF6B82; --crit-soft:#3A1720; --info:#7FA8F0; --info-soft:#18233A;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#101217; --surface:#171A21; --sunk:#1E222B; --ink:#E6E8ED; --muted:#9CA3B0; --rule:#2B303B;
+  --accent:#FF5B74; --accent-soft:#3A1720; --ok:#5CC98E; --ok-soft:#15291F; --warn:#E7B04A; --warn-soft:#2E2412;
+  --crit:#FF6B82; --crit-soft:#3A1720; --info:#7FA8F0; --info-soft:#18233A;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6;padding-inline:16px;padding-block:0 64px}
+.wrap{max-width:1080px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(30px,5vw,46px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:26px;font-weight:700}
+h3{font-size:18px;font-weight:600}
+p{margin:0;max-width:68ch}
+a{color:var(--accent)}
+code,.mono{font-family:var(--mono);font-size:.88em}
+code{background:var(--sunk);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:600}
+.stack{display:flex;flex-direction:column;gap:14px}
+.stack-lg{display:flex;flex-direction:column;gap:28px}
+
+header.top{padding-block:36px 20px;display:flex;flex-direction:column;gap:12px}
+.dev{font-family:var(--display);color:var(--accent);font-weight:500}
+.lede{font-size:17px;color:var(--muted)}
+.repos{display:flex;flex-wrap:wrap;gap:10px}
+.repo{border:1px solid var(--rule);background:var(--surface);border-radius:8px;padding:10px 14px;flex:1 1 280px}
+.repo b{font-family:var(--mono);font-size:14px}
+.repo span{display:block;color:var(--muted);font-size:13.5px}
+
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--rule);display:flex;gap:2px;overflow-x:auto;margin-inline:-16px;padding-inline:16px;scrollbar-width:none}
+nav.tabs button{font:inherit;font-weight:500;font-size:14px;color:var(--muted);background:none;border:0;border-bottom:2px solid transparent;padding:12px 12px 10px;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs button:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.count{font-family:var(--mono);font-size:11px;background:var(--crit-soft);color:var(--crit);border-radius:99px;padding:1px 7px;margin-left:5px}
+section.panel{padding-top:28px}
+
+/* signal path */
+.path{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px}
+.node{font:inherit;text-align:left;cursor:pointer;background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:10px 12px;flex:1 1 130px;display:flex;flex-direction:column;gap:2px;color:var(--ink)}
+.node small{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.node b{font-weight:600;font-size:14.5px}
+.node[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.node.lang{border-style:dashed}
+.arrow{align-self:center;color:var(--muted);font-family:var(--mono)}
+.detail{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.detail ul{margin:0;padding-left:18px}
+.detail li{margin:3px 0}
+.legend{font-size:13px;color:var(--muted)}
+
+.areas{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.area{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.area .p{font-family:var(--mono);font-size:13px;color:var(--accent);font-weight:500}
+.area span{font-size:13.5px;color:var(--muted)}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;background:var(--sunk);position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.chip{display:inline-block;font-size:11.5px;font-weight:600;border-radius:99px;padding:1px 8px;white-space:nowrap}
+.c-ok{background:var(--ok-soft);color:var(--ok)}
+.c-warn{background:var(--warn-soft);color:var(--warn)}
+.c-crit{background:var(--crit-soft);color:var(--crit)}
+.c-info{background:var(--info-soft);color:var(--info)}
+.c-mute{background:var(--sunk);color:var(--muted)}
+
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+input[type=search],select{font:inherit;font-size:14px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);border-radius:7px;padding:7px 10px;min-width:0}
+input[type=search]{flex:1 1 220px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{font:inherit;font-size:13px;background:var(--surface);color:var(--muted);border:1px solid var(--rule);border-radius:99px;padding:4px 11px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* stages */
+.stages{counter-reset:s;display:flex;flex-direction:column;border-left:2px solid var(--rule);margin-left:10px}
+.stage{position:relative;padding:0 0 18px 22px}
+.stage::before{counter-increment:s;content:counter(s);position:absolute;left:-12px;top:0;width:22px;height:22px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);font-family:var(--mono);font-size:11px;display:grid;place-items:center;color:var(--accent);font-weight:500}
+.stage h3{font-size:15.5px;font-family:var(--body);font-weight:600}
+.stage p{color:var(--muted);font-size:14px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+
+/* wizard */
+.wiz{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:820px){.wiz{grid-template-columns:1fr}}
+.qbox{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:16px;position:sticky;top:56px}
+@media (max-width:820px){.qbox{position:static}}
+.q{display:flex;flex-direction:column;gap:6px}
+.q > label,.q > .ql{font-weight:600;font-size:14px}
+.q .hint{font-size:12.5px;color:var(--muted)}
+.checks{display:flex;flex-direction:column;gap:4px}
+.checks label{font-size:14px;display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+.checks input{margin-top:4px;accent-color:var(--accent)}
+.plan{display:flex;flex-direction:column;gap:18px}
+.phase{display:flex;flex-direction:column;gap:6px}
+.phase > h3{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.phase > h3 .tag{font-family:var(--mono);font-size:11.5px;color:var(--muted);font-weight:400}
+.step{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:10px 12px}
+.step input{margin-top:5px;accent-color:var(--accent);width:16px;height:16px}
+.step.done .st{text-decoration:line-through;color:var(--muted)}
+.st{font-weight:500}
+.sd{font-size:13.5px;color:var(--muted)}
+.sd code{font-size:12px}
+.who{margin-left:6px}
+.progress{height:6px;border-radius:99px;background:var(--sunk);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
+@media (prefers-reduced-motion:reduce){.progress i{transition:none}}
+.note{border-left:3px solid var(--info);background:var(--info-soft);padding:10px 14px;border-radius:0 8px 8px 0;font-size:14px}
+.note.warn{border-color:var(--warn);background:var(--warn-soft)}
+.note.crit{border-color:var(--crit);background:var(--crit-soft)}
+.btn{font:inherit;font-size:13px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);border-radius:7px;padding:5px 11px;cursor:pointer}
+
+/* issues */
+.issue{display:grid;grid-template-columns:86px minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--rule)}
+.issue:last-child{border-bottom:0}
+.issue b{font-weight:600}
+.issue p{font-size:14px;color:var(--muted)}
+@media (max-width:520px){.issue{grid-template-columns:1fr;gap:4px}}
+
+/* commands */
+.cmd{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.cmd-h{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.cmd-h span{font-size:13.5px;color:var(--muted)}
+pre{margin:0;background:var(--sunk);border-radius:6px;padding:9px 11px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.5;white-space:pre}
+.cmdgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,460px),1fr));gap:10px}
+footer{margin-top:48px;color:var(--muted);font-size:13px;border-top:1px solid var(--rule);padding-top:16px}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Ampixa · repository guide · read from source on 2026-09-24</div>
+  <h1>sanoTTS <span class="dev">सानो</span> field guide</h1>
+  <p class="lede">Tiny distilled neural TTS voices (294k to 2.3M parameters) that run in numpy, in the browser via WASM, and on a $3 ESP32-S3. This guide maps the two repositories, the training pipeline, every runtime, and exactly what to touch to add a language.</p>
+  <div class="repos">
+    <div class="repo"><b>Ampixa/saanoTTS</b> <span class="c-mute chip">private</span><span>The lab monorepo (470 MB): training tools, research, runtimes, evidence. The source of truth, and what gets published.</span></div>
+    <div class="repo"><b>Ampixa/sanoTTS</b> <span class="c-ok chip">public</span><span>The mirror, produced by <code>tools/publish_public.py</code> from <code>docs/public/manifest.txt</code>. It is currently <em>ahead</em> of private in places (see Known issues).</span></div>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Sections">
+  <button role="tab" data-tab="map" aria-selected="true">Map</button>
+  <button role="tab" data-tab="voices">Voices</button>
+  <button role="tab" data-tab="train">Train</button>
+  <button role="tab" data-tab="runtimes">Runtimes</button>
+  <button role="tab" data-tab="ship">Ship</button>
+  <button role="tab" data-tab="lang">Add a language</button>
+  <button role="tab" data-tab="issues">Known issues<span class="count" id="issueCount"></span></button>
+  <button role="tab" data-tab="cmds">Commands</button>
+</nav>
+
+<!-- MAP -->
+<section class="panel stack-lg" data-panel="map">
+  <div class="stack">
+    <h2>The signal path</h2>
+    <p class="legend">Click a stage. Dashed stages are where language-specific logic lives.</p>
+    <div class="path" id="path"></div>
+    <div class="detail" id="pathDetail" aria-live="polite"></div>
+  </div>
+  <div class="stack">
+    <h2>Where things live</h2>
+    <div class="areas" id="areas"></div>
+  </div>
+  <div class="stack">
+    <h2>Two model families, one idea</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Family</th><th>Teacher</th><th>Interface</th><th>Decoder</th><th>Rate</th><th>Frontend</th></tr></thead>
+      <tbody>
+        <tr><td><b>piperlite</b><br><span class="sd">amy, kristin, hfc, vi, id, the ten 09-08 languages, ne, hi, zh</span></td><td>Piper / VITS medium, single speaker</td><td>192-ch VITS generator latent</td><td>time-domain piperlite (fp32 / fp16; q8 on MCU)</td><td class="num">22.05 kHz</td><td>espeak-ng → per-voice <code>phoneme_id_map</code></td></tr>
+        <tr><td><b>nano</b><br><span class="sd">heart (2.27M f32), heart-nano (294k int8)</span></td><td>Kokoro-82M <code>af_heart</code></td><td>100-band mel</td><td>noise-fed ConvNeXt (TinyVocos) + iSTFT</td><td class="num">24 kHz</td><td>misaki-normalised IPA, 62-symbol vocab, English only</td></tr>
+        <tr><td><b>R7 / snt_tts</b><br><span class="sd">"robot", on-device Kristin</span></td><td>Piper Kristin</td><td>latent</td><td>int8 iSTFT</td><td class="num">22.05 kHz</td><td>on-chip espeak-ng (English), 157 ids</td></tr>
+      </tbody></table></div>
+  </div>
+</section>
+
+<!-- VOICES -->
+<section class="panel stack" data-panel="voices" hidden>
+  <h2>The voices</h2>
+  <p class="legend">From the public README and <code>web/voices/</code>. An empty cell means unmeasured, not zero. SCOREQ is how it sounds, WER is whether words arrive; neither answers the other. No listening test has been run on any non-English voice.</p>
+  <div class="controls">
+    <input type="search" id="voiceQ" placeholder="Filter by language or voice" aria-label="Filter voices">
+    <div class="seg" id="voiceSeg">
+      <button aria-pressed="true" data-f="all">All</button>
+      <button aria-pressed="false" data-f="pip">In pip</button>
+      <button aria-pressed="false" data-f="web">Browser only</button>
+    </div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Language</th><th>Voice</th><th>web/voices key</th><th style="text-align:right">Params</th><th style="text-align:right">SCOREQ</th><th style="text-align:right">WER</th><th>Where</th></tr></thead>
+    <tbody id="voiceRows"></tbody>
+  </table></div>
+  <p class="legend">English WER is 24 held-out sentences; the ten 09-08 languages use 16 out-of-domain Tatoeba sentences (<code>experiments/evidence/ood-tatoeba-20260908.json</code>). Chinese WER is jieba-segmented; its comparable CER is 0.201 vs the teacher's 0.188.</p>
+</section>
+
+<!-- TRAIN -->
+<section class="panel stack-lg" data-panel="train" hidden>
+  <div class="stack">
+    <h2>Training a voice</h2>
+    <p>Every multilingual voice came from one driver, <code>tools/train_voice_from_piper.py</code>. It runs the stages below, is resumable through per-stage done-files, and supports <code>--dry-run</code>. None of the older docs mention it; <code>docs/roota-language-porting-recipe.md</code> describes the same stages as manual commands with old paths.</p>
+  </div>
+  <div class="cols">
+    <div class="stack">
+      <h3>Piper path (the one that ships languages)</h3>
+      <div class="stages">
+        <div class="stage"><h3>Preflight</h3><p>Refuses multi-speaker teachers, <code>conv_pre</code> not 256 wide (Piper "high" voices), and espeak voices piper can't speak. Rows 0-11 = smoke, 12-139 = eval, 140+ = train.</p></div>
+        <div class="stage"><h3>Build four probe packs</h3><p><code>build_piper_vits_roota_probe_pack.py</code>, deterministic (noise 0, length 1): smoke12, eval128, train-acoustic, train512-decoder.</p></div>
+        <div class="stage"><h3>Cut the teacher decoder</h3><p><code>extract_piper_vits_decoder_cut.py</code> → <code>*-decoder-from-generator-input.onnx</code>.</p></div>
+        <div class="stage"><h3>Duration student</h3><p><code>train_roota_piper_duration_student.py</code></p></div>
+        <div class="stage"><h3>Acoustic (latent) student</h3><p><code>train_roota_piper_latent_student.py --architecture token_context --latent-adv-weight 0.1</code></p></div>
+        <div class="stage"><h3>Decoder init + signature pack</h3><p><code>verify_piper_decoder_torch_parity.py --export-checkpoint</code>, then <code>build_piper_vits_decoder_signature_pack.py</code>.</p></div>
+        <div class="stage"><h3>Decoder student, then z-mix</h3><p><code>train_roota_piper_decoder_student.py --variant piperlite --teacher-init-method importance</code>, then again with <code>--acoustic-latent-mix-prob 0.5</code>.</p></div>
+        <div class="stage"><h3>Joint finetune</h3><p><code>train_roota_joint_z_finetune.py --z-anchor-weight 0.5</code></p></div>
+        <div class="stage"><h3>Gate and package</h3><p><code>run_roota_feedback_loop.py</code>, then <code>export_roota_self_contained_package.py</code> → <code>manifest.json</code> (<code>roota.raw-fp16.v1</code>), <code>weights.fp16.bin</code>, <code>piper-phoneme-config.json</code>.</p></div>
+      </div>
+    </div>
+    <div class="stack">
+      <h3>Sizes and budgets</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>--size</th><th>Duration</th><th>Acoustic</th><th>Decoder ch.</th><th style="text-align:right">Total</th></tr></thead>
+        <tbody>
+          <tr><td><code>standard</code></td><td>h64</td><td>h96 d4</td><td class="mono">160,80,40,20</td><td class="num">~1.56M</td></tr>
+          <tr><td><code>tiny</code></td><td>h32</td><td>h48 d3</td><td class="mono">96,48,24,12</td><td class="num">~511k</td></tr>
+        </tbody></table></div>
+      <p class="legend">Shipped profile steps: duration 4000, acoustic 5000, decoder 2800, z-mix 2500, joint 4000. The script warns under 1900 text rows; the FLORES corpora gave ~1.9-2k rows per language, so ~1.75-1.84k training rows.</p>
+      <h3>Pack schema</h3>
+      <p class="sd"><code>rows.json</code>, <code>summary.json</code>, <code>audio/</code>, <code>tensors/&lt;row&gt;_chunkNN.npz</code> with <code>phoneme_ids [N]</code>, <code>w_ceil</code>, <code>generator_input [1,C,T]</code>. C = 192 for Piper latents; 80 / 82 / 83 for Kokoro mel, +log-F0 +voiced, +N_pred. The joint trainer accepts only {80, 82, 83, 192}.</p>
+      <h3>Kokoro path (nano lineage)</h3>
+      <p class="sd"><code>build_kokoro_corpus.py</code> → <code>kokoro_extract_front.py --with-prosody</code> → <code>build_kokoro_pack.py --f0-conditioning</code> → same students. Shipped nano uses <code>precompute_acoustic_mel100.py</code>, <code>train_tiny_vocos_student.py</code>, <code>train_e15_joint_nano_finetune.py</code>, <code>export_e12_nano_q8.py</code>. The 83-channel chain script lives only on the k2 host.</p>
+    </div>
+  </div>
+  <div class="stack">
+    <h2>Evaluation tools</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Tool</th><th>Measures</th><th>Use it for</th></tr></thead>
+      <tbody>
+        <tr><td><code>audition_piper_teacher.py</code></td><td>Teacher CER (Whisper small) on 24 FLORES devtest sentences</td><td>Screening a teacher; above 0.10 CER is rejected</td></tr>
+        <tr><td><code>audition_voice_package.py</code></td><td>Package CER via the numpy runtime, as retention vs the teacher</td><td>The harness behind the 09-08 and ood-tatoeba evidence</td></tr>
+        <tr><td><code>eval_scorecard.py</code></td><td>Whisper WER (small.en), speaking rate, F0 range</td><td>English intelligibility</td></tr>
+        <tr><td><code>eval_mos_all.py</code></td><td>SCOREQ, UTMOS, DNSMOS</td><td>Naturalness predictors (needs torchcodec, or SCOREQ is NaN)</td></tr>
+        <tr><td><code>eval_g2p_parity.py</code></td><td>Phoneme-id error rate of a port vs piper</td><td>Any new frontend (browser, MCU, espeak-free)</td></tr>
+        <tr><td><code>eval_phoneme_class_fidelity.py</code></td><td>2-8 kHz flatness per articulatory class</td><td>Attributing a gap to acoustic vs decoder</td></tr>
+      </tbody></table></div>
+  </div>
+</section>
+
+<!-- RUNTIMES -->
+<section class="panel stack-lg" data-panel="runtimes" hidden>
+  <div class="stack">
+    <h2>Runtimes and targets</h2>
+    <p>Click a target to see how it is built, which model it runs, and where its text frontend comes from.</p>
+    <div class="seg" id="tgtSeg"></div>
+    <div class="detail" id="tgtDetail" aria-live="polite"></div>
+  </div>
+  <div class="stack">
+    <h2>C runtime families (<code>mcu/</code>)</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Family</th><th>Runs</th><th>Precision</th><th>Blobs</th></tr></thead>
+      <tbody>
+        <tr><td><code>snt_tts</code></td><td>R7 567k: ids → duration → acoustic → iSTFT</td><td>int8 W, dynamic int8 A</td><td><code>front_q8.bin</code> + <code>model_q8.bin</code>; vocab 157/127 in <code>src/model/*.h</code></td></tr>
+        <tr><td><code>snt_nano</code></td><td>heart / heart-nano mel-100 stack</td><td>int8; <code>-DSNT_NANO_ACT_F32</code>, <code>-DSNT_NANO_W_F32</code></td><td>shapes from <code>mcu/models/&lt;lineage&gt;/nano_q8_meta.h</code>; one binary = one lineage</td></tr>
+        <tr><td><code>snt_front_f32</code> + <code>snt_piperlite</code></td><td>The multilingual web voices</td><td>fp32</td><td>'SNFR' / 'SNPL' metas + f32 weights</td></tr>
+        <tr><td><code>snt_piperlite_q8</code></td><td>piperlite decoder on MCU</td><td>W8/A12</td><td>'SNPQ' <code>meta_q8.bin</code> + <code>weights_q8.bin</code></td></tr>
+        <tr><td><code>snt_trellis</code></td><td>Trellis-RIFT 995k, web only</td><td>fp32</td><td>single 'SNTR' bundle</td></tr>
+      </tbody></table></div>
+  </div>
+  <div class="stack">
+    <h2>The golden gate</h2>
+    <p>Every port must reproduce the PyTorch reference. Fixtures are regenerated as whole versioned sets (each has <code>SHA256SUMS</code>), never edited in place.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Target</th><th>Gate</th></tr></thead>
+      <tbody>
+        <tr><td><code>make -C mcu test</code></td><td>R7 vs <code>test/fixtures/en_us_r7</code>: corr &gt; 0.98, 0.80 &lt; rms ratio &lt; 1.25</td></tr>
+        <tr><td><code>make -C mcu test-nano</code></td><td>min corr ≥ 0.98 over 8 rows; NaN is a hard fail</td></tr>
+        <tr><td><code>test-piperlite</code> / <code>-q8</code></td><td>corr &gt; 0.999 / &gt; 0.99</td></tr>
+        <tr><td><code>test-front</code></td><td>exact durations, latent corr &gt; 0.999</td></tr>
+        <tr><td><code>pypkg/tests/test_nano_golden.py</code></td><td>numpy nano vs PyTorch &gt; 0.98; RNG bit-exact with torch</td></tr>
+        <tr><td><code>verify_g2p_node.mjs</code></td><td>browser G2P ids exactly equal Python Piper</td></tr>
+      </tbody></table></div>
+  </div>
+  <div class="stack">
+    <h2>Adding a board</h2>
+    <p>Implement <code>mcu/include/snt_port.h</code> in <code>mcu/ports/&lt;plat&gt;/snt_port_&lt;plat&gt;.c</code>: <code>snt_dot_s8</code>, <code>snt_matvec_s8</code>, <code>snt_dot_s16s8</code>, <code>snt_matvec_s16s8</code>, plus <code>snt_weights_resident</code>, <code>snt_par_run</code>, <code>snt_now_us</code> and <code>snt_scratch_id</code> (required, but missing from the header). Contract: len a multiple of 16, 16-byte aligned, exact int32 accumulation; <code>snt_kernels_ref.c</code> defines the semantics. Pass the 0.98 gate, then measure RTF with <code>arduino/examples/BoardBenchmark</code> and add it to <code>BOARDS.md</code>.</p>
+    <div class="note warn">On ESP32-S3, the SIMD path is used only when weights are in RAM. Reading from flash-XIP silently returns garbage (corr 0.011).</div>
+  </div>
+</section>
+
+<!-- SHIP -->
+<section class="panel stack-lg" data-panel="ship" hidden>
+  <div class="stack">
+    <h2>From trained package to users</h2>
+    <div class="stages">
+      <div class="stage"><h3>Package</h3><p><code>export_roota_self_contained_package.py</code>. The pip runtime reads this layout directly. For fr/ar, whose checkpoints are lost, <code>repack_package_to_checkpoints.py</code> rebuilds them from the package.</p></div>
+      <div class="stage"><h3>Browser bundle</h3><p><code>export_voice_bundle.py --keys …</code> → <code>web/voices/&lt;key&gt;/{front,dec}_f32.bin + meta.json</code> (with <code>espeak_voice</code>, <code>g2p_voice_slot</code>). New languages go in its <code>NEW_LANGS</code> table.</p></div>
+      <div class="stage"><h3>Shrink to fp16</h3><p><code>shrink_voice_bundle_f16.py &lt;key&gt;</code>, only when fp16 is the reference precision (the 09-08 voices). The browser widens to fp32 after download.</p></div>
+      <div class="stage"><h3>Register in the demo</h3><p><code>web/index.html</code>: the inline <code>VOICES</code> array, <code>DEFAULT_TEXT</code>, a langtable row, counts in the prose, mascot <code>web/assets/mascots/&lt;group&gt;.png</code>.</p></div>
+      <div class="stage"><h3>Host the weights</h3><p>Upload <code>web/voices/&lt;key&gt;/</code> to Hugging Face <code>ampixa/sanoTTS</code> (manual; no tool). For pip, add a <code>pypkg/sanotts/tables/voices.json</code> entry and a GitHub release asset (<code>voices-v1</code> piperlite, <code>voices-v2</code> nano).</p></div>
+      <div class="stage"><h3>Publish the mirror</h3><p>Update <code>docs/public/manifest.txt</code> and <code>README.public.md</code>, run <code>check_public_manifest_closure.py</code>, dry-run <code>publish_public.py</code>, then <code>--apply</code>, commit and push the mirror by hand. <code>pages.yml</code> deploys <code>web/</code> as-is.</p></div>
+    </div>
+  </div>
+  <div class="note crit"><b>Before the next publish:</b> <code>publish_public.py --apply</code> deletes every mirror file that isn't in the mapping. The Chinese/pinyin work, pypkg v0.7.0, Hugging Face voice loading and the newer G2P tests exist only in the public mirror. Port them back to the private repo first.</div>
+  <div class="stack">
+    <h2>How users get voices</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Channel</th><th>Resolution</th></tr></thead>
+      <tbody>
+        <tr><td>pip (mirror v0.7.0)</td><td>Hugging Face first, then GitHub release tarballs; <code>SANOTTS_VOICE_SOURCE=hf|github</code> pins one. Cache <code>~/.cache/sanotts/&lt;package&gt;/</code>. Private v0.5.0 is GitHub-only.</td></tr>
+        <tr><td>Browser</td><td><code>VOICE_HOSTS</code>: HF, then GitHub raw, then local; <code>?voices=hf|gh|local</code>. Cache Storage <code>sanotts-voices-v1</code>.</td></tr>
+        <tr><td>npm <code>sanotts-web</code></td><td><code>voices/&lt;key&gt;/meta.json</code> under <code>voiceBase</code>; the voice id is the directory name.</td></tr>
+        <tr><td>Home Assistant</td><td><code>custom_components/sanotts</code> on the Python package; voice list in <code>const.py</code>, checked against <code>voices.json</code> by <code>check_sanotts_ha_voices.py</code>.</td></tr>
+      </tbody></table></div>
+  </div>
+</section>
+
+<!-- LANG -->
+<section class="panel stack-lg" data-panel="lang" hidden>
+  <div class="stack">
+    <h2>Add a language</h2>
+    <p>Answer the questions on the left and the checklist is built from them. Ticks are saved in this browser only. Each step is tagged <span class="chip c-info">you write</span> when it is hard logic under your own rules (G2P, parsing, fixes at a failure point), <span class="chip c-mute">boilerplate</span> when an agent may do it, and <span class="chip c-warn">eval</span> when it is a check you define.</p>
+  </div>
+  <div class="wiz">
+    <form class="qbox" id="wizForm" onsubmit="return false">
+      <div class="q">
+        <label for="langName">Language</label>
+        <input type="search" id="langName" placeholder="e.g. Polish, pl" value="">
+        <span class="hint">Only used to fill in the checklist text.</span>
+      </div>
+      <div class="q">
+        <span class="ql">Is there a Piper <em>medium</em>, single-speaker teacher?</span>
+        <select id="teacher" aria-label="Teacher availability">
+          <option value="piper">Yes, a Piper medium voice</option>
+          <option value="high">Only a Piper "high" or multi-speaker voice</option>
+          <option value="none">No Piper voice (Kokoro or other teacher)</option>
+        </select>
+      </div>
+      <div class="q">
+        <span class="ql">Does espeak-ng speak it acceptably?</span>
+        <select id="espeak" aria-label="espeak support">
+          <option value="yes">Yes, rule-based output is fine</option>
+          <option value="diac">Needs diacritization first (like Arabic)</option>
+          <option value="lex">Lexical stress, large dictionary (like Russian)</option>
+          <option value="norm">Needs text normalisation (like es-419)</option>
+          <option value="nonipa">Teacher isn't espeak-typed (like pinyin Chinese)</option>
+        </select>
+      </div>
+      <div class="q">
+        <span class="ql">Must the pip default install be free of GPL espeak?</span>
+        <select id="gpl" aria-label="GPL requirement">
+          <option value="ok">No, espeak fallback is fine</option>
+          <option value="free">Yes, write an espeak-free G2P</option>
+        </select>
+        <span class="hint">phonemizer-fork (GPL-3.0) is a required dependency since 0.5.0, so today this is a choice, not a constraint.</span>
+      </div>
+      <div class="q">
+        <span class="ql">Ship to</span>
+        <div class="checks" id="targets">
+          <label><input type="checkbox" value="web" checked> Browser demo</label>
+          <label><input type="checkbox" value="pip" checked> pip package</label>
+          <label><input type="checkbox" value="npm"> npm sanotts-web</label>
+          <label><input type="checkbox" value="ha"> Home Assistant</label>
+          <label><input type="checkbox" value="s3"> ESP32-S3 firmware</label>
+          <label><input type="checkbox" value="esphome"> ESPHome</label>
+          <label><input type="checkbox" value="ids"> Arduino / mobile (ids in)</label>
+        </div>
+      </div>
+      <div class="q">
+        <div class="progress" aria-hidden="true"><i id="prog"></i></div>
+        <span class="hint" id="progText"></span>
+        <button type="button" class="btn" id="resetTicks">Clear ticks</button>
+      </div>
+    </form>
+    <div class="plan" id="plan"></div>
+  </div>
+</section>
+
+<!-- ISSUES -->
+<section class="panel stack" data-panel="issues" hidden>
+  <h2>Known issues</h2>
+  <p class="legend">Found by reading the code on 2026-09-24. None of these were reproduced by running anything, so treat each as a lead to confirm.</p>
+  <div class="seg" id="issueSeg"></div>
+  <div id="issues"></div>
+</section>
+
+<!-- COMMANDS -->
+<section class="panel stack" data-panel="cmds" hidden>
+  <h2>Commands</h2>
+  <p class="legend">Run from the private repo root unless noted. Flags are those read from the scripts; use <code>--help</code> before long runs.</p>
+  <input type="search" id="cmdQ" placeholder="Filter: test, train, wasm, publish…" aria-label="Filter commands">
+  <div class="cmdgrid" id="cmds"></div>
+</section>
+
+<footer>Built from four read-only surveys of <code>Ampixa/saanoTTS</code> @ <code>fc0ac64</code> and <code>Ampixa/sanoTTS</code> @ <code>d2fffbd</code>. Every cited path was checked to exist. Commands and line numbers were not executed.</footer>
+</div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+/* tabs */
+function showTab(t){
+  $$('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t));
+  $$('section.panel').forEach(p=>p.hidden=p.dataset.panel!==t);
+  store.set('tab',t);
+}
+$$('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{showTab(b.dataset.tab);history.replaceState(null,'','#'+b.dataset.tab)}));
+const initial=(location.hash||'').slice(1);
+showTab(['map','voices','train','runtimes','ship','lang','issues','cmds'].includes(initial)?initial:store.get('tab','map'));
+
+/* signal path */
+const PATH=[
+ {k:'text',t:'Text',s:'input',lang:true,d:['Split into chunks on <code>. ! ? । 。 ！ ？</code> in the browser (<code>splitChunks</code>).','Pre-G2P language work happens here: Arabic tashkeel diacritization (<code>web/tashkeel/</code>), es-419 normalisation (<code>pypkg/sanotts/mexican_g2p.py</code>), Russian lexicon shards fetched per sentence (<code>web/ru_lexicon.js</code>).']},
+ {k:'g2p',t:'G2P',s:'text → phoneme ids',lang:true,d:['Python: <code>piper_g2p.module_for</code> dispatches on the voice\'s <code>espeak.voice</code>: en → misaki lexicon, id → indo-g2p bridge, vi → <code>vi_g2p</code>; anything else raises and the engine falls back to espeak via <code>frontend.py</code>.','Browser: espeak-ng in WASM (<code>snt_g2p.wasm</code>) plus a codepoint→id table per voice slot (<code>cp_id_tables_multi.h</code>, 18 slots, append-only).','Nano / trellis: <code>trellis_frontend.js</code> / <code>nano_g2p.py</code>, a 62-symbol English vocabulary.','MCU: on-chip English espeak (ESP32-S3), misaki lexicon in C (ESPHome), Nepali rules in C (ESP32-C3), or ids supplied by the host (Arduino, mobile).']},
+ {k:'dur',t:'Duration',s:'ids → frames per id',d:['Student of the teacher\'s duration predictor. Standard size h64, tiny h32.','Nano: 22,858 params (heart-nano); R7: 36,164.']},
+ {k:'ac',t:'Acoustic',s:'→ latent or mel',d:['piperlite: predicts the 192-ch VITS generator latent (<code>token_context</code> architecture).','nano: predicts a 100-band mel.','This interface width is the single biggest difference between the two families.']},
+ {k:'dec',t:'Decoder',s:'→ waveform',d:['piperlite time-domain decoder (web, pip) or int8 iSTFT (R7 on MCU).','nano: noise-fed ConvNeXt + iSTFT, then a DC block. The noise is a port of torch MT19937, so it is reproducible bit-for-bit.','"Quality lives in the decoder": same amy voice, decoder 1.09M → 1.84M moves SCOREQ 3.70 → 4.16.']},
+ {k:'pcm',t:'Audio',s:'22.05 / 24 kHz PCM',d:['pip: float32 numpy, WAV via CLI. Browser: Web Audio. ESP32-S3: LEDC-PWM on GPIO 17 into an LM386.','ESP32-S3 kernel RTF 0.383 with SIMD (scalar 1.58); standalone app ~1.1 end to end.']},
+];
+const pathEl=$('#path');
+PATH.forEach((n,i)=>{
+  const b=document.createElement('button');b.className='node'+(n.lang?' lang':'');b.setAttribute('aria-pressed','false');
+  b.innerHTML=`<small>${n.s}</small><b>${n.t}</b>`;b.onclick=()=>selPath(n.k);b.dataset.k=n.k;pathEl.appendChild(b);
+  if(i<PATH.length-1){const a=document.createElement('span');a.className='arrow';a.textContent='→';a.setAttribute('aria-hidden','true');pathEl.appendChild(a)}
+});
+function selPath(k){const n=PATH.find(x=>x.k===k);$$('.node').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k));
+  $('#pathDetail').innerHTML=`<div class="eyebrow">${n.lang?'Language-specific':'Language-agnostic'}</div><h3>${n.t}</h3><ul>${n.d.map(x=>`<li>${x}</li>`).join('')}</ul>`}
+selPath('g2p');
+
+const AREAS=[
+ ['pypkg/','pip package sanotts: numpy runtime, CLI, per-language G2P, voice registry'],
+ ['tools/','~405 scripts: packs, students, eval, export, publish'],
+ ['src/saanotts/','research package: path resolver, torch model families'],
+ ['mcu/','portable C99 runtime, kernels, ports, golden fixtures'],
+ ['web/','browser demo: WASM glue, voices, tashkeel, ru shards'],
+ ['npmpkg/','sanotts-web npm wrapper around the WASM runtime'],
+ ['arduino/','SanoTTS Arduino / PlatformIO library + BoardBenchmark'],
+ ['esphome/','ESPHome component with on-chip lexicon G2P'],
+ ['esp32c3/','legacy C3 runtime, Nepali C frontend'],
+ ['mobile/','C API + Dart / Kotlin / Swift bindings (ids in)'],
+ ['custom_components/','Home Assistant TTS integration'],
+ ['experiments/evidence/','dated JSON results behind every claim'],
+ ['configs/, data/textsets/','teacher inventory, small text contracts'],
+ ['docs/public/','mirror manifest + public README and licence'],
+];
+$('#areas').innerHTML=AREAS.map(([p,s])=>`<div class="area"><span class="p">${p}</span><span>${s}</span></div>`).join('');
+
+/* voices */
+const V=[
+ ['English','amy','amy','1.45M','4.13','0.058','pip'],['English','kristin','kristin','1.40M','4.09','0.171','pip'],['English','hfc','hfc','1.83M','3.94','0.069','pip'],
+ ['English','amy-small','—','1.08M','3.70','','pip'],['English','heart (24 kHz)','heart','2.27M','3.48','0.080','pip'],['English','heart-nano (int8)','heartnano','294k','2.29','0.083','pip'],
+ ['English','robot (on-device int8)','dec503','567k','','','web'],
+ ['German','German / small','german, german-tiny','1.57M / 512k','','0.099 / 0.145','pip'],['Turkish','Turkish / small','turkish, turkish-tiny','1.56M / 510k','','0.303','pip'],
+ ['Russian','Russian / small','russian, russian-tiny','1.57M / 512k','','0.120','pip'],['French','French','french','1.57M','','0.221','pip'],
+ ['Spanish','Spanish / small','spanish, spanish-tiny','1.56M / 510k','','0.147','pip'],['Italian','Italian / small','italian, italian-tiny','1.57M / 512k','','0.080','pip'],
+ ['Portuguese','Portuguese / small','portuguese, portuguese-tiny','1.57M / 512k','','0.038','pip'],['Romanian','Romanian / small','romanian, romanian-tiny','1.57M / 512k','','0.392','pip'],
+ ['Czech','Czech / small','czech, czech-tiny','1.57M / 513k','','0.351','pip'],['Arabic','Arabic','arabic','1.57M','','0.274','pip'],
+ ['Nepali नेपाली','Nepali','nepali','1.47M','','','web'],['Hindi हिन्दी','Hindi','hindi','1.50M','','','web'],
+ ['Vietnamese','Vietnamese','vietnamese','1.57M','1.53','0.468','pip'],['Indonesian','Indonesian','indonesian','1.56M','1.71','0.256','pip'],
+ ['Chinese 中文','Chinese (xiaoya, pinyin)','chinese-xiaoya (mirror only)','1.55M','','0.262','pip*'],
+];
+let vf='all';
+function renderVoices(){const q=$('#voiceQ').value.toLowerCase();
+  $('#voiceRows').innerHTML=V.filter(r=>(vf==='all'||(vf==='pip'?r[6].startsWith('pip'):r[6]==='web'))&&r.join(' ').toLowerCase().includes(q))
+  .map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td><code>${r[2]}</code></td><td class="num">${r[3]}</td><td class="num">${r[4]||'<span class="sd">—</span>'}</td><td class="num">${r[5]||'<span class="sd">—</span>'}</td><td>${r[6]==='web'?'<span class="chip c-mute">browser</span>':r[6]==='pip*'?'<span class="chip c-warn">mirror pip 0.7</span>':'<span class="chip c-ok">pip + browser</span>'}</td></tr>`).join('')}
+$('#voiceQ').addEventListener('input',renderVoices);
+$$('#voiceSeg button').forEach(b=>b.onclick=()=>{vf=b.dataset.f;$$('#voiceSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderVoices()});
+renderVoices();
+
+/* targets */
+const T={
+ 'pip':{build:'<code>pip install sanotts</code>; dev: <code>pip install -e pypkg</code>',model:'piperlite (fp16 package) and nano; pure numpy, no torch',g2p:'misaki lexicon (en), indo-g2p (id), rules (vi), pinyin (zh, mirror), otherwise espeak-ng via phonemizer-fork',lang:'<code>tables/voices.json</code> entry + release asset. A new <code>&lt;lang&gt;_g2p.py</code> only for the espeak-free route.'},
+ 'Browser / WASM':{build:'<code>mcu/ports/wasm/build_voices.sh</code>, <code>build_nano.sh</code>, <code>build_trellis.sh</code>, <code>build_g2p.sh</code>; serve <code>web/</code> statically',model:'snt_front_f32 + snt_piperlite, snt_nano, snt_trellis, R7',g2p:'espeak-ng in WASM with per-slot id tables; tashkeel (ar); lazy lexicon shards (ru); misaki E2M for nano/trellis',lang:'Voice config, a new slot in <code>gen_cp_id_tables.py</code>, espeak data in <code>espeak-data-multi/</code>, rebuild G2P, pass <code>verify_g2p_node.mjs</code>, export the bundle, add a <code>VOICES</code> row.'},
+ 'npm':{build:'<code>npmpkg/</code>, v0.2.0. <code>dist/</code> is listed in <code>files</code> but has no build script',model:'Same WASM as the demo',g2p:'espeak WASM only: no tashkeel, no ru shards, no f16 widening',lang:'<code>KNOWN_VOICES</code> + README. fp16, Arabic or Russian voices need loader work first.'},
+ 'ESP32-S3':{build:'<code>mcu/ports/esp32s3/firmware</code>: <code>main/golden/stage.sh</code>, <code>idf.py set-target esp32s3 build flash</code>',model:'R7 Kristin int8 (also nano_app for e12nano)',g2p:'on-chip espeak-ng, English data only on SPIFFS, 157-id table',lang:'Add <code>&lt;lang&gt;_dict</code> to <code>firmware/espeak-ng-data</code> (may need a bigger SPIFFS), change <code>SetVoiceByName</code> in <code>esp_g2p.c</code>, regenerate <code>cp_id_table.h</code>, restage a model for that language.'},
+ 'ESPHome':{build:'<code>python3 esphome/tools/gen_component_data.py && esphome compile sanotts-s3.yaml</code>',model:'e12nano from <code>mcu/test/fixtures/en_us_e12nano</code> (hardcoded)',g2p:'<code>nano_lex_g2p.c</code>: misaki us_gold lexicon, English, 62 symbols',lang:'A new dictionary, packer and vocab, or the unshipped espeak IDF component (62 KB internal SRAM, GPL, measured less accurate).'},
+ 'ESP32-C3':{build:'<code>esp32c3/build_host.sh</code>; IDF <code>main/</code>',model:'legacy int8 blob',g2p:'Nepali Devanagari rules in C (<code>ne_frontend.c</code>) with a Python oracle',lang:'Write a rules frontend in that style with its own oracle and test. Offline synthesis only (RTF 5.72).'},
+ 'Arduino':{build:'zip-install <code>arduino/</code> or PlatformIO <code>lib_deps</code>',model:'R7 via LittleFS blobs; PiperLiteQ8; BoardBenchmark embeds e12nano',g2p:'none: ids from the host (<code>extras/gen_golden_ids.py</code>)',lang:'Swap blobs + <code>arduino/src/model/*.h</code>; ids come from elsewhere.'},
+ 'Mobile':{build:'<code>mobile/build_ios.sh</code> (xcframework), <code>CMakeLists.txt</code> for Android (<code>SANOTTS_MODEL</code>)',model:'snt_nano, e12nano by default',g2p:'none: <code>sanotts_speak(…, phoneme_ids, …)</code>',lang:'Not a G2P surface. Set <code>SANOTTS_MODEL</code> to the matching lineage.'},
+ 'Home Assistant':{build:'copy <code>custom_components/sanotts</code>',model:'Python sanotts pinned to 0.1.0',g2p:'phonemizer-fork + espeakng-loader',lang:'Add a <code>VoiceInfo</code> in <code>const.py</code>; run <code>check_sanotts_ha_voices.py</code>.'},
+};
+const tgtSeg=$('#tgtSeg');let tsel='pip';
+Object.keys(T).forEach(k=>{const b=document.createElement('button');b.textContent=k;b.onclick=()=>selT(k);tgtSeg.appendChild(b)});
+function selT(k){tsel=k;$$('#tgtSeg button').forEach(b=>b.setAttribute('aria-pressed',b.textContent===k));const t=T[k];
+ $('#tgtDetail').innerHTML=`<h3>${k}</h3><div class="tbl"><table><tbody><tr><th>Build</th><td>${t.build}</td></tr><tr><th>Model</th><td>${t.model}</td></tr><tr><th>Text frontend</th><td>${t.g2p}</td></tr><tr><th>New language</th><td>${t.lang}</td></tr></tbody></table></div>`}
+selT('pip');
+
+/* language wizard */
+const W=['you','boil','eval'];
+const TAG={you:'<span class="chip c-info who">you write</span>',boil:'<span class="chip c-mute who">boilerplate</span>',eval:'<span class="chip c-warn who">eval</span>'};
+function buildPlan(){
+  const L=$('#langName').value.trim()||'the language';
+  const teacher=$('#teacher').value, es=$('#espeak').value, gpl=$('#gpl').value;
+  const tg=new Set($$('#targets input:checked').map(i=>i.value));
+  const P=[];
+  const ph=(title,tag,steps,pre)=>P.push({title,tag,steps,pre});
+
+  ph('Define "working" first','before any training',[
+    ['eval','Write down what "working" means for '+L,'Candidates: teacher CER ≤ 0.10 on 24 FLORES devtest sentences; package CER retention vs teacher; G2P id parity = 100% between every frontend you ship; a native speaker judges 10 clips. You pick which ones gate shipping.'],
+    ['eval','Predict the numbers before each run','Write one line per eval, e.g. "teacher CER ≈ 0.05, student WER ≈ 0.15", then compare. The 09-08 batch landed from 0.038 (pt) to 0.392 (ro) OOD WER.'],
+  ]);
+
+  if(teacher==='piper'){
+    ph('Pick and screen the teacher','Piper path',[
+      ['boil','Choose a Piper medium, single-speaker voice for '+L,'Record it in a teacher inventory (see <code>configs/roota-piper-teachers.example.json</code>; the real <code>configs/roota-piper-teachers.json</code> has absolute paths and none of the 09-08 teachers).'],
+      ['eval','Screen it with <code>tools/audition_piper_teacher.py</code>','On 24 FLORES-200 devtest sentences with Whisper small. Above 0.10 CER, reject. zh and ko failed this screen in <code>experiments/evidence/piper-teacher-asr-audition-20260907.json</code>.'],
+    ]);
+  } else if(teacher==='high'){
+    ph('Teacher is out of the driver\'s range','blocker',[
+      ['boil','Confirm the preflight will refuse it','<code>train_voice_from_piper.py</code> rejects multi-speaker teachers and <code>conv_pre</code> ≠ 256 (Piper "high"). Run with <code>--dry-run</code> to see the refusal.'],
+      ['you','Decide: find a medium voice, or extend the pipeline','Supporting a different conv_pre width or speaker conditioning changes the decoder cut and student shapes. That is design work, not config.'],
+    ]);
+  } else {
+    ph('No Piper teacher: the Kokoro-style path','research path',[
+      ['boil','Build a corpus from the teacher','<code>tools/build_kokoro_corpus.py --texts … --out-dir … --voice … --lang-code …</code> writes audio + <code>manifest.jsonl</code>.'],
+      ['boil','Extract front and build the pack','<code>kokoro_extract_front.py --with-prosody</code>, then <code>build_kokoro_pack.py --f0-conditioning</code> (80/82/83-ch <code>generator_input</code>).'],
+      ['you','Design the vocabulary and frontend contract','The nano stack is English-only: a 62-symbol misaki vocab. A new language needs its own symbol set, a new <code>nano_q8_meta.h</code> (<code>NANO_VOCAB</code>) and a new fixture.'],
+      ['eval','Check what lives only on k2','The 83-ch chain script and the FLORES corpora are not in this checkout. Confirm before planning around them.'],
+    ]);
+  }
+
+  const txt=[['boil','Assemble ~2k sentences of '+L+' text as JSONL','<code>--auto-text</code> cannot generate non-English text, so pass <code>--text corpus.jsonl</code>. The 09-08 batch used FLORES (~1.9-2k rows), which is under the driver\'s 1900-training-row warning once 140 rows are held out.']];
+  if(es==='norm') txt.push(['you','Write the text normaliser','Precedent: <code>pypkg/sanotts/mexican_g2p.py</code>, hooked into pack building at <code>build_piper_vits_roota_probe_pack.py:636</code>. It must be gated on the exact espeak voice. An earlier revision ran for every language and corrupted the training text of all non-Spanish voices.']);
+  if(es==='diac') txt.push(['eval','Confirm what the teacher does to your text','Piper runs tashkeel before espeak for Arabic, so training packs were already diacritized. The gap was only at inference: 44.55% id match without the port, 100% with it (<code>ar-tashkeel-port-20260908.json</code>).']);
+  ph('Text corpus','language-specific',txt);
+
+  if(teacher!=='high') ph('Train','',[
+    ['boil','Dry-run the driver','<code>python3 tools/train_voice_from_piper.py --voice &lt;teacher-key&gt; --text corpus.jsonl --dry-run</code>'],
+    ['boil','Run the standard size, then decide on tiny','<code>--size standard --profile shipped</code> (~1.56M). <code>--size tiny</code> (~511k) was trained for 8 of the 10 languages.'],
+    ['eval','Score the package against the teacher','<code>tools/audition_voice_package.py --package artifacts/voices/&lt;LANG&gt;/package --teacher-audition … --texts …</code>, then again on out-of-domain Tatoeba text. Save the JSON to <code>experiments/evidence/</code> with a date.'],
+    ['boil','Keep the checkpoints','fr and ar lost theirs and had to be rebuilt from the fp16 package with <code>repack_package_to_checkpoints.py</code>.'],
+  ]);
+
+  if(tg.has('pip')){
+    const s=[['boil','Add the voice to <code>pypkg/sanotts/tables/voices.json</code>','Alias → package, language, sample_rate, release. Then publish <code>&lt;archive&gt;.tar.gz</code> to the GitHub release and the loose files to HF.']];
+    if(gpl==='free'||es==='nonipa'){
+      s.push(['you','Write <code>pypkg/sanotts/&lt;lang&gt;_g2p.py</code>','Contract: <code>text_to_phoneme_ids(text, table) -&gt; (ids, unmapped)</code>, reusing <code>frontend.phonemes_to_ids</code> for Piper framing (BOS, PAD interleave, EOS). Expose <code>producible_symbols</code> and <code>coverage_report</code> like <code>id_g2p.py</code> / <code>vi_g2p.py</code>. It must emit the teacher\'s exact codepoints, not "correct" IPA.']);
+      s.push(['boil','Wire it into <code>piper_g2p.module_for</code>','Add the branch and update the unknown-language error. Add data files to <code>[tool.hatch.build].include</code> in <code>pypkg/pyproject.toml</code>, and attribution to <code>g2p_data/NOTICE.md</code>.']);
+      if(es==='nonipa') s.push(['you','Extend <code>frontend.load_phoneme_table</code> for the new phoneme_type','The mirror\'s pinyin support (multi-codepoint keys) is the worked example; it isn\'t in the private repo yet.']);
+      s.push(['eval','G2P parity test vs the teacher\'s own phonemizer','<code>tools/eval_g2p_parity.py</code>, plus a pytest in <code>pypkg/tests/</code> (the private repo has none for G2P).']);
+    } else {
+      s.push(['eval','Confirm the espeak fallback path is taken','Unknown languages raise in <code>piper_g2p</code> and fall back to <code>frontend.py</code>; regional variants resolve at <code>frontend.py:263-284</code>. Check the ids match what the teacher saw.']);
+    }
+    s.push(['eval','Run <code>python3 -m pytest pypkg/tests/</code>','Not wired into the Makefile; run it by hand.']);
+    ph('pip package','pypkg/',s);
+  }
+
+  if(tg.has('web')){
+    const s=[
+      ['boil','Add the Piper <code>.onnx.json</code> to <code>mcu/ports/wasm/voice-configs/</code>',''],
+      ['boil','Append a slot to <code>VOICES</code> in <code>tools/gen_cp_id_tables.py</code>','Append only: slot order is the contract (18 today, kristin … tr). Regenerate <code>cp_id_tables_multi.h</code>. Line 36 hardcodes <code>/Users/cdjk/…</code>.'],
+      ['boil','Add espeak data to <code>mcu/ports/wasm/espeak-data-multi/</code>','Copy <code>&lt;lang&gt;_dict</code> and <code>lang/&lt;family&gt;/&lt;lang&gt;</code> from piper-tts 1.4.2\'s espeak data. Then <code>bash mcu/ports/wasm/build_g2p.sh</code>.'],
+      ['eval','Pass <code>verify_g2p_node.mjs</code>','Exact id parity with Python Piper. This is the gate that caught Arabic at 44.55%.'],
+    ];
+    if(es==='diac') s.push(['you','Port the diacritizer to the browser','Precedent: <code>tashkeel_port.py</code>, <code>export_tashkeel_web.py</code>, <code>web/tashkeel/</code>. Loaded lazily before G2P in <code>synthVoice</code>.']);
+    if(es==='lex') s.push(['boil','Shard the lexicon','<code>gen_ru_lexicon_shards.py</code> → <code>web/g2p-lazy/&lt;lang&gt;/</code> + a loader like <code>web/ru_lexicon.js</code>. <code>prepare()</code> must run after <code>set_voice</code> and before <code>g2pIds</code> on every text. First check whether stress is regular enough to skip this.']);
+    if(es==='nonipa') s.push(['you','Write the browser G2P at parity with Python','Precedent in the mirror: <code>web/g2p-lazy/zh/zh_g2p.mjs</code> and a <code>pinyin:true</code> branch in <code>index.html</code>.']);
+    s.push(['boil','Export the bundle','<code>tools/export_voice_bundle.py --keys &lt;key&gt;</code> with a <code>NEW_LANGS</code> entry (espeak voice, slot). If fp16 is the reference: <code>tools/shrink_voice_bundle_f16.py &lt;key&gt;</code>.']);
+    s.push(['boil','Register in <code>web/index.html</code>','<code>VOICES</code> row, <code>DEFAULT_TEXT[key]</code>, langtable row with <code>samp</code> buttons, counts in the prose, mascot PNG.']);
+    s.push(['eval','Listen in the browser and compare to Python output','Same text through pip and browser should give the same ids and near-identical audio.']);
+    ph('Browser demo','web/ + mcu/ports/wasm/',s);
+  }
+  if(tg.has('npm')) ph('npm sanotts-web','npmpkg/',[
+    ['boil','Add to <code>KNOWN_VOICES</code> and the README',''],
+    ['you','Add what the loader lacks, if this voice needs it','f16 widening, tashkeel or lexicon shards. Without f16 widening, raw f16 blobs go to a runtime that expects f32.'],
+    ['boil','Bump <code>package.json</code> and build <code>dist/</code>','No build script exists yet.'],
+  ]);
+  if(tg.has('ha')) ph('Home Assistant','custom_components/',[
+    ['boil','Add a <code>VoiceInfo</code> in <code>custom_components/sanotts/const.py</code>','Mirror the <code>voices.json</code> entry.'],
+    ['eval','Run <code>tools/check_sanotts_ha_voices.py</code>','Also note the integration pins sanotts 0.1.0.'],
+  ]);
+  if(tg.has('s3')) ph('ESP32-S3 firmware','mcu/ports/esp32s3/',[
+    ['boil','Add <code>&lt;lang&gt;_dict</code> to <code>firmware/espeak-ng-data</code>','Check the SPIFFS partition still fits.'],
+    ['boil','Change <code>SetVoiceByName</code> in <code>esp_g2p.c</code> and regenerate <code>cp_id_table.h</code>','From the voice\'s <code>phoneme_id_map</code>.'],
+    ['you','Quantise and stage a model for this language','The shipped firmware runs R7 Kristin. A new language needs its own int8 export and a golden fixture.'],
+    ['eval','Pass the 0.98 golden gate, then measure on-device WER','<code>eval_g2p_parity.py</code> for the on-chip G2P vs piper.'],
+  ]);
+  if(tg.has('esphome')) ph('ESPHome','esphome/',[
+    ['you','Decide: new lexicon or revive the espeak component','The lexicon path (<code>esphome/g2p/lex/</code>) is English-only; the espeak IDF component costs 62 KB internal SRAM, is GPL, and measured 6.09% vs 1.47% token error.'],
+    ['boil','Unhardcode the fixture in <code>gen_component_data.py</code>','Line 34 pins <code>en_us_e12nano</code>.'],
+  ]);
+  if(tg.has('ids')) ph('Arduino / mobile','ids in',[
+    ['boil','Generate ids on the host','These targets do no G2P. Use the pip frontend to precompute ids.'],
+    ['boil','Swap blobs and model headers','Arduino: <code>arduino/src/model/*.h</code>. Mobile: <code>SANOTTS_MODEL</code>.'],
+  ]);
+  ph('Publish','private → public',[
+    ['boil','Update <code>docs/public/manifest.txt</code> and <code>README.public.md</code>','Add new tools and evidence files.'],
+    ['eval','Run <code>tools/check_public_manifest_closure.py</code>','Manual; not in CI.'],
+    ['boil','Dry-run <code>tools/publish_public.py</code>, read the delete list, then <code>--apply</code>','Port the mirror-only Chinese work back first.'],
+    ['eval','Write the learning-log entry, then commit','Your commit hook requires it.'],
+  ]);
+  return P;
+}
+let ticks=store.get('langTicks',{});
+function renderPlan(){
+  const P=buildPlan();let total=0,done=0;
+  $('#plan').innerHTML=P.map((p,pi)=>`<div class="phase"><h3>${p.title}${p.tag?`<span class="tag">${p.tag}</span>`:''}</h3>${p.steps.map((s,si)=>{
+    const id=(p.title+'|'+s[1]).replace(/<[^>]+>/g,'');total++;const on=!!ticks[id];if(on)done++;
+    return `<label class="step${on?' done':''}"><input type="checkbox" data-id="${encodeURIComponent(id)}"${on?' checked':''}><div><div class="st">${s[1]} ${TAG[s[0]]}</div>${s[2]?`<div class="sd">${s[2]}</div>`:''}</div></label>`}).join('')}</div>`).join('');
+  $('#prog').style.width=(total?done/total*100:0)+'%';$('#progText').textContent=`${done} of ${total} steps done`;
+  $$('#plan input').forEach(i=>i.onchange=()=>{const id=decodeURIComponent(i.dataset.id);if(i.checked)ticks[id]=1;else delete ticks[id];store.set('langTicks',ticks);renderPlan()});
+}
+const wiz=store.get('wiz',null);
+if(wiz){$('#langName').value=wiz.l||'';$('#teacher').value=wiz.t||'piper';$('#espeak').value=wiz.e||'yes';$('#gpl').value=wiz.g||'ok';if(wiz.tg)$$('#targets input').forEach(i=>i.checked=wiz.tg.includes(i.value))}
+function saveWiz(){store.set('wiz',{l:$('#langName').value,t:$('#teacher').value,e:$('#espeak').value,g:$('#gpl').value,tg:$$('#targets input:checked').map(i=>i.value)});renderPlan()}
+$('#wizForm').addEventListener('input',saveWiz);$('#wizForm').addEventListener('change',saveWiz);
+$('#resetTicks').onclick=()=>{ticks={};store.set('langTicks',ticks);renderPlan()};
+renderPlan();
+
+/* issues */
+const I=[
+ ['crit','publish','Next publish would erase mirror-only work','The public mirror has Chinese/pinyin (web, pypkg, tools), pypkg v0.7.0, Hugging Face voice loading, <code>--nano-g2p</code>/<code>--piperlite-g2p</code> CLI flags and five G2P test files that the private repo lacks. <code>publish_public.py --apply</code> deletes everything outside the mapping.'],
+ ['high','npm','npm package can\'t play the ten 09-08 voices','No f16 widening (raw f16 reaches an f32 runtime), no tashkeel for Arabic, no Russian lexicon shards; <code>dist/</code> has no build script.'],
+ ['high','pypkg','<code>nano_frontend.vocabulary_for</code> imports a missing module','It imports <code>.kokoro_frontend</code>, which exists in neither repo. Any nano package whose meta.json ships <code>frontend.vocabulary</code> raises ImportError.'],
+ ['high','training','Unknown whether 09-08 packs predate the es-419 normaliser fix','<code>mexican_g2p.py</code> says an earlier revision ran for every language and corrupted non-Spanish training text. Nothing in this checkout dates the 09-08 packs relative to the fix. Check on k2.'],
+ ['med','web','fp16 widened sha256 is never verified','<code>shrink_voice_bundle_f16.py</code> writes <code>*_widened_sha256</code>; <code>voiceBytesOk</code> only checks sizes, plus sha256 for nano metas.'],
+ ['med','repro','Training inputs live only on k2','FLORES corpora, ten-language checkpoints and the 83-ch Kokoro chain script are not in the repo. fr/ar checkpoints are lost. Git history is one squashed commit.'],
+ ['med','portability','Hardcoded <code>/Users/cdjk/…</code> paths','<code>tools/gen_cp_id_tables.py:36</code> and <code>configs/roota-piper-teachers.json</code>, against the rule in <code>docs/repository-layout.md</code>.'],
+ ['med','tests','No private tests for the G2P modules','<code>nano_g2p</code>, <code>piper_g2p</code>, <code>id_*</code>, <code>vi_g2p</code> are untested in private; the tests exist only in the mirror. <code>pypkg/tests</code> is not in the Makefile.'],
+ ['low','docs','Stale docs','<code>roota-language-porting-recipe.md</code> (pre-driver), <code>multilingual-roota-replication.md</code>, <code>RESEARCH.md</code>, <code>CHECKPOINTS.md</code>, <code>hf/README.md</code>, and the private <code>README.md</code> (still the 567k Kristin story). None mention the 09-08 batch or <code>train_voice_from_piper.py</code>.'],
+ ['low','pypkg','Version and message drift','<code>__version__</code> is "0.1.0" vs pyproject 0.5.0; errors still say <code>pip install sanotts[espeak]</code> though espeak is now required; <code>id_indo_bridge</code> docstring says it isn\'t the default, but it is.'],
+ ['low','mcu','<code>snt_scratch_id()</code> missing from <code>snt_port.h</code>','Declared extern in <code>snt_tts.c</code> / <code>snt_nano.c</code>; the porting doc says "8 functions".'],
+ ['low','arduino','Library drift','<code>arduino/src/snt_nano.c</code> differs from <code>mcu/src/snt_nano.c</code>; <code>arduino/README.md</code> leads with R7 while <code>BOARDS.md</code> leads with e12nano.'],
+ ['low','ci','Manifest closure check isn\'t in CI','<code>check_public_manifest_closure.py</code> is manual; <code>checks.yml</code> is private-only.'],
+ ['low','data','Textset name mismatch','The directory is <code>data/textsets/multilang-distill-v1</code> (en_US, hi_IN, zh_CN only).'],
+];
+const SEV={crit:['Critical','c-crit'],high:['High','c-crit'],med:['Medium','c-warn'],low:['Low','c-mute']};
+let isel='all';
+const iseg=$('#issueSeg');['all','crit','high','med','low'].forEach(k=>{const b=document.createElement('button');b.dataset.k=k;b.textContent=k==='all'?'All':SEV[k][0];b.onclick=()=>{isel=k;renderIssues()};iseg.appendChild(b)});
+function renderIssues(){$$('#issueSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===isel));
+ $('#issues').innerHTML=I.filter(x=>isel==='all'||x[0]===isel).map(x=>`<div class="issue"><div><span class="chip ${SEV[x[0]][1]}">${SEV[x[0]][0]}</span><div class="eyebrow" style="margin-top:6px">${x[1]}</div></div><div class="stack" style="gap:3px"><b>${x[2]}</b><p>${x[3]}</p></div></div>`).join('')}
+$('#issueCount').textContent=I.filter(x=>x[0]==='crit'||x[0]==='high').length;
+renderIssues();
+
+/* commands */
+const C=[
+ ['test','Full check','compileall, Python unit tests, then the C golden gate.','make check'],
+ ['test','C golden gate (R7)','Self-contained host test; start here.','make -C mcu test'],
+ ['test','Nano golden gate','Min corr ≥ 0.98 over 8 rows.','make -C mcu test-nano'],
+ ['test','pip package tests','Not wired into make.','python3 -m pytest pypkg/tests/'],
+ ['use','Synthesize with pip','One subcommand: say.','pip install sanotts\nsanotts say "Hello" --voice amy -o hello.wav'],
+ ['use','Local voice directory','--voice or --voice-dir, not both.','sanotts say "Guten Tag" --voice-dir path/to/package -o out.wav'],
+ ['train','Screen a Piper teacher','Reject above 0.10 CER.','python3 tools/audition_piper_teacher.py --voices <key> --texts flores24.json --out <out.json>'],
+ ['train','Train a voice (dry run)','Resumable; prints the stage plan.','python3 tools/train_voice_from_piper.py \\\n  --voice de_DE-thorsten-medium --text corpus.jsonl \\\n  --size standard --profile shipped --dry-run'],
+ ['train','Score a package vs its teacher','CER retention; the 09-08 harness.','python3 tools/audition_voice_package.py \\\n  --package artifacts/voices/<LANG>/package \\\n  --teacher-audition <teacher.json> --texts <texts>'],
+ ['train','Naturalness predictors','SCOREQ + UTMOS + DNSMOS.','python3 tools/eval_mos_all.py name:dir [name:dir ...] --out <out.json>'],
+ ['train','English intelligibility','Whisper WER, rate, F0 range.','python3 tools/eval_scorecard.py name:dir [...] --out <out.json>'],
+ ['train','Kokoro corpus','Nano / research path.','python3 tools/build_kokoro_corpus.py --texts <t> --out-dir <d> --voice af_heart --lang-code a'],
+ ['wasm','Regenerate G2P id tables','Append new slots only.','python3 tools/gen_cp_id_tables.py'],
+ ['wasm','Rebuild browser G2P','After adding espeak data.','bash mcu/ports/wasm/build_g2p.sh\nnode mcu/ports/wasm/verify_g2p_node.mjs'],
+ ['wasm','Rebuild voice / nano runtimes','','bash mcu/ports/wasm/build_voices.sh\nbash mcu/ports/wasm/build_nano.sh <lineage> <voice> <Export> [int8|f32]'],
+ ['wasm','Export a browser bundle','Then shrink if fp16 is the reference.','python3 tools/export_voice_bundle.py --keys <key>\npython3 tools/shrink_voice_bundle_f16.py <key>'],
+ ['wasm','Serve the demo locally','','cd web && python3 -m http.server 8000'],
+ ['device','ESP32-S3 firmware','','cd mcu/ports/esp32s3/firmware\n./build.sh\nidf.py -p <PORT> flash monitor'],
+ ['device','ESPHome','','python3 esphome/tools/gen_component_data.py\nesphome compile esphome/sanotts-s3.yaml'],
+ ['device','iOS xcframework','','bash mobile/build_ios.sh'],
+ ['publish','Manifest closure','Fails if a published tool imports an unshipped module.','python3 tools/check_public_manifest_closure.py'],
+ ['publish','Publish mirror (dry run)','Read the delete list before --apply.','python3 tools/publish_public.py\n# then, only after porting mirror-only work back:\npython3 tools/publish_public.py --apply'],
+ ['publish','Check HA voice list','','python3 tools/check_sanotts_ha_voices.py'],
+];
+function renderCmds(){const q=$('#cmdQ').value.toLowerCase();
+ $('#cmds').innerHTML=C.filter(c=>c.join(' ').toLowerCase().includes(q)).map((c,i)=>`<div class="cmd"><div class="cmd-h"><b>${c[1]}</b><span class="chip c-mute">${c[0]}</span></div>${c[2]?`<span class="sd">${c[2]}</span>`:''}<pre>${c[3].replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre><div><button class="btn" data-c="${encodeURIComponent(c[3])}">Copy</button></div></div>`).join('');
+ $$('#cmds .btn').forEach(b=>b.onclick=()=>{const t=decodeURIComponent(b.dataset.c);const done=()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1400)};
+   try{navigator.clipboard.writeText(t).then(done,()=>selectPre(b))}catch(e){selectPre(b)}});}
+function selectPre(b){const pre=b.closest('.cmd').querySelector('pre');const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected, press ⌘C'}
+$('#cmdQ').addEventListener('input',renderCmds);renderCmds();
+</script>
+
+</body>
+</html>
