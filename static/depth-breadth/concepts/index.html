@@ -95,6 +95,32 @@ aside{position:sticky;top:64px;display:flex;flex-direction:column;gap:10px}
 .state{font:inherit;font-size:12px;border:1px solid var(--rule);background:var(--sunk);color:var(--muted);border-radius:99px;padding:2px 9px;cursor:pointer;white-space:nowrap}
 .state[data-s="1"]{background:var(--warn-soft);color:var(--warn);border-color:transparent}
 .state[data-s="2"]{background:var(--both-soft);color:var(--both);border-color:transparent}
+.card.wide{grid-column:1/-1}
+.labbox{border:1px dashed var(--rule);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:12px;background:var(--bg)}
+.lab-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:14px}
+.lab-row label{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.lab-row input[type=number],.lab-row select{font:inherit;font-size:14px;width:84px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);border-radius:6px;padding:4px 6px}
+.lab-row select{width:auto}
+.lab-row .btn{border-radius:7px}
+.lab-row .btn.pri{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.cells{display:flex;flex-wrap:wrap;gap:4px;font-family:var(--mono);font-size:13px}
+.cell{width:30px;height:30px;display:grid;place-items:center;border:1px solid var(--rule);border-radius:5px;background:var(--surface)}
+.cell.pad{border-style:dashed;color:var(--muted)}
+.cell.in{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:500}
+.outs{display:flex;flex-wrap:wrap;gap:4px;font-family:var(--mono);font-size:12px;color:var(--muted);align-items:center;min-height:24px}
+.outs b{min-width:30px;height:24px;padding:0 4px;display:grid;place-items:center;border-radius:5px;background:var(--both-soft);color:var(--both);font-weight:500}
+.fb{font-size:13.5px;font-weight:500}
+.fb.ok{color:var(--both)} .fb.no{color:var(--accent)}
+.sd{font-size:13px;color:var(--muted)}
+.chal{margin:0;padding-left:20px;font-size:13.5px;display:flex;flex-direction:column;gap:4px}
+details{font-size:13.5px} summary{cursor:pointer;color:var(--muted);font-weight:500}
+details p{margin-top:6px}
+.ranges{overflow-x:auto}
+.ranges table{border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;min-width:420px}
+.ranges td,.ranges th{padding:5px 10px;border-bottom:1px solid var(--rule);text-align:right}
+.ranges th{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.ranges td:first-child,.ranges th:first-child{text-align:left;font-family:var(--mono)}
+.okc{color:var(--both);font-weight:600} .badc{color:var(--accent);font-weight:600}
 footer{margin-top:36px;color:var(--muted);font-size:13px;border-top:1px solid var(--rule);padding-top:14px}
 </style>
 
@@ -102,7 +128,7 @@ footer{margin-top:36px;color:var(--muted);font-size:13px;border-top:1px solid va
 <header>
   <div class="eyebrow">Ampixa · sanoTTS · saanoTTS · nsl</div>
   <h1>Reading map: breadth first, then depth by problem</h1>
-  <p class="lede">28 concepts that the three repos actually depend on, each tied to the file or number in the repo that needs it. Go wide first: one short read per card and the recall question. When you hit a real problem, pick it on the left and go deep along that path.</p>
+  <p class="lede">The concepts that the three repos actually depend on, each tied to the file or number in the repo that needs it. If the basics feel shaky, start at Layer 0 and do each exercise by hand before reading. Then go wide: one short read per card, plus the recall question. When you hit a real problem, pick it on the left and go deep along that path.</p>
   <div class="how">
     <div><b>BFS pass</b>Read only the "Wide" link on each card, layer by layer. Mark it "skimmed".</div>
     <div><b>Recall check</b>Answer the yellow question in your own words, without the tab open. Only then mark "can explain".</div>
@@ -144,12 +170,69 @@ const ax=id=>`https://arxiv.org/abs/${id}`;
 const L=(t,u)=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`;
 
 const LAYERS=[
+ ['0','Foundations','The ground under Layer 1. Exercise first, reading second.'],
  ['1','Shared ground','Needed by all three repos. Do this layer first.'],
  ['2','Core mechanisms','How each system actually works.'],
  ['3','Specific architectures and open problems','Where the repos are today, and where they are stuck.'],
 ];
 
 const N=[
+/* layer 0 */
+{id:'conv',l:0,t:'ml',r:['tts','nsl'],lab:'conv',title:'1D convolution: a sliding window',
+ why:'The duration, acoustic and decoder students in sanoTTS are stacks of 1D convolutions over phoneme and frame sequences. nsl\'s pose encoders slide over 15 fps frames. Each output frame is computed from one window of input frames.',
+ wide:L('Understanding convolutions (Chris Olah)','https://colah.github.io/posts/2014-07-Understanding-Convolutions/'),
+ deep:L('A guide to convolution arithmetic (Dumoulin, Visin)',ax('1603.07285'))+'<br>'+L('CS231n: convolutional networks','https://cs231n.github.io/convolutional-networks/'),
+ q:'In your own words: why do the TTS students pad their convolutions so the output length equals the input length?'},
+{id:'ints',l:0,t:'sys',r:['tts'],lab:'ints',title:'Bits, integer ranges and overflow',
+ why:'On the ESP32, weights and activations are int8, and every dot product accumulates in <code>int32_t</code> (<code>mcu/src/snt_kernels_ref.c:15</code>). If the accumulator is too small, the sum silently wraps around to garbage.',
+ wide:L('Two\'s complement (Cornell notes)','https://www.cs.cornell.edu/~tomf/notes/cps104/twoscomp.html'),
+ deep:L('Beej\'s guide to C','https://beej.us/guide/bgc/')+'<br>'+L('Nand2Tetris (build a computer from gates)','https://www.nand2tetris.org/'),
+ q:'Why does 127 + 1 give −128 in int8 instead of an error, and why is that worse than a crash?'},
+{id:'nn',l:0,t:'ml',r:['tts','nsl'],title:'Neurons, weights and loss',
+ why:'"heart-nano has 294,279 parameters" counts every learned weight and bias: duration 22,858 + acoustic 65,299 + decoder 206,122. Training means adjusting them to lower a loss.',
+ wide:L('3Blue1Brown: neural networks','https://www.3blue1brown.com/topics/neural-networks'),
+ deep:L('Karpathy: Neural Networks, Zero to Hero','https://karpathy.ai/zero-to-hero.html'),
+ q:'A linear layer maps 64 inputs to 96 outputs with a bias. How many parameters does it have?'},
+{id:'bp',l:0,t:'ml',r:['tts','nsl'],title:'Gradient descent and backprop',
+ why:'You got this on the quiz. This card checks that the idea extends to what surrounds it: every trainer in <code>tools/train_roota_*</code> loops over a forward pass, the loss, backprop and an update.',
+ wide:L('3Blue1Brown: backpropagation','https://www.3blue1brown.com/topics/neural-networks'),
+ deep:L('CS231n: backprop, intuitions','https://cs231n.github.io/optimization-2/'),
+ q:'If the loss goes up after a training step, name two different things that could be wrong.'},
+{id:'up',l:0,t:'ml',r:['tts'],title:'Upsampling: from frames to samples',
+ why:'The decoder turns 24000 / 256 ≈ 94 frames per second into 24,000 samples per second. The piperlite decoder\'s channels shrink (160, 80, 40, 20) as time grows at each stage.',
+ wide:L('Deconvolution and checkerboard artifacts (Distill)','https://distill.pub/2016/deconv-checkerboard/'),
+ deep:L('Convolution arithmetic: transposed convolutions',ax('1603.07285')),
+ q:'At hop 256, how many audio samples does one frame become? How many frames is a 2-second clip at 24 kHz?'},
+{id:'rnn',l:0,t:'ml',r:['tts','nsl'],title:'RNNs and LSTMs',
+ why:'The older way to model sequences. sanoTTS uses convolutions instead, and understanding why is the point: an RNN has to compute one step after another, which suits a SIMD chip badly.',
+ wide:L('The unreasonable effectiveness of RNNs (Karpathy)','https://karpathy.github.io/2015/05/21/rnn-effectiveness/'),
+ deep:L('Understanding LSTMs (Chris Olah)','https://colah.github.io/posts/2015-08-Understanding-LSTMs/'),
+ q:'Why can a convolution compute all its output frames at once, while an RNN can\'t?'},
+{id:'emb',l:0,t:'ml',r:['tts','nsl'],title:'Embeddings',
+ why:'The first layer of every student turns a phoneme id into a vector. The vocabulary is 62 symbols (nano), 157 (R7) or the voice\'s own <code>phoneme_id_map</code>. nsl retrieves signs by comparing embeddings.',
+ wide:L('The illustrated word2vec (Jay Alammar)','https://jalammar.github.io/illustrated-word2vec/'),
+ deep:'<code>pypkg/sanotts/models.py</code> (the numpy forward pass; the embedding lookup comes first)',
+ q:'What shape is an embedding table for 62 symbols at hidden size 64, and how many parameters does it hold?'},
+{id:'split',l:0,t:'ml',r:['tts','nsl'],title:'Train, validation and test splits',
+ why:'<code>train_voice_from_piper.py</code> holds out rows 0-11 (smoke) and 12-139 (eval). nsl freezes its eval sets. Its biggest audit finding was a checkpoint that had been selected on the test set.',
+ wide:L('Google ML crash course: dividing datasets','https://developers.google.com/machine-learning/crash-course/overfitting/dividing-datasets'),
+ deep:'Layer 1 card: evaluation hygiene',
+ q:'What is the validation set for, if you already have a test set?'},
+{id:'ptr',l:0,t:'sys',r:['tts'],title:'Pointers, memory layout and alignment',
+ why:'You got pointer arithmetic on the quiz. The next step is alignment: <code>snt_port.h</code> requires 16-byte-aligned pointers and rows padded to a multiple of 16.',
+ wide:L('Beej\'s guide to C: pointers','https://beej.us/guide/bgc/'),
+ deep:'<code>mcu/include/snt_port.h</code>, <code>mcu/src/snt_kernels_ref.c</code>',
+ q:'What does it mean for a pointer to be 16-byte aligned? Give one aligned and one unaligned address.'},
+{id:'arena',l:0,t:'sys',r:['tts'],title:'Stack, heap and arenas',
+ why:'The C runtimes take one arena from the caller and never call malloc (<code>snt_front_f32.c</code>, <code>snt_piperlite_q8.c</code>). The exception is <code>snt_trellis.c</code>, which runs only in the browser. sanoTTS-jp also never calls malloc.',
+ wide:L('Memory allocation strategies: linear/arena (gingerBill)','https://www.gingerbill.org/article/2019/02/08/memory-allocation-strategies-002/'),
+ deep:L('Operating Systems: Three Easy Pieces (memory chapters)','https://pages.cs.wisc.edu/~remzi/OSTEP/'),
+ q:'Name two reasons an embedded runtime would avoid malloc.'},
+{id:'boot',l:0,t:'sys',r:['tts'],title:'Compile, link and boot a firmware image',
+ why:'The <code>.S</code> assembly kernels, <code>idf.py build flash</code>, the flash partitions, and the SPIFFS partition that holds espeak data on the ESP32-S3.',
+ wide:L('From zero to main() (Memfault Interrupt)','https://interrupt.memfault.com/blog/zero-to-main-1'),
+ deep:L('How to write linker scripts for firmware','https://interrupt.memfault.com/blog/how-to-write-linker-scripts-for-firmware'),
+ q:'What has to happen between power-on and the first line of main() on a microcontroller?'},
 /* layer 1 */
 {id:'fp',l:1,t:'sys',r:['tts','nsl'],title:'Floating point and numerical parity',
  why:'Every port is gated on correlation with PyTorch (<code>corr &gt; 0.98</code>), not exact equality. There\'s a <code>-fastmath</code> variant, and trellis uses double reductions. nsl: device-parity checks in <code>scripts/</code>.',
@@ -300,6 +383,7 @@ const N=[
 ];
 
 const P=[
+ {k:'basics',t:'The basics feel shaky',s:'start here',path:[['conv','Do the window exercise by hand'],['ints','Then the overflow exercise'],['nn','What a parameter is'],['emb','The first layer of every model'],['up','How frames become audio'],['arena','How the C runtime holds memory']]},
  {k:'slow',t:'A new board is slower than real time',s:'systems',path:[['mem','Where do the weights live when the kernel runs?'],['esp','Which memory type, and what it costs'],['simd','Is the fast path actually taken?'],['rtf','Measure the kernel separately from the app'],['tinyml','Port-layer shape']]},
  {k:'gate',t:'int8 export fails the 0.98 golden gate',s:'heart got 0.951',path:[['fp','Is the reference itself stable?'],['int','Where does precision go'],['quant','QAT vs post-training'],['simd','Is accumulation exact?']]},
  {k:'ids',t:'Browser ids differ from Python',s:'e.g. Arabic 44.55%',path:[['g2p','What text reaches espeak'],['wasm','Data files and string passing'],['gpl','What you are allowed to ship']]},
@@ -320,12 +404,14 @@ function render(){
     return `<section class="layer"><div class="layer-h"><div class="eyebrow">Layer ${l}</div><h2>${name}</h2><span>${sub}</span></div><div class="cards">${cards.map(n=>{
       const s=st[n.id]||0,lab=['not read','skimmed','can explain'][s];
       const tc=n.t==='sys'?'t-sys':'t-ml',tl=n.t==='sys'?'systems':'AI / ML';
-      return `<article class="card${onSet.has(n.id)?' on':''}${route&&!onSet.has(n.id)?' dim':''}" id="c-${n.id}">
+      return `<article class="card${n.lab?' wide':''}${onSet.has(n.id)?' on':''}${route&&!onSet.has(n.id)?' dim':''}" id="c-${n.id}">
         <div class="top"><h3>${n.title}</h3><button class="state" data-id="${n.id}" data-s="${s}" aria-label="Status: ${lab}">${lab}</button></div>
         <div class="tags"><span class="chip ${tc}">${tl}</span>${n.r.map(r=>`<span class="chip r">${r==='tts'?'sanoTTS':'nsl'}</span>`).join('')}</div>
         <p class="why">${n.why}</p>
+        ${n.lab?`<div class="labbox" data-lab="${n.lab}"></div>`:''}
         <div class="reads"><div><span class="k">Wide</span><span>${n.wide}</span></div><div><span class="k">Deep</span><span>${n.deep}</span></div></div>
         <div class="q"><b>Can you answer?</b> ${n.q}</div></article>`}).join('')}</div></section>`}).join('');
+  mountLabs();
   $$('.state').forEach(b=>b.onclick=()=>{const id=b.dataset.id;st[id]=((st[id]||0)+1)%3;store.set('rmState',st);render()});
   const vis=N.filter(n=>(ft==='all'||n.t===ft)&&(fr==='all'||n.r.includes(fr)));
   const c2=vis.filter(n=>st[n.id]===2).length,c1=vis.filter(n=>st[n.id]===1).length;
@@ -338,6 +424,77 @@ function render(){
     $$('#route [data-go]').forEach(a=>{const go=()=>{const el=$('#c-'+a.dataset.go);if(el)el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})};a.onclick=go;a.onkeydown=e=>{if(e.key==='Enter')go()}});
     $('#clr').onclick=()=>{sel=null;render()};
   } else R.hidden=true;
+}
+/* Layer 0 labs */
+const LS=Object.assign({conv:{N:5,K:3,S:1,P:0,pos:0},ints:{type:'',k:256,checked:false}},store.get('labState',{}));
+const saveLS=()=>store.set('labState',LS);
+const nOut=(N,K,S,P)=>{const e=N+2*P-K;return e<0?0:Math.floor(e/S)+1};
+function mountLabs(){const c=$('[data-lab="conv"]');if(c)mountConv(c);const i=$('[data-lab="ints"]');if(i)mountInts(i)}
+function mountConv(box){
+  const s=LS.conv;
+  box.innerHTML=`
+  <div class="lab-row">
+    <label>Input frames N <input type="number" id="cvN" min="1" max="200" value="${s.N}"></label>
+    <label>Kernel K <input type="number" id="cvK" min="1" max="9" value="${s.K}"></label>
+    <label>Stride S <input type="number" id="cvS" min="1" max="3" value="${s.S}"></label>
+    <label>Padding P <input type="number" id="cvP" min="0" max="3" value="${s.P}"></label>
+  </div>
+  <div class="cells" id="cvCells"></div>
+  <div class="outs" id="cvOuts"></div>
+  <div class="lab-row"><button class="btn pri" id="cvStep">Slide the window</button><button class="btn" id="cvReset">Back to start</button><span class="fb" id="cvPos"></span></div>
+  <div class="lab-row"><label>Predict: how many outputs with these settings? <input type="number" id="cvGuess" min="0"></label><button class="btn" id="cvCheck">Check</button><span class="fb" id="cvFb"></span></div>
+  <ol class="chal">
+    <li>N = 6, K = 3. Predict first, then slide the window to check.</li>
+    <li>You have 5 → 3 and 6 → ?. What does one extra frame add? Write a rule for any N when K = 3.</li>
+    <li>N = 100, K = 3 (the quiz question). Use your rule, then check it here.</li>
+    <li>Keep N = 100 and set K = 5. Change your rule so it works for any K.</li>
+    <li>N = 5, K = 3: which padding P gives 5 outputs? This is called "same" padding.</li>
+    <li>N = 8, K = 2, S = 2. What happens to the length? Where would a model want that?</li>
+  </ol>
+  <details><summary>The general rule (open only after you've written your own)</summary><p>outputs = ⌊(N + 2P − K) / S⌋ + 1. Padding adds P zero frames to each end, each window needs K frames, and each slide moves S frames. With K = 3, P = 1 and S = 1, the output is as long as the input. That's why the TTS students use it: every phoneme or frame keeps exactly one output.</p></details>`;
+  const draw=()=>{
+    const {N,K,S,P}=s,tot=nOut(N,K,S,P),len=N+2*P;
+    if(s.pos>=tot)s.pos=Math.max(0,tot-1);
+    if(len>32){$('#cvCells').innerHTML=`<span class="sd">${len} frames is too long to draw. Predict it with your rule.</span>`;$('#cvOuts').innerHTML='';$('#cvPos').textContent='';return}
+    const a0=s.pos*S;
+    $('#cvCells').innerHTML=Array.from({length:len},(_,i)=>{const pad=i<P||i>=P+N;const lbl=pad?'0':(N<=26?String.fromCharCode(97+i-P):i-P+1);const on=tot>0&&i>=a0&&i<a0+K;return `<span class="cell${pad?' pad':''}${on?' in':''}">${lbl}</span>`}).join('');
+    $('#cvOuts').innerHTML=tot?'outputs so far: '+Array.from({length:s.pos+1},(_,j)=>`<b>y${j+1}</b>`).join(''):'';
+    $('#cvPos').textContent=tot===0?'The window is wider than the padded input, so it fits nowhere.':(s.pos+1>=tot?`Position ${s.pos+1}. One more slide would go past the end.`:`Position ${s.pos+1}.`);
+  };
+  const read=()=>{s.N=Math.max(1,Math.min(200,+$('#cvN').value||1));s.K=Math.max(1,Math.min(9,+$('#cvK').value||1));s.S=Math.max(1,Math.min(3,+$('#cvS').value||1));s.P=Math.max(0,Math.min(3,+$('#cvP').value||0));s.pos=0;$('#cvFb').textContent='';saveLS();draw()};
+  ['cvN','cvK','cvS','cvP'].forEach(id=>$('#'+id).addEventListener('input',read));
+  $('#cvStep').onclick=()=>{if(s.pos+1<nOut(s.N,s.K,s.S,s.P))s.pos++;saveLS();draw()};
+  $('#cvReset').onclick=()=>{s.pos=0;saveLS();draw()};
+  $('#cvCheck').onclick=()=>{const g=$('#cvGuess').value,fb=$('#cvFb');if(g===''){fb.className='fb no';fb.textContent='Enter a number first.';return}
+    const t=nOut(s.N,s.K,s.S,s.P),ok=+g===t;fb.className='fb '+(ok?'ok':'no');fb.textContent=ok?`Right: ${t}.`:`Not ${g}. Slide the window and count, or rethink the rule.`};
+  draw();
+}
+const TY={int8:[8,-128,127],int16:[16,-32768,32767],int32:[32,-2147483648,2147483647]};
+function mountInts(box){
+  const s=LS.ints;
+  box.innerHTML=`
+  <div class="lab-row"><span>Pick a type:</span><div class="seg" id="itSeg">${Object.keys(TY).map(k=>`<button data-k="${k}" aria-pressed="${k===s.type}">${k}_t</button>`).join('')}</div></div>
+  <div class="lab-row" id="itRange"></div>
+  <div class="lab-row"><label>How many int8 × int8 products to add up? <input type="number" id="itK" min="1" max="1000000" value="${s.k}"></label></div>
+  <div class="lab-row"><label>Predict the smallest safe accumulator <select id="itGuess"><option value="">choose</option><option>int8</option><option>int16</option><option>int32</option></select></label><button class="btn" id="itCheck">Check</button><span class="fb" id="itFb"></span></div>
+  <div class="ranges" id="itTable"></div>
+  <ol class="chal">
+    <li>Before picking a type: what are the smallest and largest values an int8 can hold? Then pick int8 to check.</li>
+    <li>What is the largest possible product of two int8 values? Hint: try the most negative one.</li>
+    <li>Sum 256 of those products (the quiz question). Predict the smallest safe type, then check.</li>
+    <li>How many worst-case products can int16 hold before it overflows? How many can int32 hold?</li>
+    <li>Open <code>mcu/src/snt_kernels_ref.c</code> and find the accumulator in <code>snt_dot_s8</code>. Does it match your answer? Why does it cast each operand to int32 before multiplying?</li>
+  </ol>`;
+  const drawRange=()=>{if(!s.type){$('#itRange').innerHTML='<span class="sd">Pick a type to see its range.</span>';return}const [b,lo,hi]=TY[s.type];
+    $('#itRange').innerHTML=`<span><b>${s.type}_t</b>: ${b} bits, from <b>${lo.toLocaleString()}</b> to <b>${hi.toLocaleString()}</b>.${s.type==='int8'?' In int8, 127 + 1 wraps around to −128.':''}</span>`};
+  const drawTable=()=>{if(!s.checked){$('#itTable').innerHTML='';return}const w=16384*s.k;
+    $('#itTable').innerHTML=`<table><thead><tr><th>Accumulator</th><th>Max value</th><th>Worst-case sum</th><th>Result</th></tr></thead><tbody>${Object.entries(TY).map(([k,[,,hi]])=>`<tr><td>${k}_t</td><td>${hi.toLocaleString()}</td><td>${w.toLocaleString()}</td><td class="${w<=hi?'okc':'badc'}">${w<=hi?'fits':'overflows'}</td></tr>`).join('')}</tbody></table><p class="sd" style="margin-top:6px">Worst case for one product: (−128) × (−128) = 16,384.</p>`};
+  $$('#itSeg button').forEach(b=>b.onclick=()=>{s.type=b.dataset.k;$$('#itSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));saveLS();drawRange()});
+  $('#itK').addEventListener('input',()=>{s.k=Math.max(1,Math.min(1000000,+$('#itK').value||1));s.checked=false;$('#itFb').textContent='';saveLS();drawTable()});
+  $('#itCheck').onclick=()=>{const g=$('#itGuess').value,fb=$('#itFb');if(!g){fb.className='fb no';fb.textContent='Pick a type first.';return}
+    const w=16384*s.k,ans=w<=127?'int8':w<=32767?'int16':w<=2147483647?'int32':'none';s.checked=true;saveLS();
+    fb.className='fb '+(g===ans?'ok':'no');fb.textContent=g===ans?'Right.':(ans==='none'?'Even int32 overflows at this count. You would need int64.':`Not ${g}. The table shows why.`);drawTable()};
+  drawRange();drawTable();
 }
 $$('#trackSeg button').forEach(b=>b.onclick=()=>{ft=b.dataset.t;$$('#trackSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
 $$('#repoSeg button').forEach(b=>b.onclick=()=>{fr=b.dataset.r;$$('#repoSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});

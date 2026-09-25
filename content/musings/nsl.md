@@ -1,3 +1,11 @@
+---
+title: "NSL"
+date: 2026-12-12
+description: "a poem about leaving your old self behind and walking into the dark alone"
+tags: ["poems"]
+back: true
+---
+
 # NSL
 
 ## What are we trying to achieve?
