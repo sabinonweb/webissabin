@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<script>(function(){var t;try{t=localStorage.getItem("theme")}catch(e){}if(t==="dark"||t==="light"){document.documentElement.dataset.theme=t}})();</script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<title>Systems Intern Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400;500;700&display=swap">
+<style>
+  :root {
+    --font: "Kode Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --bg: #fafaf9;
+    --ink: #1c1917;
+    --muted: #78716c;
+    --faint: #a8a29e;
+    --line: #e7e5e4;
+    --code-bg: #f5f5f4;
+    --mark: #fef3c7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #1c1917;
+      --ink: #fafaf9;
+      --muted: #a8a29e;
+      --faint: #78716c;
+      --line: #44403c;
+      --code-bg: #292524;
+      --mark: #422006;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #1c1917;
+    --ink: #fafaf9;
+    --muted: #a8a29e;
+    --faint: #78716c;
+    --line: #44403c;
+    --code-bg: #292524;
+    --mark: #422006;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.75;
+    padding-inline: 16px;
+    padding-block: 48px 96px;
+  }
+  main { max-width: 44rem; margin: 0 auto; }
+
+  header { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  h1 { font-size: 1.6rem; line-height: 1.3; margin: 0; font-weight: 700; text-wrap: balance; }
+  .byline { color: var(--muted); font-size: 0.85rem; margin: 6px 0 32px; }
+  h2 { font-size: 1.15rem; margin: 56px 0 8px; font-weight: 700; text-wrap: balance; }
+  h3 { font-size: 0.95rem; margin: 28px 0 4px; font-weight: 500; }
+  p, ul, ol { margin: 0 0 14px; }
+  ul, ol { padding-left: 1.3em; }
+  li { margin-bottom: 4px; }
+  a { color: inherit; text-decoration: underline dotted; text-underline-offset: 3px; }
+  strong { font-weight: 700; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 48px 0; }
+
+  code { font-family: var(--font); background: var(--code-bg); padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
+  pre { background: var(--code-bg); padding: 14px 16px; border-radius: 4px; overflow-x: auto; font-size: 0.85rem; line-height: 1.6; margin: 0 0 12px; }
+  pre code { background: none; padding: 0; }
+
+  blockquote { margin: 0 0 14px; padding-left: 16px; border-left: 2px solid var(--line); color: var(--ink); }
+  .muted { color: var(--muted); }
+  .small { font-size: 0.85rem; }
+
+  button {
+    font: inherit; font-size: 0.8rem; color: var(--ink); background: transparent;
+    border: 1px solid var(--line); border-radius: 3px; padding: 3px 10px; cursor: pointer;
+  }
+  button:hover { border-color: var(--muted); }
+  button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+
+  details.q { margin: 0 0 18px; }
+  details.q > summary { cursor: pointer; color: var(--muted); font-size: 0.85rem; list-style: none; }
+  details.q > summary::-webkit-details-marker { display: none; }
+  details.q > summary::before { content: "+ "; }
+  details.q[open] > summary::before { content: "− "; }
+  details.q .answer { margin-top: 8px; padding-left: 16px; border-left: 2px solid var(--line); }
+
+  .prompt { font-weight: 500; margin-bottom: 6px; }
+
+  ul.checks { list-style: none; padding-left: 0; }
+  ul.checks li { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
+  ul.checks input { margin-top: 6px; accent-color: var(--ink); flex: none; }
+  ul.checks input:checked + label { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--faint); }
+  .tally { color: var(--muted); font-size: 0.85rem; }
+
+  .fields { display: grid; grid-template-columns: max-content 1fr; gap: 8px 14px; align-items: center; margin: 12px 0 14px; }
+  .fields label { color: var(--muted); font-size: 0.85rem; }
+  .fields input {
+    font: inherit; font-size: 0.9rem; color: var(--ink); background: transparent;
+    border: 0; border-bottom: 1px dotted var(--faint); padding: 2px 0; width: 100%; min-width: 0;
+  }
+  @media (max-width: 440px) { .fields { grid-template-columns: 1fr; gap: 2px; } .fields input { margin-bottom: 10px; } }
+
+  .timer { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 8px 0 18px; }
+  .timer .clock { font-size: 1.4rem; font-variant-numeric: tabular-nums; min-width: 5ch; }
+  .timer.done .clock { color: var(--muted); }
+
+  .mock { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 10px; }
+  .mock span { flex: 1; }
+
+  mark { background: var(--mark); color: inherit; padding: 0 2px; }
+  footer { margin-top: 64px; color: var(--faint); font-size: 0.8rem; }
+</style>
+</head>
+<body>
+
+<main>
+  <header>
+    <h1>Systems intern prep: C, Rust and making things fast</h1>
+    <button id="theme-toggle" type="button" aria-label="Toggle dark mode">dark</button>
+  </header>
+  <p class="byline">Notes for the 3-month core-systems internship · last edited 25 Sep 2026</p>
+
+  <p>The posting asks for three things at once: <strong>strong competitive results</strong>, <strong>C and Rust</strong>, and <strong>low-level performance work in a large codebase</strong>. Each one points to a different kind of interview round, so this page treats them separately.</p>
+  <p>Links to books, courses and practice sites are collected at the bottom, under <a href="#resources">Where to prepare</a>.</p>
+  <p>Most sections end with a few questions. Answer each one in your head, or on paper, before you open it. If your answer doesn't match, that's the topic to spend time on.</p>
+
+  <h2>First: find out the format</h2>
+  <p>Ask the recruiter what the rounds look like and which language the coding rounds allow. That answer decides how you split your time more than anything on this page does.</p>
+  <div class="fields">
+    <label for="f-company">Company</label><input id="f-company" type="text" placeholder="not asked yet">
+    <label for="f-date">Interview date</label><input id="f-date" type="text" placeholder="?">
+    <label for="f-format">Rounds</label><input id="f-format" type="text" placeholder="OA, live coding, systems chat, take-home…">
+    <label for="f-lang">Language allowed</label><input id="f-lang" type="text" placeholder="C, Rust, C++, any?">
+  </div>
+  <p class="muted small">Saved in this browser only.</p>
+
+  <h2>Timed problem solving</h2>
+  <p>"Strong competitive results" almost always means an algorithm round under time pressure. Practise every day.</p>
+  <ul>
+    <li>Solve in <strong>C or Rust, not Python</strong>. <code>Vec</code>, <code>HashMap</code>, <code>BinaryHeap</code>, slices, iterators and <code>sort_unstable_by_key</code> should come without thinking. In C, be able to write a growable array quickly.</li>
+    <li>Codeforces Div 2 A–D, or LeetCode medium/hard. Always timed.</li>
+    <li>Topics: BFS/DFS, Dijkstra, union-find, DP, binary search on the answer, two pointers, heaps, prefix sums, bit tricks.</li>
+    <li>Say the time and space complexity out loud before you write code.</li>
+  </ul>
+  <p>A medium problem should take under 25 minutes. Here's a clock for it:</p>
+  <div class="timer" id="timer">
+    <span class="clock" id="clock">25:00</span>
+    <button type="button" id="t-start">start</button>
+    <button type="button" id="t-reset">reset</button>
+  </div>
+
+  <h2>C: where things go wrong</h2>
+  <p>A job about finding bugs in core systems means C questions will be about what goes wrong, not syntax. Be able to explain each of these with a small example:</p>
+  <ul>
+    <li><strong>Undefined behaviour:</strong> signed overflow, strict aliasing, out-of-bounds access, use-after-free, uninitialised reads. Know why the compiler is allowed to delete your null check.</li>
+    <li>Pointers vs arrays, arrays decaying to pointers, <code>sizeof</code> traps.</li>
+    <li>Struct padding and alignment. Integer promotion and signed/unsigned comparisons.</li>
+    <li><code>volatile</code> (and why it doesn't make code thread-safe), <code>restrict</code>.</li>
+    <li>Stack vs heap, what a function call does to the stack, what <code>malloc</code> does at a high level.</li>
+    <li>Tools: <code>-Wall -Wextra -fsanitize=address,undefined</code>, lldb/gdb, valgrind in a Linux container.</li>
+  </ul>
+
+  <h3>Bug hunt</h3>
+  <p>Each snippet has one real bug. Give yourself five minutes per snippet before opening the answer.</p>
+
+  <p class="prompt">1. An overflow check</p>
+<pre><code>int will_overflow(int x) {
+    return x + 1 &lt; x;
+}</code></pre>
+  <details class="q"><summary>answer</summary><div class="answer">
+    <p>Signed overflow is undefined behaviour, so the compiler may assume <code>x + 1</code> never wraps. Under that assumption <code>x + 1 &lt; x</code> is always false, and at <code>-O2</code> the function usually compiles to <code>return 0</code>. Compare against the limit instead: <code>return x == INT_MAX;</code></p>
+  </div></details>
+
+  <p class="prompt">2. A greeting</p>
+<pre><code>char *greet(const char *name) {
+    char buf[64];
+    snprintf(buf, sizeof buf, "hi %s", name);
+    return buf;
+}</code></pre>
+  <details class="q"><summary>answer</summary><div class="answer">
+    <p><code>buf</code> lives on the stack and is gone when the function returns, so the caller gets a dangling pointer. It often "works" in testing because nothing has overwritten that stack memory yet. Fix it by having the caller pass in a buffer, or by allocating with <code>malloc</code> and documenting who frees it.</p>
+  </div></details>
+
+  <p class="prompt">3. Every item except the last</p>
+<pre><code>unsigned n = get_len();
+for (int i = 0; i &lt; n - 1; i++)
+    process(items[i]);</code></pre>
+  <details class="q"><summary>answer</summary><div class="answer">
+    <p>When <code>n</code> is 0, <code>n - 1</code> wraps to <code>UINT_MAX</code>. The comparison also converts <code>i</code> to unsigned, so the loop runs far past the array. Write <code>i + 1 &lt; n</code>, or return early when <code>n == 0</code>.</p>
+  </div></details>
+
+  <p class="prompt">4. Allocating a list from a network packet</p>
+<pre><code>uint32_t count = read_u32(packet);
+struct item *items = malloc(count * sizeof *items);
+for (uint32_t i = 0; i &lt; count; i++)
+    items[i] = read_item(packet);</code></pre>
+  <details class="q"><summary>answer</summary><div class="answer">
+    <p>An attacker controls <code>count</code>. A large value makes <code>count * sizeof *items</code> wrap around to a small number, so <code>malloc</code> returns a tiny buffer and the loop writes past its end. The <code>malloc</code> result isn't checked for NULL either. Use <code>calloc(count, sizeof *items)</code>, which checks the multiplication, and put an upper bound on <code>count</code>.</p>
+  </div></details>
+
+  <h2>Rust, deeper than the basics</h2>
+  <ul>
+    <li>Ownership, borrowing, lifetimes. <code>Send</code> and <code>Sync</code>, and what each one promises.</li>
+    <li>When to use <code>Box</code>, <code>Rc</code>, <code>Arc</code>, <code>Cell</code>, <code>RefCell</code>, <code>Mutex</code>.</li>
+    <li>Generics vs trait objects: static vs dynamic dispatch, inlining, code size.</li>
+    <li><code>unsafe</code>: what it lets you do, which rules still apply (aliasing, valid values), and checking with <strong>Miri</strong>.</li>
+    <li>FFI: <code>#[repr(C)]</code>, <code>extern "C"</code>, who frees memory that crosses the boundary.</li>
+    <li>When zero-cost abstractions cost something: bounds checks, <code>clone()</code> in a hot loop, hidden allocations.</li>
+  </ul>
+
+  <h3>Check yourself</h3>
+  <p class="prompt">Why won't this compile, and what bug is the compiler preventing?</p>
+<pre><code>let mut v = vec![1, 2, 3];
+let first = &amp;v[0];
+v.push(4);
+println!("{first}");</code></pre>
+  <details class="q"><summary>answer</summary><div class="answer">
+    <p><code>push</code> may need to grow the vector, which moves its contents to a new allocation. <code>first</code> would then point at freed memory. The borrow checker refuses a mutable borrow (<code>push</code>) while the shared borrow (<code>first</code>) is still used later. The C++ version of this code compiles and gives you a use-after-free.</p>
+  </div></details>
+
+  <p class="prompt">Why is <code>Rc&lt;T&gt;</code> not <code>Send</code>, when <code>Arc&lt;T&gt;</code> is?</p>
+  <details class="q"><summary>answer</summary><div class="answer">
+    <p><code>Rc</code> updates its reference count with ordinary, non-atomic increments. If two threads cloned or dropped it at once, updates could be lost, the count would be wrong, and the value could be freed while still in use. <code>Arc</code> pays for atomic operations so this can't happen.</p>
+  </div></details>
+
+  <p class="prompt">Inside an <code>unsafe</code> block you create two <code>&amp;mut</code> references to the same value, but you only ever use one at a time. Is that fine?</p>
+  <details class="q"><summary>answer</summary><div class="answer">
+    <p>No. Two live <code>&amp;mut</code> references to the same memory break Rust's aliasing rules, and that's undefined behaviour even if you never use them at the same moment. The compiler optimises on the assumption that a <code>&amp;mut</code> is the only way to reach that memory. Miri reports this; normal tests usually won't.</p>
+  </div></details>
+
+  <h2>Performance and hardware</h2>
+  <p>This is the part most candidates are weakest on, and it's the actual job.</p>
+  <ul>
+    <li><strong>Memory:</strong> cache lines, locality, struct-of-arrays vs array-of-structs, false sharing.</li>
+    <li><strong>CPU:</strong> branch prediction, pipelining, the idea behind SIMD, reading compiler output on <a href="https://godbolt.org" target="_blank" rel="noopener">Godbolt</a>.</li>
+    <li><strong>Concurrency:</strong> atomics, memory ordering (<code>Relaxed</code>, <code>Acquire</code>, <code>Release</code>, <code>SeqCst</code>), how a lock-free SPSC ring buffer works, the ABA problem.</li>
+    <li><strong>Measuring:</strong> benchmark before and after, profile (<code>cargo flamegraph</code>, Instruments on macOS, <code>perf</code> in a Linux VM), use <code>criterion</code>, account for variance and warm-up.</li>
+  </ul>
+  <blockquote>Interviewers watch for people who optimise without measuring. Always say how you would check that it got faster.</blockquote>
+
+  <h3>Check yourself</h3>
+  <p class="prompt">Two threads each increment their own counter, with no sharing. It runs slower than one thread doing both. Why?</p>
+<pre><code>struct Counters {
+    a: AtomicU64,   // thread 1 only
+    b: AtomicU64,   // thread 2 only
+}</code></pre>
+  <details class="q"><summary>answer</summary><div class="answer">
+    <p>False sharing. <code>a</code> and <code>b</code> sit on the same cache line, so each write forces the other core to give up its copy of that line, and the line bounces between cores. Put each counter on its own line with <code>#[repr(align(64))]</code>, or 128 on Apple M-series chips.</p>
+  </div></details>
+
+  <p class="prompt">You loop over a large 2D array with <code>for col { for row { sum += a[row][col] } }</code>. Swapping the two loops makes it several times faster. Why?</p>
+  <details class="q"><summary>answer</summary><div class="answer">
+    <p>C and Rust store 2D arrays row by row. Walking down a column jumps a whole row's width in memory at every step, so almost every access misses the cache. Walking along a row uses every byte of each cache line it loads, and the prefetcher can see the pattern coming.</p>
+  </div></details>
+
+  <p class="prompt">A producer writes <code>data</code>, then sets <code>ready = true</code>. A consumer waits for <code>ready</code>, then reads <code>data</code>. With <code>Relaxed</code> ordering on <code>ready</code>, what can go wrong?</p>
+  <details class="q"><summary>answer</summary><div class="answer">
+    <p>The consumer can see <code>ready == true</code> and still read the old <code>data</code>. <code>Relaxed</code> makes the flag itself atomic but says nothing about when other memory writes become visible, and ARM chips really do reorder this. Use a <code>Release</code> store on the producer side and an <code>Acquire</code> load on the consumer side: everything written before the release is visible after the acquire.</p>
+  </div></details>
+
+  <p class="prompt">Your benchmark says a loop takes 0 ns. What happened?</p>
+  <details class="q"><summary>answer</summary><div class="answer">
+    <p>The compiler saw the result was never used and deleted the loop. Pass inputs and outputs through <code>std::hint::black_box</code> (criterion does this for you), and check the generated assembly when a number looks too good.</p>
+  </div></details>
+
+  <h2>Four things to build</h2>
+  <p>Build each one in C first, then in Rust. They cover most of the topics above. The logic in these is yours to write. I can set up the project and the benchmark harness, and review what you write.</p>
+  <ul class="checks" data-group="builds">
+    <li><input type="checkbox" id="b1"><label for="b1"><strong>Arena allocator.</strong> Alignment, pointer arithmetic, and handing out references that can't outlive the arena.</label></li>
+    <li><input type="checkbox" id="b2"><label for="b2"><strong>Open-addressing hash map.</strong> Probing, load factor, deletion. Benchmark it against <code>std::HashMap</code> and explain the gap.</label></li>
+    <li><input type="checkbox" id="b3"><label for="b3"><strong>Lock-free SPSC ring buffer.</strong> Atomics and memory ordering, checked with Miri and <code>loom</code>.</label></li>
+    <li><input type="checkbox" id="b4"><label for="b4"><strong>Profile and speed something up.</strong> Take a slow function, profile it, make it 3× faster, and write down why it got faster.</label></li>
+  </ul>
+  <p class="tally" id="builds-tally"></p>
+
+  <h2>Your best interview story</h2>
+  <p>The listing asks for existing low-level work. weft-core, the Rust P2P mesh, already fits. Profile it, find one real bug or bottleneck, fix it, and measure the change. Then practise saying it in two minutes:</p>
+  <blockquote>"I profiled it, saw <mark>X</mark>, changed <mark>Y</mark>, and it got <mark>Z%</mark> faster, because <mark>W</mark>."</blockquote>
+  <p>That sentence is the internship's job in miniature. Be ready for the follow-ups: how did you measure, what else did you try, and what would break if the input grew 100×.</p>
+
+  <h2>How you'll know you're ready</h2>
+  <p>Don't judge by how many topics you've read about. Judge by whether you can do these:</p>
+  <ul class="checks" data-group="ready">
+    <li><input type="checkbox" id="r1"><label for="r1">Solve a medium problem in Rust, cold, in under 25 minutes, without fighting compile errors.</label></li>
+    <li><input type="checkbox" id="r2"><label for="r2">Find the undefined behaviour in 30 lines of unfamiliar C within 5 minutes.</label></li>
+    <li><input type="checkbox" id="r3"><label for="r3">Explain false sharing and Acquire/Release on a whiteboard with no notes.</label></li>
+    <li><input type="checkbox" id="r4"><label for="r4">Explain why a <code>clone()</code> or bounds check shows up in a flamegraph, and how to remove it.</label></li>
+    <li><input type="checkbox" id="r5"><label for="r5">Tell the weft-core optimisation story in 2 minutes, with real numbers.</label></li>
+    <li><input type="checkbox" id="r6"><label for="r6">Explain the design choices in each of the four builds a week later, without looking.</label></li>
+  </ul>
+  <p class="tally" id="ready-tally"></p>
+
+  <h2>Mock interviews</h2>
+  <p>Explaining things out loud while someone pushes back is where gaps show up. Paste one of these into a Claude session:</p>
+  <div class="mock"><span>"Give me 30 lines of buggy C. Don't tell me the bug. Time me."</span><button type="button" class="copy">copy</button></div>
+  <div class="mock"><span>"Grill me on memory ordering. Push back on vague answers."</span><button type="button" class="copy">copy</button></div>
+  <div class="mock"><span>"Give me a timed Codeforces-style problem. I'll solve it in Rust, then review my code."</span><button type="button" class="copy">copy</button></div>
+  <div class="mock"><span>"Act as a skeptical interviewer and ask follow-ups on my weft-core optimisation."</span><button type="button" class="copy">copy</button></div>
+  <p>Also do at least one mock with a real person, a peer or a mentor. An AI won't make you nervous the way a real interviewer does.</p>
+
+  <hr>
+
+  <h2 id="resources">Where to prepare</h2>
+  <p>Everything I'd point you to, grouped by topic. Each group puts the one to start with first. Unless marked otherwise, everything here is free.</p>
+
+  <h3>Problem solving</h3>
+  <ul>
+    <li><a href="https://cses.fi/problemset/" target="_blank" rel="noopener">CSES Problem Set</a>: start here. 300 classic problems grouped by topic, a good fit for Rust practice.</li>
+    <li><a href="https://cses.fi/book/book.pdf" target="_blank" rel="noopener">Competitive Programmer's Handbook</a> (PDF): the theory that goes with CSES, short chapters.</li>
+    <li><a href="https://codeforces.com/problemset" target="_blank" rel="noopener">Codeforces</a>: timed contests and rated problems. Enter live Div 2 rounds to practise under real pressure.</li>
+    <li><a href="https://leetcode.com/problemset/" target="_blank" rel="noopener">LeetCode</a> and the <a href="https://neetcode.io/practice" target="_blank" rel="noopener">NeetCode 150</a> list: interview-style problems, if the online assessment turns out to look like that.</li>
+    <li><a href="https://usaco.guide/" target="_blank" rel="noopener">USACO Guide</a>: a structured path from easy to hard, with explanations.</li>
+    <li><a href="https://cp-algorithms.com/" target="_blank" rel="noopener">cp-algorithms</a>: reference for when you need a specific algorithm explained.</li>
+    <li><a href="https://github.com/EbTech/rust-algorithms" target="_blank" rel="noopener">EbTech/rust-algorithms</a>: shows what competitive Rust looks like (fast input reading, graph templates).</li>
+  </ul>
+
+  <h3>C</h3>
+  <ul>
+    <li><a href="https://blog.regehr.org/archives/213" target="_blank" rel="noopener">John Regehr, A Guide to Undefined Behavior in C and C++</a>: start here. Why UB exists and what compilers do with it.</li>
+    <li><a href="https://blog.llvm.org/2011/05/what-every-c-programmer-should-know.html" target="_blank" rel="noopener">Chris Lattner, What Every C Programmer Should Know About Undefined Behavior</a>: the compiler author's side of the same story, in three parts.</li>
+    <li><a href="https://gustedt.gitlabpages.inria.fr/modern-c/" target="_blank" rel="noopener">Modern C</a> by Jens Gustedt: a free book on C as it's written today.</li>
+    <li><a href="https://beej.us/guide/bgc/" target="_blank" rel="noopener">Beej's Guide to C</a>: a friendlier refresher if your C is rusty.</li>
+    <li><a href="http://www.catb.org/esr/structure-packing/" target="_blank" rel="noopener">The Lost Art of Structure Packing</a>: padding and alignment, explained properly.</li>
+    <li><a href="https://wiki.sei.cmu.edu/confluence/display/c/SEI+CERT+C+Coding+Standard" target="_blank" rel="noopener">SEI CERT C Coding Standard</a>: a catalogue of real C bug patterns. Good material for the bug-hunt kind of question.</li>
+    <li><a href="https://en.cppreference.com/w/c" target="_blank" rel="noopener">cppreference (C section)</a>: the reference for what the standard actually says.</li>
+    <li><a href="https://clang.llvm.org/docs/AddressSanitizer.html" target="_blank" rel="noopener">AddressSanitizer docs</a> and the <a href="https://github.com/google/sanitizers/wiki" target="_blank" rel="noopener">sanitizers wiki</a>: the tools that find these bugs for you.</li>
+  </ul>
+
+  <h3>Rust</h3>
+  <ul>
+    <li><a href="https://marabos.nl/atomics/" target="_blank" rel="noopener">Mara Bos, Rust Atomics and Locks</a>: start here. Free online. Atomics, memory ordering, and building your own locks and channels. It covers the ring-buffer build directly.</li>
+    <li><a href="https://doc.rust-lang.org/nomicon/" target="_blank" rel="noopener">The Rustonomicon</a>: the official guide to <code>unsafe</code> Rust.</li>
+    <li><a href="https://rust-unofficial.github.io/too-many-lists/" target="_blank" rel="noopener">Learning Rust With Entirely Too Many Linked Lists</a>: ownership, <code>Rc</code>, <code>RefCell</code> and raw pointers, learned by struggling with one data structure.</li>
+    <li><a href="https://www.youtube.com/playlist?list=PLqbS7AVVErFiWDOAVrPt7aYmnuuOLYvOa" target="_blank" rel="noopener">Crust of Rust</a> by <a href="https://www.youtube.com/@jonhoo" target="_blank" rel="noopener">Jon Gjengset</a>: long live-coding videos on lifetimes, smart pointers, atomics, channels.</li>
+    <li><a href="https://nnethercote.github.io/perf-book/" target="_blank" rel="noopener">The Rust Performance Book</a>: short and practical. Profiling, allocation, bounds checks.</li>
+    <li><a href="https://doc.rust-lang.org/book/" target="_blank" rel="noopener">The Rust Book</a> and <a href="https://github.com/rust-lang/rustlings" target="_blank" rel="noopener">Rustlings</a>: only if a basic topic feels shaky.</li>
+    <li><a href="https://cheats.rs/" target="_blank" rel="noopener">cheats.rs</a>: a dense cheat sheet to skim the night before.</li>
+    <li><a href="https://rust-for-rustaceans.com/" target="_blank" rel="noopener">Rust for Rustaceans</a> (paid book): the step after the Rust Book, if you want one book to go deeper.</li>
+    <li>Tools: <a href="https://github.com/rust-lang/miri" target="_blank" rel="noopener">Miri</a>, <a href="https://github.com/tokio-rs/loom" target="_blank" rel="noopener">loom</a>, <a href="https://github.com/bheisler/criterion.rs" target="_blank" rel="noopener">criterion</a>, <a href="https://github.com/flamegraph-rs/flamegraph" target="_blank" rel="noopener">cargo flamegraph</a>, <a href="https://doc.rust-lang.org/std/sync/atomic/" target="_blank" rel="noopener">std::sync::atomic docs</a>.</li>
+  </ul>
+
+  <h3>Performance and hardware</h3>
+  <ul>
+    <li><a href="https://en.algorithmica.org/hpc/" target="_blank" rel="noopener">Algorithms for Modern Hardware</a> (Algorithmica): start here. Caches, branch prediction, SIMD, with real benchmarks. Probably the most useful single link on this page for this job.</li>
+    <li><a href="https://github.com/dendibakh/perf-book" target="_blank" rel="noopener">Denis Bakhvalov, Performance Analysis and Tuning on Modern CPUs</a>: free book on measuring and profiling. His blog, <a href="https://easyperf.net/" target="_blank" rel="noopener">easyperf.net</a>, has practice challenges.</li>
+    <li><a href="https://people.freebsd.org/~lstewart/articles/cpumemory.pdf" target="_blank" rel="noopener">Ulrich Drepper, What Every Programmer Should Know About Memory</a> (PDF): the classic. Long; read sections 3 and 6 first.</li>
+    <li><a href="https://preshing.com/20120913/acquire-and-release-semantics/" target="_blank" rel="noopener">Preshing, Acquire and Release Semantics</a>: the clearest short explanation of memory ordering. Read the posts around it too.</li>
+    <li><a href="https://mechanical-sympathy.blogspot.com/2011/07/false-sharing.html" target="_blank" rel="noopener">Martin Thompson, False Sharing</a>: short, with a benchmark you can reproduce.</li>
+    <li><a href="https://stackoverflow.com/questions/11227809/" target="_blank" rel="noopener">Why is processing a sorted array faster than an unsorted one?</a>: the famous branch-prediction answer.</li>
+    <li><a href="https://www.brendangregg.com/flamegraphs.html" target="_blank" rel="noopener">Brendan Gregg, Flame Graphs</a>: how to read the profiler output you'll be showing in interviews.</li>
+    <li><a href="https://www.agner.org/optimize/" target="_blank" rel="noopener">Agner Fog's optimization manuals</a>: deep reference on CPU internals and instruction costs. Look things up here rather than reading it cover to cover.</li>
+    <li><a href="https://ocw.mit.edu/courses/6-172-performance-engineering-of-software-systems-fall-2018/" target="_blank" rel="noopener">MIT 6.172, Performance Engineering of Software Systems</a>: a full course with lectures. Pick the lectures on caches, bit hacks and multicore.</li>
+    <li><a href="https://www.cs.cmu.edu/~213/" target="_blank" rel="noopener">CMU 15-213</a> and its textbook <a href="https://csapp.cs.cmu.edu/" target="_blank" rel="noopener">CS:APP</a>: the foundations (memory hierarchy, linking, virtual memory). The labs, especially bomb lab and malloc lab, are excellent practice.</li>
+    <li><a href="https://www.computerenhance.com/" target="_blank" rel="noopener">Casey Muratori, Computer, Enhance!</a> (paid): a performance-aware programming course, if you want guided exercises.</li>
+    <li><a href="https://godbolt.org" target="_blank" rel="noopener">Compiler Explorer</a>: check what your code compiles to. Use it constantly.</li>
+  </ul>
+
+  <h3>Real bugs and postmortems</h3>
+  <p>The job is finding bugs in real systems, so read how real ones happened. These also make good interview talking points.</p>
+  <ul>
+    <li><a href="https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/" target="_blank" rel="noopener">Cloudflare, Cloudbleed incident report</a>: an end-of-buffer check written as <code>==</code> instead of <code>&gt;=</code> in a generated C parser leaked private memory into web pages.</li>
+    <li><a href="https://rustsec.org/advisories/" target="_blank" rel="noopener">RustSec advisories</a>: real soundness bugs in Rust crates, many inside <code>unsafe</code> blocks.</li>
+    <li><a href="https://googleprojectzero.blogspot.com/" target="_blank" rel="noopener">Google Project Zero blog</a>: detailed write-ups of memory-safety bugs in real software.</li>
+    <li><a href="https://github.com/danluu/post-mortems" target="_blank" rel="noopener">danluu/post-mortems</a>: a big list of production failures, grouped by cause.</li>
+  </ul>
+
+  <h3>Mock interviews and company research</h3>
+  <ul>
+    <li><a href="https://interviewing.io/" target="_blank" rel="noopener">interviewing.io</a>: anonymous mock interviews with working engineers.</li>
+    <li>Search Glassdoor and Reddit for "[company] intern interview" once you know the company. Past candidates often describe the exact rounds.</li>
+  </ul>
+
+  <footer>Ticks and fields are saved in this browser only.</footer>
+</main>
+
+<script>
+(function () {
+  function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  // theme, shared key with the personal site
+  var root = document.documentElement;
+  var toggle = document.getElementById('theme-toggle');
+  function isDark() {
+    var t = root.getAttribute('data-theme');
+    if (t) return t === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function label() { toggle.textContent = isDark() ? 'light' : 'dark'; }
+  var saved = get('theme');
+  if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
+  label();
+  toggle.addEventListener('click', function () {
+    var next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    set('theme', next);
+    label();
+  });
+
+  // text fields
+  document.querySelectorAll('.fields input').forEach(function (el) {
+    var v = get('prep:' + el.id);
+    if (v) el.value = v;
+    el.addEventListener('input', function () { set('prep:' + el.id, el.value); });
+  });
+
+  // checklists
+  document.querySelectorAll('ul.checks').forEach(function (list) {
+    var group = list.getAttribute('data-group');
+    var boxes = list.querySelectorAll('input[type=checkbox]');
+    var tally = document.getElementById(group + '-tally');
+    function update() {
+      var n = 0;
+      boxes.forEach(function (b) { if (b.checked) n++; });
+      tally.textContent = n + ' of ' + boxes.length + ' done';
+    }
+    boxes.forEach(function (b) {
+      b.checked = get('prep:' + b.id) === '1';
+      b.addEventListener('change', function () { set('prep:' + b.id, b.checked ? '1' : '0'); update(); });
+    });
+    update();
+  });
+
+  // timer
+  var total = 25 * 60, left = total, handle = null;
+  var clock = document.getElementById('clock');
+  var startBtn = document.getElementById('t-start');
+  var timerEl = document.getElementById('timer');
+  function draw() {
+    var m = Math.floor(left / 60), s = left % 60;
+    clock.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+  function stop() { clearInterval(handle); handle = null; startBtn.textContent = left === total ? 'start' : 'resume'; }
+  startBtn.addEventListener('click', function () {
+    if (handle) { stop(); return; }
+    if (left === 0) return;
+    startBtn.textContent = 'pause';
+    handle = setInterval(function () {
+      left--; draw();
+      if (left <= 0) { stop(); startBtn.textContent = "time's up"; timerEl.classList.add('done'); }
+    }, 1000);
+  });
+  document.getElementById('t-reset').addEventListener('click', function () {
+    stop(); left = total; draw(); startBtn.textContent = 'start'; timerEl.classList.remove('done');
+  });
+
+  // copy buttons
+  document.querySelectorAll('.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.previousElementSibling.textContent.replace(/^"|"$/g, '');
+      function done() { btn.textContent = 'copied'; setTimeout(function () { btn.textContent = 'copy'; }, 1500); }
+      try {
+        navigator.clipboard.writeText(text).then(done, function () { selectText(btn.previousElementSibling); });
+      } catch (e) { selectText(btn.previousElementSibling); }
+    });
+  });
+  function selectText(el) {
+    var r = document.createRange(); r.selectNodeContents(el);
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+})();
+</script>
+</body>
+</html>

@@ -4,178 +4,154 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Breadth first, then depth</title>
+<script>(function(){var t;try{t=localStorage.getItem("theme")}catch(e){}if(t!=="dark"&&t!=="light"){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t})();</script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400;500;700&display=swap">
+<style>
+:root{color-scheme:light;--font-main:"Kode Mono",ui-monospace,Menlo,monospace;
+  --bg:#fafaf9;--ink:#1c1917;--muted:#78716c;--faint:#a8a29e;--accent:#1c1917;--line:#e7e5e4;--card:#ffffff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --bg:#1c1917;--ink:#fafaf9;--muted:#a8a29e;--faint:#78716c;--accent:#fafaf9;--line:#44403c;--card:#292524}}
+:root[data-theme="dark"]{color-scheme:dark;
+  --bg:#1c1917;--ink:#fafaf9;--muted:#a8a29e;--faint:#78716c;--accent:#fafaf9;--line:#44403c;--card:#292524}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-main);font-size:15px;line-height:1.75}
+.wrap{max-width:44rem;margin:0 auto;padding:4rem 1.5rem 3rem}
+a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--muted)}
+a:hover{border-bottom-style:solid;border-bottom-color:var(--accent)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.back{border:0;color:var(--muted);font-size:.85rem;display:inline-block;margin-bottom:2.5rem}
+h1{font-size:1.6rem;line-height:1.3;margin:0 0 .5rem;text-wrap:balance}
+h2{font-size:1.25rem;line-height:1.35;margin:3.5rem 0 .2rem;color:var(--accent);text-wrap:balance}
+h3{font-size:1.02rem;line-height:1.4;margin:0 0 .15rem;color:var(--accent)}
+section{margin-top:2.75rem;scroll-margin-top:1.5rem}
+.meta{color:var(--faint);font-size:.8rem;margin:0 0 2.5rem}
+.sub{color:var(--muted);font-size:.85rem;margin:0 0 .5rem}
+.tagline{color:var(--faint);font-size:.75rem;margin:0 0 .9rem}
+.quiet{color:var(--muted)}
+p{margin:0 0 1rem}
+code{font-family:inherit;font-size:.9em;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:0 .3rem;overflow-wrap:anywhere}
+blockquote{border-left:3px solid var(--accent);margin:1.25rem 0;padding:.05rem 0 .05rem 1rem;color:var(--muted)}
+blockquote b{color:var(--ink);font-weight:700}
+ol,ul{padding-left:1.4rem;margin:0 0 1rem}
+li{margin:.3rem 0}
+#stuck > li{margin:1rem 0}
+.steps{margin:.3rem 0 0;padding-left:1.3rem;font-size:.9rem}
+.steps li{margin:.15rem 0}
+.toc-h{margin:1.4rem 0 .3rem;font-weight:700}
+.tick{color:var(--muted)}
+hr{border:0;border-top:1px solid var(--line);margin:3rem 0}
+.mark,.btn{font:inherit;font-size:.8rem;color:var(--muted);background:none;border:1px solid var(--line);border-radius:6px;padding:.25rem .8rem;cursor:pointer}
+.mark:hover,.btn:hover{color:var(--accent);border-color:var(--accent)}
+.mark[data-s="2"]{color:var(--ink);border-color:var(--ink)}
+.btn.pri{color:var(--ink);border-color:var(--ink)}
+.theme-toggle{position:fixed;top:.75rem;right:.75rem;z-index:20;font:inherit;font-size:.75rem;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.25rem .7rem;cursor:pointer}
+.exercise{margin:1.5rem 0;padding:1.1rem 1.2rem;background:var(--card);border:1px solid var(--line);border-radius:6px}
+.exercise .label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 .8rem}
+.labbox{display:flex;flex-direction:column;gap:.9rem;font-size:.9rem}
+.lab-row{display:flex;flex-wrap:wrap;gap:.6rem 1.1rem;align-items:center}
+.lab-row label{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+.lab-row input[type=number],.lab-row select{font:inherit;font-size:.9rem;width:5rem;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:.15rem .4rem}
+.lab-row select{width:auto}
+.seg{display:flex;flex-wrap:wrap;gap:.4rem}
+.seg button{font:inherit;font-size:.8rem;color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:.15rem .7rem;cursor:pointer}
+.seg button[aria-pressed="true"]{color:var(--bg);background:var(--ink);border-color:var(--ink)}
+.sd{color:var(--muted);font-size:.85rem}
+.cells{display:flex;flex-wrap:wrap;gap:4px}
+.cell{width:28px;height:28px;display:grid;place-items:center;border:1px solid var(--line);border-radius:3px;font-size:.85rem}
+.cell.pad{border-style:dashed;color:var(--faint)}
+.cell.in{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.outs{display:flex;flex-wrap:wrap;gap:4px;align-items:center;color:var(--muted);font-size:.8rem;min-height:24px}
+.outs b{min-width:28px;height:22px;padding:0 4px;display:grid;place-items:center;border:1px solid var(--ink);border-radius:3px;color:var(--ink);font-weight:400}
+.fb{font-size:.85rem}
+.fb.ok{color:var(--ink);font-weight:700}
+.fb.ok::before{content:"✓ "}
+.fb.no{color:var(--muted);font-style:italic}
+.chal{margin:0;padding-left:1.3rem;font-size:.88rem}
+.chal li{margin:.25rem 0}
+details{font-size:.88rem}
+summary{cursor:pointer;color:var(--muted)}
+details p{margin:.5rem 0 0}
+.ranges{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.85rem;font-variant-numeric:tabular-nums}
+th{text-align:left;font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:.4rem 1rem .5rem 0;border-bottom:2px solid var(--ink)}
+td{padding:.5rem 1rem .5rem 0;border-bottom:1px solid var(--line)}
+.okc{color:var(--ink);font-weight:700}
+.badc{color:var(--muted);font-style:italic}
+.matwrap{display:flex;flex-wrap:wrap;gap:12px;align-items:center;overflow-x:auto}
+.mt{border-collapse:collapse;width:auto;margin:0}
+.mt td{min-width:30px;height:26px;text-align:center;border:1px solid var(--line);padding:0 4px}
+.mt td.hl{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mt td.y{border-color:var(--ink);font-weight:700}
+.mt td.empty{color:var(--faint);border-style:dashed}
+.mop{color:var(--muted)}
+
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.75rem;margin:0 0 1.5rem}
+.how div{border:1px solid var(--line);border-radius:6px;padding:.75rem .9rem;font-size:.88rem;color:var(--muted);background:var(--card)}
+.how b{display:block;color:var(--ink);margin-bottom:.15rem}
+.filters{font-size:.85rem;display:flex;flex-wrap:wrap;gap:.35rem .5rem;align-items:center;margin:0 0 .75rem}
+.filters button{font:inherit;font-size:.85rem;color:var(--muted);background:none;border:0;border-bottom:1px dotted transparent;padding:0 .1rem;cursor:pointer}
+.filters button:hover{color:var(--accent)}
+.filters button[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--ink);font-weight:700}
+.filters .sep{color:var(--faint)}
+.mark[data-s="1"]{color:var(--ink);border-style:dashed;border-color:var(--muted)}
+.skim{color:var(--faint);font-size:.8rem}
+footer{border-top:1px solid var(--line);margin-top:4rem;padding-top:1.25rem;color:var(--faint);font-size:.75rem}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
 </head>
 <body>
-<title>Ampixa Reading Map</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<style>
-:root{
-  --bg:#F5F6F8; --surface:#FFFFFF; --sunk:#ECEEF2; --ink:#15171C; --muted:#5A6170; --rule:#DADEE5;
-  --accent:#C4163A; --accent-soft:#FBE7EB;
-  --sys:#2A5DB0; --sys-soft:#E4ECF8; --ml:#7A3FB0; --ml-soft:#F0E7F8; --both:#1F7A4D; --both-soft:#E3F3EA;
-  --warn:#9A6200; --warn-soft:#FBF0DB;
-  --display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
-  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){color-scheme:dark;
-    --bg:#101217; --surface:#171A21; --sunk:#1E222B; --ink:#E6E8ED; --muted:#9CA3B0; --rule:#2B303B;
-    --accent:#FF5B74; --accent-soft:#3A1720;
-    --sys:#7FA8F0; --sys-soft:#18233A; --ml:#C39BF0; --ml-soft:#2A1C3A; --both:#5CC98E; --both-soft:#15291F;
-    --warn:#E7B04A; --warn-soft:#2E2412;}
-}
-:root[data-theme="dark"]{color-scheme:dark;
-    --bg:#101217; --surface:#171A21; --sunk:#1E222B; --ink:#E6E8ED; --muted:#9CA3B0; --rule:#2B303B;
-    --accent:#FF5B74; --accent-soft:#3A1720;
-    --sys:#7FA8F0; --sys-soft:#18233A; --ml:#C39BF0; --ml-soft:#2A1C3A; --both:#5CC98E; --both-soft:#15291F;
-    --warn:#E7B04A; --warn-soft:#2E2412;}
-*{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6;padding-inline:16px;padding-block:0 64px}
-.wrap{max-width:1120px;margin:0 auto}
-h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
-h1{font-size:clamp(30px,5vw,44px);font-weight:700}
-h2{font-size:24px;font-weight:700}
-h3{font-size:16.5px;font-weight:600}
-p{margin:0;max-width:70ch}
-a{color:var(--accent)}
-code{font-family:var(--mono);font-size:.86em;background:var(--sunk);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
-.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:600}
-.stack{display:flex;flex-direction:column;gap:14px}
-header{padding-block:36px 22px;display:flex;flex-direction:column;gap:12px}
-.lede{font-size:16.5px;color:var(--muted)}
-.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
-.how div{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:11px 14px;font-size:14px}
-.how b{display:block;font-family:var(--display);font-size:15px}
-
-.chip{display:inline-block;font-size:11.5px;font-weight:600;border-radius:99px;padding:1px 8px;white-space:nowrap}
-.t-sys{background:var(--sys-soft);color:var(--sys)} .t-ml{background:var(--ml-soft);color:var(--ml)} .t-both{background:var(--both-soft);color:var(--both)}
-.r{background:var(--sunk);color:var(--muted);font-family:var(--mono);font-weight:500}
-
-.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--rule);padding-block:10px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-inline:-16px;padding-inline:16px}
-.seg{display:flex;flex-wrap:wrap;gap:6px}
-.seg button,.btn{font:inherit;font-size:13px;background:var(--surface);color:var(--muted);border:1px solid var(--rule);border-radius:99px;padding:4px 11px;cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-button:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.prog{margin-left:auto;display:flex;gap:10px;align-items:center;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
-.meter{width:120px;height:6px;border-radius:99px;background:var(--sunk);overflow:hidden;display:flex}
-.meter i{display:block;height:100%}
-.meter .m2{background:var(--both)} .meter .m1{background:var(--warn)}
-
-.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:24px;align-items:start;padding-top:24px}
-@media (max-width:860px){.layout{grid-template-columns:1fr}}
-aside{position:sticky;top:64px;display:flex;flex-direction:column;gap:10px}
-@media (max-width:860px){aside{position:static}}
-.problems{display:flex;flex-direction:column;gap:6px}
-.pb{font:inherit;text-align:left;background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:9px 12px;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;gap:2px}
-.pb small{color:var(--muted);font-size:12.5px}
-.pb[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
-.route{background:var(--surface);border:1px solid var(--accent);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
-.route ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
-.route li{font-size:14px}
-.route li a{cursor:pointer}
-.route .why{color:var(--muted);font-size:13px;display:block}
-
-.layer{display:flex;flex-direction:column;gap:12px;margin-bottom:30px}
-.layer-h{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:8px}
-.layer-h span{color:var(--muted);font-size:13.5px}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:12px}
-.card{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:9px;scroll-margin-top:80px}
-.card.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
-.card.dim{opacity:.38}
-.card .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
-.card .tags{display:flex;gap:5px;flex-wrap:wrap}
-.why{font-size:13.5px;color:var(--muted)}
-.reads{display:flex;flex-direction:column;gap:5px;font-size:14px}
-.reads div{display:grid;grid-template-columns:52px minmax(0,1fr);gap:8px}
-.reads .k{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600;padding-top:3px}
-.q{font-size:13.5px;border-left:3px solid var(--warn);background:var(--warn-soft);padding:7px 10px;border-radius:0 6px 6px 0}
-.state{font:inherit;font-size:12px;border:1px solid var(--rule);background:var(--sunk);color:var(--muted);border-radius:99px;padding:2px 9px;cursor:pointer;white-space:nowrap}
-.state[data-s="1"]{background:var(--warn-soft);color:var(--warn);border-color:transparent}
-.state[data-s="2"]{background:var(--both-soft);color:var(--both);border-color:transparent}
-.card.wide{grid-column:1/-1}
-.labbox{border:1px dashed var(--rule);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:12px;background:var(--bg)}
-.lab-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:14px}
-.lab-row label{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.lab-row input[type=number],.lab-row select{font:inherit;font-size:14px;width:84px;background:var(--surface);color:var(--ink);border:1px solid var(--rule);border-radius:6px;padding:4px 6px}
-.lab-row select{width:auto}
-.lab-row .btn{border-radius:7px}
-.lab-row .btn.pri{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.cells{display:flex;flex-wrap:wrap;gap:4px;font-family:var(--mono);font-size:13px}
-.cell{width:30px;height:30px;display:grid;place-items:center;border:1px solid var(--rule);border-radius:5px;background:var(--surface)}
-.cell.pad{border-style:dashed;color:var(--muted)}
-.cell.in{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:500}
-.outs{display:flex;flex-wrap:wrap;gap:4px;font-family:var(--mono);font-size:12px;color:var(--muted);align-items:center;min-height:24px}
-.outs b{min-width:30px;height:24px;padding:0 4px;display:grid;place-items:center;border-radius:5px;background:var(--both-soft);color:var(--both);font-weight:500}
-.fb{font-size:13.5px;font-weight:500}
-.fb.ok{color:var(--both)} .fb.no{color:var(--accent)}
-.sd{font-size:13px;color:var(--muted)}
-.chal{margin:0;padding-left:20px;font-size:13.5px;display:flex;flex-direction:column;gap:4px}
-details{font-size:13.5px} summary{cursor:pointer;color:var(--muted);font-weight:500}
-details p{margin-top:6px}
-.ranges{overflow-x:auto}
-.ranges table{border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;min-width:420px}
-.ranges td,.ranges th{padding:5px 10px;border-bottom:1px solid var(--rule);text-align:right}
-.ranges th{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
-.ranges td:first-child,.ranges th:first-child{text-align:left;font-family:var(--mono)}
-.matwrap{display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-family:var(--mono);font-size:13px;overflow-x:auto}
-.mt{border-collapse:collapse}
-.mt td{min-width:32px;height:28px;text-align:center;border:1px solid var(--rule);background:var(--surface);padding:0 4px;font-variant-numeric:tabular-nums}
-.mt td.hl{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:500}
-.mt td.y{background:var(--both-soft);color:var(--both);font-weight:500}
-.mt td.empty{color:var(--muted);border-style:dashed}
-.mop{color:var(--muted);font-size:16px}
-.okc{color:var(--both);font-weight:600} .badc{color:var(--accent);font-weight:600}
-footer{margin-top:36px;color:var(--muted);font-size:13px;border-top:1px solid var(--rule);padding-top:14px}
-</style>
-
 <div class="wrap">
-<header>
-  <div class="eyebrow">Ampixa · sanoTTS · saanoTTS · nsl</div>
-  <h1>Reading map: breadth first, then depth by problem</h1>
-  <p class="lede">The concepts that the three repos actually depend on, each tied to the file or number in the repo that needs it. If the basics feel shaky, start at Layer 0 and do each exercise by hand before reading. Then go wide: one short read per card, plus the recall question. When you hit a real problem, pick it on the left and go deep along that path.</p>
-  <div class="how">
-    <div><b>BFS pass</b>Read only the "Wide" link on each card, layer by layer. Mark it "skimmed".</div>
-    <div><b>Recall check</b>Answer the yellow question in your own words, without the tab open. Only then mark "can explain".</div>
-    <div><b>DFS pass</b>Pick a problem. Follow its path, reading the "Deep" links and the repo pointer.</div>
-    <div><b>Already in nsl</b><code>nsl/docs/CONCEPTS.html</code> has one-line concept cards. This page is the reading layer behind them.</div>
-  </div>
-</header>
+<a class="back" href="/private/">← back</a>
+<article>
+<h1>Breadth first, then depth by problem</h1>
+<p class="meta">a reading map for sanoTTS, saanoTTS and nsl · 25 september 2026</p>
 
-<div class="bar">
-  <div class="seg" id="trackSeg">
-    <button data-t="all" aria-pressed="true">All</button>
-    <button data-t="sys" aria-pressed="false">Systems / embedded</button>
-    <button data-t="ml" aria-pressed="false">AI / ML</button>
-  </div>
-  <div class="seg" id="repoSeg">
-    <button data-r="all" aria-pressed="true">Any repo</button>
-    <button data-r="tts" aria-pressed="false">sanoTTS</button>
-    <button data-r="nsl" aria-pressed="false">nsl</button>
-  </div>
-  <div class="prog"><span id="progTxt"></span><div class="meter" aria-hidden="true"><i class="m2" id="m2"></i><i class="m1" id="m1"></i></div></div>
+<p>These are the ideas the three repos actually lean on, in the order they build on each other. Each section covers one idea: where the repos use it, a question to answer before reading anything, and one or two things to read. It is not meant to be read in one sitting.</p>
+
+<h2 id="how">How to read this</h2>
+<div class="how">
+  <div><b>Breadth pass</b>Read only the "Read:" link in each section, layer by layer. Mark it "skimmed".</div>
+  <div><b>Recall check</b>Answer the "Before you read" question in your own words, without the tab open. Only then mark it "understood".</div>
+  <div><b>Depth pass</b>Pick a problem below. Follow its path, reading the "Going deeper" links and the repo files.</div>
+  <div><b>Already in nsl</b><code>nsl/docs/CONCEPTS.html</code> has one-line concept cards. This page is the reading layer behind them.</div>
 </div>
+<p>Go wide first. Take one section a day, starting at Layer 0 and moving up. For each one:</p>
+<ol>
+  <li>Answer the question in the box before reading anything. Write your guess down, even if it's wrong.</li>
+  <li>If there's an exercise, do it next.</li>
+  <li>Open the file or number the section points at, so you know what the idea is for.</li>
+  <li>Read the first link, and stop once you can answer the question.</li>
+  <li>Close the tab and answer again in your own words. Mark it "skimmed" if you're still unsure, and "understood" only if you could explain it to someone else.</li>
+</ol>
+<p>The next day, answer yesterday's question from memory before starting a new one.</p>
+<p>When a real problem blocks you, stop going wide and go deep instead. Find the problem below and follow its path. It picks out the few sections, from any layer, that the problem needs.</p>
 
-<div class="layout">
-  <aside>
-    <div class="eyebrow">Go deep on a problem</div>
-    <div class="problems" id="problems"></div>
-    <div class="route" id="route" hidden></div>
-  </aside>
-  <main id="layers"></main>
+<h2 id="stuck-on">If you're stuck on something</h2>
+<ul id="stuck"></ul>
+
+<h2 id="contents">Contents</h2>
+<p class="filters" id="filters">
+  <span class="quiet">show</span> <button type="button" data-f="t" data-v="all" aria-pressed="true">all</button> <button type="button" data-f="t" data-v="sys" aria-pressed="false">systems</button> <button type="button" data-f="t" data-v="ml" aria-pressed="false">ai / ml</button>
+  <span class="sep">·</span>
+  <span class="quiet">repo</span> <button type="button" data-f="r" data-v="all" aria-pressed="true">any</button> <button type="button" data-f="r" data-v="tts" aria-pressed="false">sanoTTS</button> <button type="button" data-f="r" data-v="nsl" aria-pressed="false">nsl</button>
+</p>
+<p class="sub" id="progress"></p>
+<div id="toc"></div>
+
+<div id="body"></div>
+</article>
+
+<footer>Links checked on 24–25 September 2026: arXiv IDs against their paper titles, and other pages for a working response (gnu.org blocks automated checks, so that one link is unverified). The repo references come from reading the code, not running it. Companion page: <a href="/depth-breadth/sanotts-guide/">sanoTTS field guide</a>.</footer>
 </div>
-
-<footer>Every link was checked on 2026-09-24: arXiv IDs against their titles, other pages for a 200 response (gnu.org blocks automated checks). Repo pointers come from reading the code, not running it. Companion: <a href="/depth-breadth/sanotts-guide/">sanoTTS field guide</a>.</footer>
-</div>
-
+<button class="theme-toggle" id="theme-toggle" type="button">dark</button>
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const ax=id=>`https://arxiv.org/abs/${id}`;
 const L=(t,u)=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`;
-
 const LAYERS=[
  ['0','Foundations','The ground under Layer 1. Exercise first, reading second.'],
  ['1','Shared ground','Needed by all three repos. Do this layer first.'],
@@ -437,36 +413,6 @@ const P=[
  {k:'good',t:'A result looks too good',s:'before you publish',path:[['leak','Leakage checklist'],['recipe','Baselines and ablations'],['fp','Is it a numerics artefact?']]},
 ];
 
-let st=store.get('rmState',{}),ft='all',fr='all',sel=null;
-function render(){
-  const route=sel?P.find(p=>p.k===sel):null, onSet=new Set(route?route.path.map(x=>x[0]):[]);
-  $('#layers').innerHTML=LAYERS.map(([l,name,sub])=>{
-    const cards=N.filter(n=>n.l==+l&&(ft==='all'||n.t===ft)&&(fr==='all'||n.r.includes(fr)));
-    if(!cards.length)return'';
-    return `<section class="layer"><div class="layer-h"><div class="eyebrow">Layer ${l}</div><h2>${name}</h2><span>${sub}</span></div><div class="cards">${cards.map(n=>{
-      const s=st[n.id]||0,lab=['not read','skimmed','can explain'][s];
-      const tc=n.t==='sys'?'t-sys':'t-ml',tl=n.t==='sys'?'systems':'AI / ML';
-      return `<article class="card${n.lab?' wide':''}${onSet.has(n.id)?' on':''}${route&&!onSet.has(n.id)?' dim':''}" id="c-${n.id}">
-        <div class="top"><h3>${n.title}</h3><button class="state" data-id="${n.id}" data-s="${s}" aria-label="Status: ${lab}">${lab}</button></div>
-        <div class="tags"><span class="chip ${tc}">${tl}</span>${n.r.map(r=>`<span class="chip r">${r==='tts'?'sanoTTS':'nsl'}</span>`).join('')}</div>
-        <p class="why">${n.why}</p>
-        ${n.lab?`<div class="labbox" data-lab="${n.lab}"></div>`:''}
-        <div class="reads"><div><span class="k">Wide</span><span>${n.wide}</span></div><div><span class="k">Deep</span><span>${n.deep}</span></div></div>
-        <div class="q"><b>Can you answer?</b> ${n.q}</div></article>`}).join('')}</div></section>`}).join('');
-  mountLabs();
-  $$('.state').forEach(b=>b.onclick=()=>{const id=b.dataset.id;st[id]=((st[id]||0)+1)%3;store.set('rmState',st);render()});
-  const vis=N.filter(n=>(ft==='all'||n.t===ft)&&(fr==='all'||n.r.includes(fr)));
-  const c2=vis.filter(n=>st[n.id]===2).length,c1=vis.filter(n=>st[n.id]===1).length;
-  $('#progTxt').textContent=`${c2} can explain · ${c1} skimmed · ${vis.length} shown`;
-  $('#m2').style.width=(c2/vis.length*100)+'%';$('#m1').style.width=(c1/vis.length*100)+'%';
-  $('#problems').innerHTML=P.map(p=>`<button class="pb" data-k="${p.k}" aria-pressed="${p.k===sel}">${p.t}<small>${p.s}</small></button>`).join('');
-  $$('.pb').forEach(b=>b.onclick=()=>{sel=sel===b.dataset.k?null:b.dataset.k;render()});
-  const R=$('#route');
-  if(route){R.hidden=false;R.innerHTML=`<div class="eyebrow">Depth path</div><h3>${route.t}</h3><ol>${route.path.map(([id,why])=>{const n=N.find(x=>x.id===id);return `<li><a data-go="${id}" tabindex="0">${n.title}</a><span class="why">${why}</span></li>`}).join('')}</ol><button class="btn" id="clr">Show all cards</button>`;
-    $$('#route [data-go]').forEach(a=>{const go=()=>{const el=$('#c-'+a.dataset.go);if(el)el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})};a.onclick=go;a.onkeydown=e=>{if(e.key==='Enter')go()}});
-    $('#clr').onclick=()=>{sel=null;render()};
-  } else R.hidden=true;
-}
 /* Layer 0 labs */
 const LS=Object.assign({conv:{N:5,K:3,S:1,P:0,pos:0},ints:{type:'',k:256,checked:false},mat:{R:3,C:4,n:4,row:-1},fixq:{s:0.1,x:1.23}},store.get('labState',{}));
 const saveLS=()=>store.set('labState',LS);
@@ -597,10 +543,42 @@ function mountInts(box){
     fb.className='fb '+(g===ans?'ok':'no');fb.textContent=g===ans?'Right.':(ans==='none'?'Even int32 overflows at this count. You would need int64.':`Not ${g}. The table shows why.`);drawTable()};
   drawRange();drawTable();
 }
-$$('#trackSeg button').forEach(b=>b.onclick=()=>{ft=b.dataset.t;$$('#trackSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
-$$('#repoSeg button').forEach(b=>b.onclick=()=>{fr=b.dataset.r;$$('#repoSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
-render();
-</script>
 
+let st=store.get('rmState',{}),ft='all',fr='all';
+const stOf=id=>st[id]||0,isDone=id=>stOf(id)===2;
+const LBL=['mark as skimmed','skimmed · mark as understood','✓ understood'];
+const shown=n=>(ft==='all'||n.t===ft)&&(fr==='all'||n.r.includes(fr));
+const REPO={tts:'sanoTTS',nsl:'nsl'};
+const joinLinks=h=>h.replace(/<br>/g,', and ');
+function renderToc(){
+  $('#toc').innerHTML=LAYERS.map(([l,name])=>{const ns=N.filter(n=>n.l==+l&&shown(n));return ns.length?`<p class="toc-h">Layer ${l}: ${name}</p><ol>${ns.map(n=>`<li><a href="#${n.id}">${n.title}</a>${stOf(n.id)===2?' <span class="tick">✓</span>':stOf(n.id)===1?' <span class="skim">(skimmed)</span>':''}</li>`).join('')}</ol>`:''}).join('');
+  const vis=N.filter(shown),c2=vis.filter(n=>stOf(n.id)===2).length,c1=vis.filter(n=>stOf(n.id)===1).length;
+  $('#progress').textContent=`${vis.length} sections shown · ${c2} understood · ${c1} skimmed.`;
+  $$('#body section').forEach(sec=>{const n=N.find(x=>x.id===sec.id);sec.hidden=!shown(n)});
+  $$('#body .layer-h').forEach(h=>{const l=+h.dataset.l;h.hidden=!N.some(n=>n.l===l&&shown(n))});
+}
+function renderBody(){
+  $('#stuck').innerHTML=P.map(p=>`<li><b>${p.t}</b> <span class="quiet">(${p.s})</span><ol class="steps">${p.path.map(([id,why])=>`<li><a href="#${id}">${N.find(n=>n.id===id).title}</a> <span class="quiet">— ${why}</span></li>`).join('')}</ol></li>`).join('');
+  $('#body').innerHTML=LAYERS.map(([l,name,sub])=>`<div class="layer-h" data-l="${l}"><h2 id="layer-${l}">Layer ${l}: ${name}</h2><p class="sub">${sub}</p></div>`+N.filter(n=>n.l==+l).map(n=>`
+    <section id="${n.id}">
+      <h3>${n.title}</h3>
+      <p class="tagline">${n.t==='sys'?'systems':'ai / ml'} · ${n.r.map(r=>REPO[r]).join(', ')}</p>
+      <p>${n.why}</p>
+      <blockquote><b>Before you read:</b> ${n.q}</blockquote>
+      ${n.lab?`<div class="exercise"><p class="label">Exercise</p><div class="labbox" data-lab="${n.lab}"></div></div>`:''}
+      <p><b>Read:</b> ${joinLinks(n.wide)}.</p>
+      <p><b>Going deeper:</b> ${joinLinks(n.deep)}.</p>
+      <button class="mark" type="button" data-id="${n.id}" data-s="${stOf(n.id)}">${LBL[stOf(n.id)]}</button>
+    </section>`).join('')).join('');
+  mountLabs();
+  $$('.mark').forEach(b=>b.onclick=()=>{const id=b.dataset.id;st[id]=(stOf(id)+1)%3;store.set('rmState',st);b.dataset.s=stOf(id);b.textContent=LBL[stOf(id)];b.title=stOf(id)===2?'Click again to reset':'';renderToc()});
+}
+
+renderBody();renderToc();
+$$('#filters button').forEach(b=>b.onclick=()=>{if(b.dataset.f==='t')ft=b.dataset.v;else fr=b.dataset.v;$$(`#filters button[data-f="${b.dataset.f}"]`).forEach(x=>x.setAttribute('aria-pressed',x===b));renderToc()});
+(function(){var root=document.documentElement,btn=document.getElementById('theme-toggle');
+  function label(){btn.textContent=root.dataset.theme==='dark'?'light':'dark'}label();
+  btn.addEventListener('click',function(){var n=root.dataset.theme==='dark'?'light':'dark';root.dataset.theme=n;try{localStorage.setItem('theme',n)}catch(e){}label()})})();
+</script>
 </body>
 </html>
