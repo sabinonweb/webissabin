@@ -120,6 +120,13 @@ details p{margin-top:6px}
 .ranges td,.ranges th{padding:5px 10px;border-bottom:1px solid var(--rule);text-align:right}
 .ranges th{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
 .ranges td:first-child,.ranges th:first-child{text-align:left;font-family:var(--mono)}
+.matwrap{display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-family:var(--mono);font-size:13px;overflow-x:auto}
+.mt{border-collapse:collapse}
+.mt td{min-width:32px;height:28px;text-align:center;border:1px solid var(--rule);background:var(--surface);padding:0 4px;font-variant-numeric:tabular-nums}
+.mt td.hl{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:500}
+.mt td.y{background:var(--both-soft);color:var(--both);font-weight:500}
+.mt td.empty{color:var(--muted);border-style:dashed}
+.mop{color:var(--muted);font-size:16px}
 .okc{color:var(--both);font-weight:600} .badc{color:var(--accent);font-weight:600}
 footer{margin-top:36px;color:var(--muted);font-size:13px;border-top:1px solid var(--rule);padding-top:14px}
 </style>
@@ -188,6 +195,41 @@ const N=[
  wide:L('Two\'s complement (Cornell notes)','https://www.cs.cornell.edu/~tomf/notes/cps104/twoscomp.html'),
  deep:L('Beej\'s guide to C','https://beej.us/guide/bgc/')+'<br>'+L('Nand2Tetris (build a computer from gates)','https://www.nand2tetris.org/'),
  q:'Why does 127 + 1 give −128 in int8 instead of an error, and why is that worse than a crash?'},
+{id:'mat',l:0,t:'ml',r:['tts','nsl'],lab:'mat',title:'Dot products and matrix × vector',
+ why:'Every linear layer computes y = W·x. On the chip, <code>snt_matvec_s8</code> is exactly this: it calls <code>snt_dot_s8</code> once per row of W (<code>mcu/src/snt_kernels_ref.c:20-24</code>). Most of the runtime is spent here.',
+ wide:L('3Blue1Brown: essence of linear algebra','https://www.3blue1brown.com/topics/linear-algebra'),
+ deep:'<code>mcu/src/snt_kernels_ref.c</code>, then the SIMD version in <code>mcu/ports/esp32s3/</code>',
+ q:'A layer maps 64 inputs to 96 outputs. What shape is W, and how many multiply-adds does one forward pass cost?'},
+{id:'fixq',l:0,t:'sys',r:['tts'],lab:'fixq',title:'Fixed-point numbers and scales',
+ why:'An int8 value on the chip stands for q × scale. <code>mcu/src/model/act_scales.h</code> holds calibrated activation scales. The kernels multiply plain integers and apply the scale once at the end.',
+ wide:L('Q (number format)','https://en.wikipedia.org/wiki/Q_(number_format)'),
+ deep:L('Integer-arithmetic-only inference (Jacob et al.)',ax('1712.05877'))+'<br>Layer 2 card: integer-only inference',
+ q:'Why can the chip multiply the integers first and apply both scales once, at the end of the dot product?'},
+{id:'tensor',l:0,t:'ml',r:['tts','nsl'],title:'Tensors, shapes and broadcasting',
+ why:'<code>generator_input [1,192,T]</code> in every pack, <code>kpts (N,133,2)</code> in nsl, and the numpy runtime in <code>pypkg/sanotts/models.py</code>. Most training bugs turn out to be shape bugs.',
+ wide:L('A visual intro to NumPy (Jay Alammar)','https://jalammar.github.io/visual-numpy/'),
+ deep:L('NumPy: broadcasting','https://numpy.org/doc/stable/user/basics.broadcasting.html')+'<br>'+L('PyTorch: tensors','https://pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html'),
+ q:'In generator_input [1, 192, T], what does each axis mean? For a 2-second clip at 22,050 Hz with hop 256, roughly what is T?'},
+{id:'softmax',l:0,t:'ml',r:['tts','nsl'],title:'Probability, softmax and cross-entropy',
+ why:'nsl\'s CTC starts with <code>log_softmax</code> (<code>src/train_pose_level.py:380</code>). The Run 5 "blank mass 0.8815" is a softmax probability. Retrieval ranks the gallery by scores.',
+ wide:L('CS231n: linear classification (the softmax section)','https://cs231n.github.io/linear-classify/'),
+ deep:L('Visual information theory (Chris Olah)','https://colah.github.io/posts/2015-09-Visual-Information/'),
+ q:'If a model puts 0.88 probability on "blank" at almost every frame, what does its decoded output look like?'},
+{id:'act',l:0,t:'ml',r:['tts','nsl'],title:'Activations and normalization',
+ why:'The numpy runtime implements <code>silu</code> and <code>leaky_relu</code> (<code>models.py:49-53</code>), plus <code>gelu</code> and <code>layer_norm</code> (<code>nano.py:130,180</code>). <code>mcu/src/model/frozen_norm.h</code> freezes normalization for the int8 chip build.',
+ wide:L('CS231n: neural networks, part 1','https://cs231n.github.io/neural-networks-1/'),
+ deep:L('Layer normalization (Ba et al.)',ax('1607.06450')),
+ q:'Why do you need a non-linearity between two linear layers? What do two stacked linear layers collapse into without one?'},
+{id:'gan',l:0,t:'ml',r:['tts'],title:'Adversarial (GAN) losses',
+ why:'The acoustic student trains with <code>--latent-adv-weight 0.1</code> from step 1500 (<code>train_voice_from_piper.py:652</code>). HiFi-GAN-style decoders are trained against discriminators.',
+ wide:L('From GAN to WGAN (Lilian Weng)','https://lilianweng.github.io/posts/2017-08-20-gan/'),
+ deep:L('Generative adversarial networks (Goodfellow et al.)',ax('1406.2661')),
+ q:'Why add an adversarial loss instead of only an L1/L2 loss against the target? What does L2 alone tend to produce in audio?'},
+{id:'stats',l:0,t:'ml',r:['tts','nsl'],title:'Small samples and uncertainty',
+ why:'sanoTTS: "16 sentences per language, directional, not precise." nsl: E_cont has 37 spans, and the offset medians are n = 10 each. Numbers from small samples move a lot between runs.',
+ wide:L('Seeing Theory (Brown University)','https://seeing-theory.brown.edu/'),
+ deep:L('Bootstrap significance for MT (Koehn 2004)','https://aclanthology.org/W04-3250/')+'<br>'+L('Significance testing in NLP (Dror et al.)','https://aclanthology.org/P18-1128/'),
+ q:'Romanian WER is 0.392 and Czech 0.351, on 16 sentences each. Can you say Czech is better? What would you need to know first?'},
 {id:'nn',l:0,t:'ml',r:['tts','nsl'],title:'Neurons, weights and loss',
  why:'"heart-nano has 294,279 parameters" counts every learned weight and bias: duration 22,858 + acoustic 65,299 + decoder 206,122. Training means adjusting them to lower a loss.',
  wide:L('3Blue1Brown: neural networks','https://www.3blue1brown.com/topics/neural-networks'),
@@ -383,7 +425,7 @@ const N=[
 ];
 
 const P=[
- {k:'basics',t:'The basics feel shaky',s:'start here',path:[['conv','Do the window exercise by hand'],['ints','Then the overflow exercise'],['nn','What a parameter is'],['emb','The first layer of every model'],['up','How frames become audio'],['arena','How the C runtime holds memory']]},
+ {k:'basics',t:'The basics feel shaky',s:'start here',path:[['conv','Do the window exercise by hand'],['ints','Then the overflow exercise'],['mat','The operation the chip spends its time on'],['fixq','What an int8 value stands for'],['nn','What a parameter is'],['tensor','Reading shapes'],['act','What sits between layers'],['softmax','Scores into probabilities'],['emb','The first layer of every model'],['up','How frames become audio'],['arena','How the C runtime holds memory'],['stats','How much to trust a number']]},
  {k:'slow',t:'A new board is slower than real time',s:'systems',path:[['mem','Where do the weights live when the kernel runs?'],['esp','Which memory type, and what it costs'],['simd','Is the fast path actually taken?'],['rtf','Measure the kernel separately from the app'],['tinyml','Port-layer shape']]},
  {k:'gate',t:'int8 export fails the 0.98 golden gate',s:'heart got 0.951',path:[['fp','Is the reference itself stable?'],['int','Where does precision go'],['quant','QAT vs post-training'],['simd','Is accumulation exact?']]},
  {k:'ids',t:'Browser ids differ from Python',s:'e.g. Arabic 44.55%',path:[['g2p','What text reaches espeak'],['wasm','Data files and string passing'],['gpl','What you are allowed to ship']]},
@@ -426,10 +468,69 @@ function render(){
   } else R.hidden=true;
 }
 /* Layer 0 labs */
-const LS=Object.assign({conv:{N:5,K:3,S:1,P:0,pos:0},ints:{type:'',k:256,checked:false}},store.get('labState',{}));
+const LS=Object.assign({conv:{N:5,K:3,S:1,P:0,pos:0},ints:{type:'',k:256,checked:false},mat:{R:3,C:4,n:4,row:-1},fixq:{s:0.1,x:1.23}},store.get('labState',{}));
 const saveLS=()=>store.set('labState',LS);
 const nOut=(N,K,S,P)=>{const e=N+2*P-K;return e<0?0:Math.floor(e/S)+1};
-function mountLabs(){const c=$('[data-lab="conv"]');if(c)mountConv(c);const i=$('[data-lab="ints"]');if(i)mountInts(i)}
+function mountLabs(){const M={conv:mountConv,ints:mountInts,mat:mountMat,fixq:mountFix};$$('[data-lab]').forEach(b=>{const f=M[b.dataset.lab];if(f)f(b)})}
+function mountMat(box){
+  const s=LS.mat,Wv=(i,j)=>((i*3+j*5)%7)-3,Xv=j=>((j*2+1)%5)-2;
+  box.innerHTML=`
+  <div class="lab-row">
+    <label>W rows <input type="number" id="mR" min="1" max="6" value="${s.R}"></label>
+    <label>W columns <input type="number" id="mC" min="1" max="6" value="${s.C}"></label>
+    <label>x entries <input type="number" id="mN" min="1" max="6" value="${s.n}"></label>
+  </div>
+  <div class="matwrap" id="mGrid"></div>
+  <div class="lab-row"><label>Predict the length of y <input type="number" id="mGuess" min="0"></label><button class="btn" id="mCheck">Check</button><span class="fb" id="mFb"></span></div>
+  <div class="lab-row"><button class="btn pri" id="mStep">Compute the next output</button><button class="btn" id="mReset">Start over</button></div>
+  <div class="sd" id="mWork"></div>
+  <ol class="chal">
+    <li>W is 3 × 4 and x has 4 entries. Predict the length of y, then check.</li>
+    <li>Work out y1 by hand before pressing "Compute the next output". Then press it and compare.</li>
+    <li>Set x to 3 entries and press the button. What goes wrong, and why?</li>
+    <li>A linear layer maps 64 inputs to 96 outputs. What shape is W? How many multiply-adds for one output, and for the whole layer?</li>
+    <li>Open <code>mcu/src/snt_kernels_ref.c</code>. <code>snt_matvec_s8</code> calls <code>snt_dot_s8</code> once per row. Explain why, using what you just did by hand.</li>
+  </ol>`;
+  const draw=()=>{
+    const {R,C,n}=s,ok=C===n;
+    const Wt=`<table class="mt" aria-label="Matrix W">${Array.from({length:R},(_,i)=>`<tr>${Array.from({length:C},(_,j)=>`<td class="${ok&&i===s.row?'hl':''}">${Wv(i,j)}</td>`).join('')}</tr>`).join('')}</table>`;
+    const Xt=`<table class="mt" aria-label="Vector x">${Array.from({length:n},(_,j)=>`<tr><td class="${ok&&s.row>=0?'hl':''}">${Xv(j)}</td></tr>`).join('')}</table>`;
+    const Yt=ok?`<table class="mt" aria-label="Output y">${Array.from({length:R},(_,i)=>{let v=0;for(let j=0;j<C;j++)v+=Wv(i,j)*Xv(j);return `<tr><td class="${i<=s.row?'y':'empty'}">${i<=s.row?v:'?'}</td></tr>`}).join('')}</table>`:'';
+    $('#mGrid').innerHTML=`<div><div class="sd">W (${R} × ${C})</div>${Wt}</div><span class="mop">·</span><div><div class="sd">x (${n})</div>${Xt}</div>${ok?`<span class="mop">=</span><div><div class="sd">y</div>${Yt}</div>`:''}`;
+  };
+  const read=()=>{s.R=Math.max(1,Math.min(6,+$('#mR').value||1));s.C=Math.max(1,Math.min(6,+$('#mC').value||1));s.n=Math.max(1,Math.min(6,+$('#mN').value||1));s.row=-1;$('#mWork').textContent='';$('#mFb').textContent='';saveLS();draw()};
+  ['mR','mC','mN'].forEach(id=>$('#'+id).addEventListener('input',read));
+  $('#mStep').onclick=()=>{const {R,C,n}=s;
+    if(C!==n){$('#mWork').textContent=`This doesn't compute. W has ${C} columns but x has ${n} entries, and each row's dot product needs exactly one x value per column.`;return}
+    if(s.row+1<R)s.row++;const r=s.row;let v=0;const terms=[];for(let j=0;j<C;j++){v+=Wv(r,j)*Xv(j);terms.push(`(${Wv(r,j)} × ${Xv(j)})`)}
+    $('#mWork').textContent=`y${r+1} = row ${r+1} of W · x = ${terms.join(' + ')} = ${v}`+(r+1>=R?'. That was the last row.':'');saveLS();draw()};
+  $('#mReset').onclick=()=>{s.row=-1;$('#mWork').textContent='';saveLS();draw()};
+  $('#mCheck').onclick=()=>{const g=$('#mGuess').value,fb=$('#mFb');if(g===''){fb.className='fb no';fb.textContent='Enter a number first.';return}
+    if(s.C!==s.n){fb.className='fb no';fb.textContent='Trick setting: these shapes don\'t multiply at all. Press the button to see why.';return}
+    const ok=+g===s.R;fb.className='fb '+(ok?'ok':'no');fb.textContent=ok?`Right: ${s.R}, one output per row of W.`:`Not ${g}. Step through the rows and count.`};
+  draw();
+}
+function mountFix(box){
+  const s=LS.fixq;
+  box.innerHTML=`
+  <div class="lab-row"><label>Scale s <input type="number" id="fS" step="0.001" min="0.0001" value="${s.s}"></label><label>Real value x <input type="number" id="fX" step="0.01" value="${s.x}"></label></div>
+  <div class="lab-row"><label>Predict the int8 value q <input type="number" id="fG"></label><button class="btn" id="fCheck">Check</button><span class="fb" id="fFb"></span></div>
+  <div class="sd" id="fOut"></div>
+  <ol class="chal">
+    <li>s = 0.1, x = 1.23. Predict q, then the real value you get back from q. How big is the error?</li>
+    <li>s = 0.1, x = 20. What happens, and how big is the error now?</li>
+    <li>What is the largest x that fits when s = 0.1? Choose an s that lets ±4.0 fit with the smallest error.</li>
+    <li>Q7 format means s = 1/128 ≈ 0.0078. What range of real values can int8 cover then?</li>
+    <li>(qa × sa) × (qb × sb) = (qa × qb) × (sa × sb). Why does this let <code>snt_dot_s8</code> multiply plain integers and apply the scales once at the end? Where are those scales stored? Look in <code>mcu/src/model/act_scales.h</code>.</li>
+  </ol>
+  <details><summary>The rule (open after you've predicted a few)</summary><p>q = round(x / s), clamped to the int8 range −128…127. Going back gives q × s. This is symmetric quantization, with the zero point at 0, the simplest form. The Layer 2 integer-inference card covers zero points.</p></details>`;
+  const read=()=>{s.s=Math.max(0.0001,+$('#fS').value||0.1);s.x=+$('#fX').value||0;$('#fFb').textContent='';$('#fOut').textContent='';saveLS()};
+  ['fS','fX'].forEach(id=>$('#'+id).addEventListener('input',read));
+  $('#fCheck').onclick=()=>{const g=$('#fG').value,fb=$('#fFb');if(g===''){fb.className='fb no';fb.textContent='Enter a number first.';return}
+    const raw=Math.round(s.x/s.s),q=Math.max(-128,Math.min(127,raw)),back=q*s.s,cl=raw!==q,ok=+g===q;
+    fb.className='fb '+(ok?'ok':'no');fb.textContent=ok?'Right.':`Not ${g}.`;
+    $('#fOut').textContent=`q = ${q}. Back to a real number: ${q} × ${s.s} = ${+back.toFixed(4)}. Error: ${+(s.x-back).toFixed(4)}.`+(cl?` x was outside the range, so q was clamped to ${q}.`:'')+` With this scale, int8 covers ${+(-128*s.s).toFixed(4)} to ${+(127*s.s).toFixed(4)}.`};
+}
 function mountConv(box){
   const s=LS.conv;
   box.innerHTML=`
