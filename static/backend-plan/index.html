@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<script>(function(){var t;try{t=localStorage.getItem("theme")}catch(e){}if(t==="dark"||t==="light"){document.documentElement.dataset.theme=t}})();</script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<title>Backend Study Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400;500;700&display=swap">
+<style>
+  :root {
+    --font: "Kode Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --bg: #fafaf9;
+    --ink: #1c1917;
+    --muted: #78716c;
+    --faint: #a8a29e;
+    --line: #e7e5e4;
+    --code-bg: #f5f5f4;
+    --mark: #fef3c7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #1c1917;
+      --ink: #fafaf9;
+      --muted: #a8a29e;
+      --faint: #78716c;
+      --line: #44403c;
+      --code-bg: #292524;
+      --mark: #422006;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #1c1917;
+    --ink: #fafaf9;
+    --muted: #a8a29e;
+    --faint: #78716c;
+    --line: #44403c;
+    --code-bg: #292524;
+    --mark: #422006;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.75;
+    padding-inline: 16px;
+    padding-block: 48px 96px;
+  }
+  main { max-width: 44rem; margin: 0 auto; }
+
+  header { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  h1 { font-size: 1.6rem; line-height: 1.3; margin: 0; font-weight: 700; text-wrap: balance; }
+  .byline { color: var(--muted); font-size: 0.85rem; margin: 6px 0 32px; }
+  h2 { font-size: 1.15rem; margin: 56px 0 8px; font-weight: 700; text-wrap: balance; }
+  h3 { font-size: 0.95rem; margin: 32px 0 4px; font-weight: 500; }
+  p, ul, ol { margin: 0 0 14px; }
+  ul, ol { padding-left: 1.3em; }
+  li { margin-bottom: 4px; }
+  a { color: inherit; text-decoration: underline dotted; text-underline-offset: 3px; }
+  strong { font-weight: 700; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 48px 0; }
+
+  code { font-family: var(--font); background: var(--code-bg); padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
+  pre { background: var(--code-bg); padding: 14px 16px; border-radius: 4px; overflow-x: auto; font-size: 0.85rem; line-height: 1.6; margin: 0 0 12px; }
+  pre code { background: none; padding: 0; }
+
+  blockquote { margin: 0 0 14px; padding-left: 16px; border-left: 2px solid var(--line); color: var(--ink); }
+  .muted { color: var(--muted); }
+  .small { font-size: 0.85rem; }
+
+  button {
+    font: inherit; font-size: 0.8rem; color: var(--ink); background: transparent;
+    border: 1px solid var(--line); border-radius: 3px; padding: 3px 10px; cursor: pointer;
+  }
+  button:hover { border-color: var(--muted); }
+  button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+
+  details.q { margin: 0 0 18px; }
+  details.q > summary { cursor: pointer; color: var(--muted); font-size: 0.85rem; list-style: none; }
+  details.q > summary::-webkit-details-marker { display: none; }
+  details.q > summary::before { content: "+ "; }
+  details.q[open] > summary::before { content: "− "; }
+  details.q .answer { margin-top: 8px; padding-left: 16px; border-left: 2px solid var(--line); }
+
+  .prompt { font-weight: 500; margin-bottom: 6px; }
+
+  ul.checks { list-style: none; padding-left: 0; }
+  ul.checks li { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+  ul.checks input { margin-top: 6px; accent-color: var(--ink); flex: none; }
+  ul.checks input:checked + label { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--faint); }
+  ul.checks .build { display: block; color: var(--muted); font-size: 0.85rem; }
+  .tally { color: var(--muted); font-size: 0.85rem; }
+
+  .fields { display: grid; grid-template-columns: max-content 1fr; gap: 8px 14px; align-items: center; margin: 12px 0 14px; }
+  .fields label { color: var(--muted); font-size: 0.85rem; }
+  .fields input, textarea {
+    font: inherit; font-size: 0.9rem; color: var(--ink); background: transparent;
+    border: 0; border-bottom: 1px dotted var(--faint); padding: 2px 0; width: 100%; min-width: 0;
+  }
+  textarea { resize: vertical; min-height: 3.2em; line-height: 1.6; }
+  @media (max-width: 440px) { .fields { grid-template-columns: 1fr; gap: 2px; } .fields input { margin-bottom: 10px; } }
+
+  .timer { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 8px 0 18px; }
+  .timer .clock { font-size: 1.4rem; font-variant-numeric: tabular-nums; min-width: 5ch; }
+  .timer.done .clock { color: var(--muted); }
+
+  table { border-collapse: collapse; width: 100%; font-size: 0.85rem; margin: 0 0 14px; }
+  th, td { text-align: left; padding: 6px 8px 6px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 500; color: var(--muted); }
+
+  mark { background: var(--mark); color: inherit; padding: 0 2px; }
+  footer { margin-top: 64px; color: var(--faint); font-size: 0.8rem; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Learning backend when I "don't have time"</h1>
+    <button id="theme-toggle" type="button" aria-label="Toggle dark mode">dark</button>
+  </header>
+  <p class="byline">A plan for working through <a href="https://backend-from-first-principle.vercel.app/">Backend from First Principles</a> · started 25 Sep 2026</p>
+
+  <p>The site has 26 chapters. It estimates 2–4 hours each, which comes to roughly <strong>60–70 hours</strong> in total. That sounds like a lot until you divide it: at five hours a week it takes about four months. Four months of small, boring, regular sessions will get me further than one heroic weekend followed by six weeks of guilt.</p>
+
+  <p>So this page isn't really about backend. It's about three things: <strong>when</strong> I sit down, <strong>what I do</strong> in each sitting, and <strong>what I build</strong> so the reading actually sticks.</p>
+
+  <h2>The honest time question</h2>
+
+  <p>"I don't have time" usually means one of two things. Either the week really is full, or the time exists but gets eaten because nothing is scheduled into it. Before planning anything, check which one it is.</p>
+
+  <blockquote>For the next three days, write down what you actually did between dinner and sleep, and on the weekend mornings. Don't judge it, just write it down.</blockquote>
+
+  <p>If you find 45 spare minutes on most weekdays (you probably will), the plan below works. If you really don't, cut it to the weekend block alone. It will take eight months instead of four, and that's still fine.</p>
+
+  <h3>The minimum dose</h3>
+  <ul>
+    <li><strong>4 weekday sessions × 45 minutes.</strong> Same time, same place each day, tied to something that already happens (right after dinner, or before opening Slack in the morning). Reading and running code only. No building.</li>
+    <li><strong>1 weekend block × 2 hours.</strong> This is where you build the week's piece of the project and push it through CI.</li>
+    <li>That's <strong>5 hours a week</strong>, about 2 chapters.</li>
+  </ul>
+
+  <p>Rules that matter more than the schedule:</p>
+  <ul>
+    <li><strong>Missed a day? Don't double up.</strong> Skip it and carry on. Trying to catch up is how the plan dies.</li>
+    <li><strong>Missed a week? Restart with the recall questions,</strong> not with the next chapter.</li>
+    <li><strong>The ten-minute rule.</strong> On bad days, promise yourself only ten minutes: one section, one diagram. If you want to sleep the moment it gets hard, that's usually escaping the difficulty, not being tired. Shrink the task until it's small enough to start.</li>
+  </ul>
+
+  <div class="fields">
+    <label for="f-slot">My weekday slot</label><input id="f-slot" type="text" placeholder="e.g. 21:00–21:45, after dinner">
+    <label for="f-weekend">My weekend block</label><input id="f-weekend" type="text" placeholder="e.g. Saturday 7–9am">
+    <label for="f-start">Start date</label><input id="f-start" type="text" placeholder="?">
+  </div>
+  <p class="muted small">Everything you type or tick on this page is saved in this browser only.</p>
+
+  <h2>How to read one chapter</h2>
+
+  <p>Reading a chapter from start to finish and nodding along feels productive, but nothing stays. Each chapter gets the same five steps instead, spread over two or three sessions.</p>
+
+  <ol>
+    <li><strong>Predict (5 min).</strong> Skim the headings only. Write down three questions you think the chapter answers, and your guess at each answer. Being wrong here is what you want: it shows you what to pay attention to.</li>
+    <li><strong>Read (one session).</strong> Read the theory with the diagrams. Stop at every diagram and redraw it on paper without looking. If you can't, read that part again.</li>
+    <li><strong>Run and break (one session).</strong> Run the chapter's Go or Python code. Then change one thing on purpose and predict what happens <em>before</em> you run it. Remove a header, send malformed JSON, kill the database halfway through.</li>
+    <li><strong>Build (weekend).</strong> Add the chapter's idea to your own project (below). You write the core logic yourself. Setup, config and wiring are fine to hand off.</li>
+    <li><strong>Explain back (5 min).</strong> Write five lines in your own words: what the thing is, why it exists, and one way it fails. If you can't write the "fails" line, you haven't finished the chapter.</li>
+  </ol>
+
+  <p>Put a clock on the reading session so it has an end. Knowing it stops makes it easier to start.</p>
+  <div class="timer" id="timer">
+    <span class="clock" id="clock">45:00</span>
+    <button type="button" id="t-start">start</button>
+    <button type="button" id="t-reset">reset</button>
+  </div>
+
+  <h2>One project, built through the whole plan</h2>
+
+  <p>Twenty-six separate toy exercises get forgotten. A single project that grows every week doesn't, because each chapter changes something you already built. The suggestion: <strong>a tiny wallet API</strong>. Accounts, balances, transfers between accounts. Money is useful here because it's unforgiving. Floats lose paisa, a double-submitted request charges someone twice, and two transfers at the same moment can spend the same balance twice. Every chapter has something to protect.</p>
+
+  <p>Language: the chapters' code is in Go and Python. Go keeps you close to the reference code and is common in backend jobs. Rust is what you already know and enjoy, but you'll be translating every example. Both are reasonable; pick one and write down why.</p>
+
+  <div class="fields">
+    <label for="f-lang">Language, and why</label><input id="f-lang" type="text" placeholder="">
+    <label for="f-repo">Repo</label><input id="f-repo" type="text" placeholder="github.com/sabinonweb/…">
+  </div>
+
+  <h3>Decide what "working" means first</h3>
+  <p>Before each phase, write down how you'll know the phase worked: the checks you'll run, not just "I read it." Some examples of the kinds of checks you could use:</p>
+  <ul>
+    <li>Does it run? (<code>curl</code> returns what I expect)</li>
+    <li>Does it match a reference? (the status codes in my API match the chapter's table)</li>
+    <li>Does a failure do what I planned? (kill Postgres mid-transfer and no money disappears)</li>
+    <li>Is it fast enough? (p99 under some number I choose, measured with <code>hey</code> or <code>k6</code>)</li>
+  </ul>
+  <p>You decide which of these matter for each phase. There's a box for it at the top of every phase below.</p>
+
+  <h2>CI/CD from the first week</h2>
+
+  <p>CI/CD is chapter 21 on the site, but don't wait that long. You learn it by watching a pipeline grow alongside your code, not by reading about it once.</p>
+
+  <p>You already run one. Open <code>.github/workflows/hugo.yaml</code> in this site's repo and read it line by line: what triggers it, what runs, where the output goes. That's CI/CD. Your own site is built and deployed by it.</p>
+
+  <p>Then grow the wallet's pipeline one step per phase:</p>
+  <table>
+    <tr><th>Phase</th><th>Pipeline adds</th></tr>
+    <tr><td>1</td><td>On every push: build, run the tests, fail the PR if they fail</td></tr>
+    <tr><td>2</td><td>Start a Postgres service container, run integration tests against it</td></tr>
+    <tr><td>3</td><td>Linting, <code>go vet</code>/<code>clippy</code>, race detector, a dependency vulnerability scan</td></tr>
+    <tr><td>4</td><td>Build a Docker image, push it to a registry, deploy automatically on merge to main</td></tr>
+  </table>
+  <p>Write the YAML yourself at least the first time. It's config, but the point is to understand it.</p>
+
+  <hr>
+
+  <h2 id="plan">The weekly plan</h2>
+  <p>This follows the site's order, with two changes: automated testing (ch 22) is pulled forward into phase 1, and configuration (ch 14) moves next to caching. Every phase ends with a review week. That week is not wasted: it's slack for the weeks that go wrong, and it's where you step back and see the whole picture.</p>
+
+  <h3>Phase 1 · The request path (weeks 1–6)</h3>
+  <div class="fields">
+    <label for="f-p1">"Working" means</label><input id="f-p1" type="text" placeholder="the checks I'll run at the end of this phase">
+  </div>
+  <ul class="checks" data-group="p1">
+    <li><input type="checkbox" id="c-w1"><label for="c-w1">Week 1 · <strong>01 HTTP &amp; CORS</strong> + read <code>hugo.yaml</code><span class="build">Build: a bare HTTP server with no framework. Send it a request by hand with <code>nc</code> and read the raw bytes. Set up the pipeline that runs on every push.</span></label></li>
+    <li><input type="checkbox" id="c-w2"><label for="c-w2">Week 2 · <strong>02 Routing</strong>, <strong>03 Serialization</strong><span class="build">Build: <code>/v1/accounts/{id}</code>. Store money as integer paisa. Try sending a float amount and see what happens.</span></label></li>
+    <li><input type="checkbox" id="c-w3"><label for="c-w3">Week 3 · <strong>04 Authentication &amp; Authorization</strong><span class="build">Build: login + an auth middleware. Write down why you chose sessions or JWT.</span></label></li>
+    <li><input type="checkbox" id="c-w4"><label for="c-w4">Week 4 · <strong>05 Validations</strong>, <strong>06 Controllers, Services &amp; Middlewares</strong><span class="build">Build: reject negative or zero transfers. Split the code into handler, service and repository layers.</span></label></li>
+    <li><input type="checkbox" id="c-w5"><label for="c-w5">Week 5 · <strong>07 REST API design</strong>, <strong>22 Automated Testing</strong><span class="build">Build: a status-code table for every endpoint, plus table-driven tests that check each row. CI runs them.</span></label></li>
+    <li><input type="checkbox" id="c-w6"><label for="c-w6">Week 6 · <strong>Review</strong><span class="build">Answer the recall questions below cold. Draw a request's full path, from <code>curl</code> to response, from memory.</span></label></li>
+  </ul>
+  <p class="tally" id="p1-tally"></p>
+
+  <p class="prompt">Recall, before week 7</p>
+  <details class="q"><summary>Why is HTTP called stateless if websites remember that I'm logged in?</summary><div class="answer"><p>The protocol itself doesn't carry memory between requests. Each request stands alone. "Being logged in" is state the <em>application</em> rebuilds on every request from something the client sends again each time: a session cookie that points to server-side state, or a signed token that holds the claims itself.</p></div></details>
+  <details class="q"><summary>CORS blocked my request. Is my API now protected from other websites?</summary><div class="answer"><p>No. CORS is enforced by the <em>browser</em>, to protect the user from pages on other origins reading responses. <code>curl</code>, a script or another server ignore it completely. It isn't access control; that has to be auth on the server.</p></div></details>
+  <details class="q"><summary>Authentication vs authorization, in one line each?</summary><div class="answer"><p>Authentication: who are you? Authorization: are you allowed to do <em>this</em> to <em>that</em>? A logged-in user reading someone else's account is an authorization bug, not an authentication bug.</p></div></details>
+
+  <h3>Phase 2 · State &amp; machinery (weeks 7–11)</h3>
+  <div class="fields">
+    <label for="f-p2">"Working" means</label><input id="f-p2" type="text" placeholder="">
+  </div>
+  <ul class="checks" data-group="p2">
+    <li><input type="checkbox" id="c-w7"><label for="c-w7">Week 7 · <strong>08 Databases</strong><span class="build">Build: Postgres. A transfer runs in one transaction. Kill the process halfway through and check that no money moved.</span></label></li>
+    <li><input type="checkbox" id="c-w8"><label for="c-w8">Week 8 · <strong>09 Caching</strong>, <strong>14 Configuration</strong><span class="build">Build: cache balance reads in Redis. Decide when the cache is invalidated, then try to catch it serving a stale balance. All settings come from environment variables.</span></label></li>
+    <li><input type="checkbox" id="c-w9"><label for="c-w9">Week 9 · <strong>10 Task Queues</strong>, <strong>12 Error Handling</strong><span class="build">Build: send receipts from a background job. Add an idempotency key so the same transfer sent twice only happens once. Add retries with backoff and <code>/healthz</code>.</span></label></li>
+    <li><input type="checkbox" id="c-w10"><label for="c-w10">Week 10 · <strong>13 gRPC</strong>, skim <strong>11 Full-Text Search</strong><span class="build">Build: move the notifier into its own service and have the wallet call it over gRPC. Search is optional: read it for the idea of an inverted index.</span></label></li>
+    <li><input type="checkbox" id="c-w11"><label for="c-w11">Week 11 · <strong>Review</strong> + look back at the whole map so far<span class="build">What connects the bugs you hit in phases 1–2? Write one paragraph.</span></label></li>
+  </ul>
+  <p class="tally" id="p2-tally"></p>
+
+  <p class="prompt">Recall, before week 12</p>
+  <details class="q"><summary>A client times out on POST /transfers and retries. What can go wrong, and what prevents it?</summary><div class="answer"><p>The first request may have succeeded on the server; only the response was lost. The retry transfers the money a second time. An idempotency key (the client sends a unique key, the server stores the result for that key and returns it on repeats) makes the retry safe.</p></div></details>
+  <details class="q"><summary>Why can a cache make a correct system incorrect?</summary><div class="answer"><p>It's a second copy of the data. Any write that updates the database but not the cache (or updates them in the wrong order, or races with a read) leaves the cache serving an old value. Caching gives you speed and costs you a consistency problem.</p></div></details>
+
+  <h3>Phase 3 · Running in production (weeks 12–15)</h3>
+  <div class="fields">
+    <label for="f-p3">"Working" means</label><input id="f-p3" type="text" placeholder="">
+  </div>
+  <ul class="checks" data-group="p3">
+    <li><input type="checkbox" id="c-w12"><label for="c-w12">Week 12 · <strong>15 Logging &amp; Observability</strong>, <strong>16 Graceful Shutdown</strong><span class="build">Build: structured logs with a request ID on every line, and one metric. On SIGTERM, stop taking new requests and let the ones in flight finish.</span></label></li>
+    <li><input type="checkbox" id="c-w13"><label for="c-w13">Week 13 · <strong>17 Security</strong>, <strong>20 Concurrency</strong><span class="build">Build: hash passwords properly. Try to read another user's account (BOLA). Fire 100 concurrent transfers from one account and try to spend the same balance twice, then fix it yourself.</span></label></li>
+    <li><input type="checkbox" id="c-w14"><label for="c-w14">Week 14 · <strong>18</strong> + <strong>19 Scaling &amp; Performance</strong><span class="build">Build: load-test it. Find one N+1 query or connection-pool limit. Measure before and after your change, and predict the number before you measure.</span></label></li>
+    <li><input type="checkbox" id="c-w15"><label for="c-w15">Week 15 · <strong>Review</strong><span class="build">Write a short postmortem for the double-spend bug: what broke, first guess, real cause, which boundary it crossed.</span></label></li>
+  </ul>
+  <p class="tally" id="p3-tally"></p>
+
+  <p class="prompt">Recall, before week 16</p>
+  <details class="q"><summary>Two transfers read balance = 100 at the same moment, each takes 80. What happened, and name two fixes.</summary><div class="answer"><p>A lost update: both read before either wrote, so both checks passed. Fixes include locking the row while you read it (<code>SELECT … FOR UPDATE</code>), a conditional update (<code>UPDATE … SET balance = balance - 80 WHERE balance &gt;= 80</code> and check the affected row count), or optimistic locking with a version column.</p></div></details>
+  <details class="q"><summary>Logs, metrics, traces: which one answers "which service made this request slow?"</summary><div class="answer"><p>Traces. Metrics tell you <em>that</em> p99 went up; logs tell you what happened inside one process; a trace follows one request across services and shows where the time went.</p></div></details>
+
+  <h3>Phase 4 · Distribution &amp; scale (weeks 16–18)</h3>
+  <div class="fields">
+    <label for="f-p4">"Working" means</label><input id="f-p4" type="text" placeholder="">
+  </div>
+  <ul class="checks" data-group="p4">
+    <li><input type="checkbox" id="c-w16"><label for="c-w16">Week 16 · <strong>21 Docker, K8s &amp; CI/CD</strong><span class="build">Build: a multi-stage Dockerfile and a compose file. CI builds the image and deploys on merge. Run it on a local <code>kind</code> cluster and do a rolling update with zero dropped requests.</span></label></li>
+    <li><input type="checkbox" id="c-w17"><label for="c-w17">Week 17 · <strong>23 Kafka</strong>, <strong>24 WebSockets</strong><span class="build">Build: publish a <code>transfer.completed</code> event, and push live balance updates to a browser tab.</span></label></li>
+    <li><input type="checkbox" id="c-w18"><label for="c-w18">Week 18 · <strong>25 OpenAPI</strong>, <strong>26 AI Agents</strong> (optional) + final review<span class="build">Build: an OpenAPI spec for the wallet, and generate a client from it. Then show the project, its evals and your notes to someone who'll ask you "why".</span></label></li>
+  </ul>
+  <p class="tally" id="p4-tally"></p>
+
+  <hr>
+
+  <h2>This week</h2>
+  <p>Fill this in at the end of each weekend block. It takes two minutes, and it's the part that shows you whether the plan is working.</p>
+  <div class="fields">
+    <label for="f-hours">Hours this week</label><input id="f-hours" type="text" placeholder="">
+    <label for="f-explain">I can now explain</label><input id="f-explain" type="text" placeholder="in one sentence, no notes">
+    <label for="f-fuzzy">Still fuzzy</label><input id="f-fuzzy" type="text" placeholder="this is next week's first 10 minutes">
+    <label for="f-broke">What broke</label><input id="f-broke" type="text" placeholder="and why, in my words">
+  </div>
+
+  <h2>If it falls apart</h2>
+  <p>It will, at least once. Work gets busy, a week disappears. When that happens, don't restart the whole plan and don't redesign this page. Open it, answer the last phase's recall questions, and do one 45-minute session. That's the entire recovery process.</p>
+
+  <footer>Backend from First Principles · backend-from-first-principle.vercel.app</footer>
+</main>
+
+<script>
+(function () {
+  function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  // theme
+  var root = document.documentElement;
+  var toggle = document.getElementById('theme-toggle');
+  function isDark() {
+    var t = root.getAttribute('data-theme');
+    if (t) return t === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function label() { toggle.textContent = isDark() ? 'light' : 'dark'; }
+  var saved = get('theme');
+  if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
+  label();
+  toggle.addEventListener('click', function () {
+    var next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    set('theme', next);
+    label();
+  });
+
+  // text fields
+  document.querySelectorAll('.fields input').forEach(function (el) {
+    var v = get('backend:' + el.id);
+    if (v) el.value = v;
+    el.addEventListener('input', function () { set('backend:' + el.id, el.value); });
+  });
+
+  // checklists
+  document.querySelectorAll('ul.checks').forEach(function (list) {
+    var group = list.getAttribute('data-group');
+    var boxes = list.querySelectorAll('input[type=checkbox]');
+    var tally = document.getElementById(group + '-tally');
+    function update() {
+      var n = 0;
+      boxes.forEach(function (b) { if (b.checked) n++; });
+      tally.textContent = n + ' of ' + boxes.length + ' weeks done';
+    }
+    boxes.forEach(function (b) {
+      b.checked = get('backend:' + b.id) === '1';
+      b.addEventListener('change', function () { set('backend:' + b.id, b.checked ? '1' : '0'); update(); });
+    });
+    update();
+  });
+
+  // timer
+  var total = 45 * 60, left = total, handle = null;
+  var clock = document.getElementById('clock');
+  var startBtn = document.getElementById('t-start');
+  var timerEl = document.getElementById('timer');
+  function draw() {
+    var m = Math.floor(left / 60), s = left % 60;
+    clock.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+  function stop() { clearInterval(handle); handle = null; startBtn.textContent = left === total ? 'start' : 'resume'; }
+  startBtn.addEventListener('click', function () {
+    if (handle) { stop(); return; }
+    if (left === 0) return;
+    startBtn.textContent = 'pause';
+    handle = setInterval(function () {
+      left--; draw();
+      if (left <= 0) { stop(); startBtn.textContent = "done for today"; timerEl.classList.add('done'); }
+    }, 1000);
+  });
+  document.getElementById('t-reset').addEventListener('click', function () {
+    stop(); left = total; draw(); startBtn.textContent = 'start'; timerEl.classList.remove('done');
+  });
+})();
+</script>
+</body>
+</html>

@@ -23,3 +23,5 @@ A model which takes any sequence of fingerspellings, and it should give as outpu
 **Real Cause**: The real cause was the fact it assumed, that the transistion will have motion and the sign will be static but that isn't always the case. In continuous signing, the sign is held for way short of a time and the aligner mistook the fast changes for transistion.
 
 **Boundary**: In isolated letters the signs are static but for continuous signing the signs move pretty fast.
+
+## 2026-09-25 - nsl / start-here.md
