@@ -69,8 +69,6 @@
   hr { border: 0; border-top: 1px solid var(--line); margin: 48px 0; }
 
   code { font-family: var(--font); background: var(--code-bg); padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
-  pre { background: var(--code-bg); padding: 14px 16px; border-radius: 4px; overflow-x: auto; font-size: 0.85rem; line-height: 1.6; margin: 0 0 12px; }
-  pre code { background: none; padding: 0; }
 
   blockquote { margin: 0 0 14px; padding-left: 16px; border-left: 2px solid var(--line); color: var(--ink); }
   .muted { color: var(--muted); }
@@ -81,7 +79,7 @@
     border: 1px solid var(--line); border-radius: 3px; padding: 3px 10px; cursor: pointer;
   }
   button:hover { border-color: var(--muted); }
-  button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+  button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
 
   details.q { margin: 0 0 18px; }
   details.q > summary { cursor: pointer; color: var(--muted); font-size: 0.85rem; list-style: none; }
@@ -101,11 +99,10 @@
 
   .fields { display: grid; grid-template-columns: max-content 1fr; gap: 8px 14px; align-items: center; margin: 12px 0 14px; }
   .fields label { color: var(--muted); font-size: 0.85rem; }
-  .fields input, textarea {
+  .fields input {
     font: inherit; font-size: 0.9rem; color: var(--ink); background: transparent;
     border: 0; border-bottom: 1px dotted var(--faint); padding: 2px 0; width: 100%; min-width: 0;
   }
-  textarea { resize: vertical; min-height: 3.2em; line-height: 1.6; }
   @media (max-width: 440px) { .fields { grid-template-columns: 1fr; gap: 2px; } .fields input { margin-bottom: 10px; } }
 
   .timer { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 8px 0 18px; }
@@ -116,188 +113,198 @@
   th, td { text-align: left; padding: 6px 8px 6px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
   th { font-weight: 500; color: var(--muted); }
 
-  mark { background: var(--mark); color: inherit; padding: 0 2px; }
+  .days { display: grid; grid-template-columns: max-content repeat(14, 1fr); gap: 4px 2px; align-items: center; font-size: 0.75rem; margin: 12px 0 6px; }
+  .days span { color: var(--muted); text-align: center; }
+  .days span.row { text-align: left; padding-right: 8px; }
+  .days input { margin: 0 auto; accent-color: var(--ink); }
+  @media (max-width: 520px) { .days { grid-template-columns: max-content repeat(7, 1fr); } .days .wk2 { display: none; } }
+
   footer { margin-top: 64px; color: var(--faint); font-size: 0.8rem; }
 </style>
 </head>
 <body>
 <main>
   <header>
-    <h1>Learning backend when I "don't have time"</h1>
+    <h1>Ampixa, RustMesh, and an hour of backend</h1>
     <button id="theme-toggle" type="button" aria-label="Toggle dark mode">dark</button>
   </header>
-  <p class="byline">A plan for working through <a href="https://backend-from-first-principle.vercel.app/">Backend from First Principles</a> · started 25 Sep 2026</p>
+  <p class="byline">How I'm splitting my days, and how I'm reading <a href="https://backend-from-first-principle.vercel.app/">Backend from First Principles</a> · 26 Sep 2026</p>
 
-  <p>The site has 26 chapters. It estimates 2–4 hours each, which comes to roughly <strong>60–70 hours</strong> in total. That sounds like a lot until you divide it: at five hours a week it takes about four months. Four months of small, boring, regular sessions will get me further than one heroic weekend followed by six weeks of guilt.</p>
+  <p>I started with "I don't have time to learn backend." Once I actually counted, that wasn't true. Ampixa takes 3–4 hours a day and the rest of the day is mine. The real problems are that those hours have no structure, and that I can only do about <strong>3–4 hours of real deep work a day</strong> before the quality drops. Some of that already goes to Ampixa.</p>
 
-  <p>So this page isn't really about backend. It's about three things: <strong>when</strong> I sit down, <strong>what I do</strong> in each sitting, and <strong>what I build</strong> so the reading actually sticks.</p>
-
-  <h2>The honest time question</h2>
-
-  <p>"I don't have time" usually means one of two things. Either the week really is full, or the time exists but gets eaten because nothing is scheduled into it. Before planning anything, check which one it is.</p>
-
-  <blockquote>For the next three days, write down what you actually did between dinner and sleep, and on the weekend mornings. Don't judge it, just write it down.</blockquote>
-
-  <p>If you find 45 spare minutes on most weekdays (you probably will), the plan below works. If you really don't, cut it to the weekend block alone. It will take eight months instead of four, and that's still fine.</p>
-
-  <h3>The minimum dose</h3>
+  <p>So the decision is: <strong>one deep project, one light one.</strong></p>
   <ul>
-    <li><strong>4 weekday sessions × 45 minutes.</strong> Same time, same place each day, tied to something that already happens (right after dinner, or before opening Slack in the morning). Reading and running code only. No building.</li>
-    <li><strong>1 weekend block × 2 hours.</strong> This is where you build the week's piece of the project and push it through CI.</li>
-    <li>That's <strong>5 hours a week</strong>, about 2 chapters.</li>
+    <li><strong>Ampixa</strong> is fixed. It's work.</li>
+    <li><strong>RustMesh</strong> is the deep project. About half the backend course (concurrency, failure, networking, operations) gets learned <em>inside</em> it, when RustMesh needs that chapter.</li>
+    <li><strong>One hour of backend</strong> a day, kept light, for the half RustMesh will never teach me: HTTP, users and auth, databases, caching, web security, scaling.</li>
   </ul>
 
-  <p>Rules that matter more than the schedule:</p>
-  <ul>
-    <li><strong>Missed a day? Don't double up.</strong> Skip it and carry on. Trying to catch up is how the plan dies.</li>
-    <li><strong>Missed a week? Restart with the recall questions,</strong> not with the next chapter.</li>
-    <li><strong>The ten-minute rule.</strong> On bad days, promise yourself only ten minutes: one section, one diagram. If you want to sleep the moment it gets hard, that's usually escaping the difficulty, not being tired. Shrink the task until it's small enough to start.</li>
-  </ul>
+  <p>This is a <strong>two-week experiment</strong>, not a promise for the next six months. On day 14 I check what actually happened and adjust.</p>
+
+  <h2>The day</h2>
+
+  <table>
+    <tr><th>Time</th><th>Block</th><th>Kind</th></tr>
+    <tr><td>8:30–9:00</td><td>Wake up, no phone</td><td>Write one sentence: what RustMesh will have by 11.</td></tr>
+    <tr><td>9:00–11:00</td><td><strong>RustMesh</strong></td><td>Deep. Phone in another room.</td></tr>
+    <tr><td>11:00–13:00</td><td>Break</td><td>Lunch, walk, anything.</td></tr>
+    <tr><td>13:00–16:00</td><td><strong>Ampixa</strong></td><td>Work.</td></tr>
+    <tr><td>16:00–17:00</td><td>Break</td><td></td></tr>
+    <tr><td>17:00–18:00</td><td><strong>Ampixa</strong></td><td>The fourth hour. On 3-hour days this hour is free.</td></tr>
+    <tr><td>18:00–19:00</td><td><strong>Backend hour</strong></td><td>Light. Read, run, break, explain back. No building.</td></tr>
+    <tr><td>19:00–21:00</td><td>Break</td><td>Dinner, free time.</td></tr>
+    <tr><td>21:00</td><td>Wind down</td><td>Five minutes: tick today's boxes. Nothing deep after this.</td></tr>
+  </table>
+  <p><strong>Saturday:</strong> RustMesh 9:00–11:00, weekend build 14:00–16:00. <strong>Sunday:</strong> off.</p>
 
   <div class="fields">
-    <label for="f-slot">My weekday slot</label><input id="f-slot" type="text" placeholder="e.g. 21:00–21:45, after dinner">
-    <label for="f-weekend">My weekend block</label><input id="f-weekend" type="text" placeholder="e.g. Saturday 7–9am">
-    <label for="f-start">Start date</label><input id="f-start" type="text" placeholder="?">
+    <label for="f-rm">RustMesh block</label><input id="f-rm" type="text" placeholder="9:00–11:00">
+    <label for="f-amp">Ampixa hours</label><input id="f-amp" type="text" placeholder="13:00–16:00, 17:00–18:00">
+    <label for="f-be">Backend hour</label><input id="f-be" type="text" placeholder="18:00–19:00">
+    <label for="f-wk">Weekend build</label><input id="f-wk" type="text" placeholder="Saturday 14:00–16:00">
+    <label for="f-off">Day off</label><input id="f-off" type="text" placeholder="Sunday">
   </div>
   <p class="muted small">Everything you type or tick on this page is saved in this browser only.</p>
 
-  <h2>How to read one chapter</h2>
+  <h3>Rules</h3>
+  <ul>
+    <li><strong>Fixed start times.</strong> With a lot of free hours, it's easy to keep pushing things to "later." A block that starts at a set time actually happens.</li>
+    <li><strong>The backend hour stays light.</strong> If it turns into building and debugging, it becomes a second deep project and I'm over the limit. Save building for the weekend.</li>
+    <li><strong>Missed a block? Don't double up.</strong> Skip it and carry on.</li>
+    <li><strong>The ten-minute rule.</strong> If I want to sleep the moment it gets hard, that's usually escaping the difficulty, not being tired. Shrink the task to one paragraph or one function and start that.</li>
+  </ul>
 
-  <p>Reading a chapter from start to finish and nodding along feels productive, but nothing stays. Each chapter gets the same five steps instead, spread over two or three sessions.</p>
+  <h2>Days 1–3: where do the hours go?</h2>
+  <p>During the first three days, also write down what actually happens outside the blocks. Before you start, write down what you think it will show. Comparing the two is the useful part.</p>
+  <div class="fields">
+    <label for="f-predict">I predict</label><input id="f-predict" type="text" placeholder="phone? late starts? Ampixa running long?">
+    <label for="f-actual">It actually showed</label><input id="f-actual" type="text" placeholder="fill in after three days">
+  </div>
 
+  <h2>The two weeks</h2>
+  <p>Ampixa runs every weekday in its fixed hours and isn't repeated below. Every RustMesh block starts by writing one sentence: <em>what will I have at the end of these two hours?</em></p>
+
+  <h3>Week 1 · CI, and the request path</h3>
+  <table>
+    <tr><th>Day</th><th>RustMesh (deep)</th><th>Backend hour (light)</th></tr>
+    <tr><td>1</td><td>Read this site's <code>hugo.yaml</code> line by line. Write RustMesh's first workflow: build + test on push.</td><td>01 HTTP: predict three questions, then read the first half.</td></tr>
+    <tr><td>2</td><td>Get CI green. Break it on purpose once, and check that the PR actually goes red.</td><td>01: read the rest. Redraw every diagram from memory.</td></tr>
+    <tr><td>3</td><td>Add <code>clippy</code> and <code>fmt --check</code> to CI. Then your current RustMesh work.</td><td>01: <code>curl -v</code> a real site, send a raw request with <code>nc</code>. Five-line explain-back.</td></tr>
+    <tr><td>4</td><td>Current RustMesh work.</td><td>02 Routing: predict, read.</td></tr>
+    <tr><td>5</td><td>Current RustMesh work.</td><td>02: run and break it. Explain back. Predict three questions for 03.</td></tr>
+    <tr><td>6</td><td>Current RustMesh work.</td><td><strong>Weekend build (2 h):</strong> a bare HTTP server with no framework, serving <code>/v1/accounts/{id}</code>.</td></tr>
+    <tr><td>7</td><td colspan="2">Off.</td></tr>
+  </table>
+
+  <h3>Week 2 · Tests, data on the wire, and auth</h3>
+  <table>
+    <tr><th>Day</th><th>RustMesh (deep)</th><th>Backend hour (light)</th></tr>
+    <tr><td>8</td><td>Read 22 Automated Testing, the parts on integration tests. Decide what one multi-node test should prove.</td><td>03 Serialization: read.</td></tr>
+    <tr><td>9</td><td>Write that test: two nodes start, connect, and exchange one message. Add it to CI.</td><td>03: send a float amount, unknown fields and broken JSON. Explain back.</td></tr>
+    <tr><td>10</td><td>Run the test 20 times in a row. If it fails even once, stop and dig into why before moving on.</td><td>04 Auth: predict, then read the sessions and cookies part.</td></tr>
+    <tr><td>11</td><td>Current RustMesh work.</td><td>04: read JWT and OAuth.</td></tr>
+    <tr><td>12</td><td>Current RustMesh work.</td><td>04: run and break it (expired token, tampered token). Explain back.</td></tr>
+    <tr><td>13</td><td>Current RustMesh work.</td><td><strong>Weekend build (2 h):</strong> JSON in and out with money as integer paisa, login, auth middleware. Answer the Track 1 recall questions cold.</td></tr>
+    <tr><td>14</td><td colspan="2">Off, apart from ten minutes on the day-14 check-in below.</td></tr>
+  </table>
+  <p class="muted small">If a day goes wrong, skip it. Don't squeeze two days into one.</p>
+
+  <p>Tick a box when the block actually happened at its time, not just "sometime today."</p>
+  <div class="days" id="days"></div>
+  <p class="tally" id="days-tally"></p>
+
+  <h3>Day 14 check-in</h3>
+  <div class="fields">
+    <label for="f-d14-rm">RustMesh: what I can explain now</label><input id="f-d14-rm" type="text" placeholder="">
+    <label for="f-d14-be">Backend: what I can explain now</label><input id="f-d14-be" type="text" placeholder="">
+    <label for="f-d14-leak">Where time leaked</label><input id="f-d14-leak" type="text" placeholder="">
+    <label for="f-d14-change">What I'll change</label><input id="f-d14-change" type="text" placeholder="one change, not five">
+  </div>
+
+  <hr>
+
+  <h2>How to read a chapter</h2>
   <ol>
-    <li><strong>Predict (5 min).</strong> Skim the headings only. Write down three questions you think the chapter answers, and your guess at each answer. Being wrong here is what you want: it shows you what to pay attention to.</li>
-    <li><strong>Read (one session).</strong> Read the theory with the diagrams. Stop at every diagram and redraw it on paper without looking. If you can't, read that part again.</li>
-    <li><strong>Run and break (one session).</strong> Run the chapter's Go or Python code. Then change one thing on purpose and predict what happens <em>before</em> you run it. Remove a header, send malformed JSON, kill the database halfway through.</li>
-    <li><strong>Build (weekend).</strong> Add the chapter's idea to your own project (below). You write the core logic yourself. Setup, config and wiring are fine to hand off.</li>
-    <li><strong>Explain back (5 min).</strong> Write five lines in your own words: what the thing is, why it exists, and one way it fails. If you can't write the "fails" line, you haven't finished the chapter.</li>
+    <li><strong>Predict (5 min).</strong> Skim the headings. Write down three questions you think the chapter answers, and your guess at each answer.</li>
+    <li><strong>Read.</strong> Stop at every diagram and redraw it from memory. If you can't, read that part again.</li>
+    <li><strong>Run and break.</strong> Run the Go or Python code. Change one thing on purpose and predict what happens before you run it.</li>
+    <li><strong>Use it.</strong> Backend-hour chapters get built into the side project at the weekend. RustMesh chapters get used in RustMesh, and you write the core logic yourself.</li>
+    <li><strong>Explain back (5 min).</strong> Five lines: what it is, why it exists, one way it fails. If you can't write the "fails" line, you haven't finished the chapter.</li>
   </ol>
 
-  <p>Put a clock on the reading session so it has an end. Knowing it stops makes it easier to start.</p>
+  <p>A clock for the backend hour, so it has an end:</p>
   <div class="timer" id="timer">
-    <span class="clock" id="clock">45:00</span>
+    <span class="clock" id="clock">60:00</span>
     <button type="button" id="t-start">start</button>
     <button type="button" id="t-reset">reset</button>
   </div>
 
-  <h2>One project, built through the whole plan</h2>
+  <h2>Track 1 · The backend hour</h2>
+  <p>These are the chapters RustMesh will never make you learn: the data-and-users half of backend. Go through them in order. About two chapters a week at an hour a day, so roughly <strong>7–8 weeks</strong>.</p>
 
-  <p>Twenty-six separate toy exercises get forgotten. A single project that grows every week doesn't, because each chapter changes something you already built. The suggestion: <strong>a tiny wallet API</strong>. Accounts, balances, transfers between accounts. Money is useful here because it's unforgiving. Floats lose paisa, a double-submitted request charges someone twice, and two transfers at the same moment can spend the same balance twice. Every chapter has something to protect.</p>
-
-  <p>Language: the chapters' code is in Go and Python. Go keeps you close to the reference code and is common in backend jobs. Rust is what you already know and enjoy, but you'll be translating every example. Both are reasonable; pick one and write down why.</p>
+  <p>The weekend side project is a <strong>tiny wallet API</strong>: accounts, balances, transfers. Keep it small. It exists so each chapter has something concrete to change.</p>
 
   <div class="fields">
-    <label for="f-lang">Language, and why</label><input id="f-lang" type="text" placeholder="">
-    <label for="f-repo">Repo</label><input id="f-repo" type="text" placeholder="github.com/sabinonweb/…">
+    <label for="f-t1">"Working" means</label><input id="f-t1" type="text" placeholder="the checks I'll run to know the side project works">
   </div>
 
-  <h3>Decide what "working" means first</h3>
-  <p>Before each phase, write down how you'll know the phase worked: the checks you'll run, not just "I read it." Some examples of the kinds of checks you could use:</p>
-  <ul>
-    <li>Does it run? (<code>curl</code> returns what I expect)</li>
-    <li>Does it match a reference? (the status codes in my API match the chapter's table)</li>
-    <li>Does a failure do what I planned? (kill Postgres mid-transfer and no money disappears)</li>
-    <li>Is it fast enough? (p99 under some number I choose, measured with <code>hey</code> or <code>k6</code>)</li>
+  <ul class="checks" data-group="t1">
+    <li><input type="checkbox" id="c-01"><label for="c-01"><strong>01 HTTP &amp; CORS</strong><span class="build">Build: a bare HTTP server with no framework. Send it a request by hand with <code>nc</code> and read the raw bytes.</span></label></li>
+    <li><input type="checkbox" id="c-02"><label for="c-02"><strong>02 Routing</strong>, <strong>03 Serialization</strong><span class="build">Build: <code>/v1/accounts/{id}</code>. Store money as integer paisa, then try sending a float amount and see what happens.</span></label></li>
+    <li><input type="checkbox" id="c-04"><label for="c-04"><strong>04 Authentication &amp; Authorization</strong><span class="build">Build: login + an auth middleware. Write down why you chose sessions or JWT.</span></label></li>
+    <li><input type="checkbox" id="c-05"><label for="c-05"><strong>05 Validations</strong>, <strong>06 Controllers, Services &amp; Middlewares</strong><span class="build">Build: reject zero or negative transfers. Split the code into handler, service and repository layers.</span></label></li>
+    <li><input type="checkbox" id="c-07"><label for="c-07"><strong>07 REST API design</strong><span class="build">Build: a status-code table for every endpoint, plus a test that checks each row.</span></label></li>
+    <li><input type="checkbox" id="c-08"><label for="c-08"><strong>08 Databases</strong><span class="build">Build: Postgres. A transfer runs in one transaction. Kill the process halfway through and check that no money moved. Then fire concurrent transfers and try to spend the same balance twice.</span></label></li>
+    <li><input type="checkbox" id="c-09"><label for="c-09"><strong>09 Caching</strong><span class="build">Build: cache balance reads in Redis. Decide when the cache is invalidated, then try to catch it serving a stale balance.</span></label></li>
+    <li><input type="checkbox" id="c-17"><label for="c-17"><strong>17 Backend Security</strong><span class="build">Build: hash passwords properly. Try to read another user's account (BOLA), and try an SQL injection against your own queries.</span></label></li>
+    <li><input type="checkbox" id="c-18"><label for="c-18"><strong>18</strong> + <strong>19 Scaling &amp; Performance</strong><span class="build">Build: load-test it with <code>hey</code> or <code>k6</code>. Find one N+1 query or connection-pool limit. Predict the number before you measure.</span></label></li>
+    <li><input type="checkbox" id="c-21k"><label for="c-21k"><strong>21 Kubernetes</strong> (the typical web-app half)<span class="build">Build: run the wallet on <code>kind</code> as a Deployment + Service with a readiness probe. Do a rolling update while <code>hey</code> is sending traffic. Did any requests fail? Predict before you check.</span></label></li>
+    <li><input type="checkbox" id="c-25"><label for="c-25"><strong>25 OpenAPI</strong><span class="build">Build: an OpenAPI spec for the wallet, and generate a client from it.</span></label></li>
   </ul>
-  <p>You decide which of these matter for each phase. There's a box for it at the top of every phase below.</p>
+  <p class="tally" id="t1-tally"></p>
+  <p class="muted small">Optional, once the rest is done: 23 Kafka, 24 WebSockets, 11 Full-Text Search, 26 AI Agents.</p>
 
-  <h2>CI/CD from the first week</h2>
+  <p class="prompt">Recall</p>
+  <details class="q"><summary>Why is HTTP called stateless if websites remember that I'm logged in?</summary><div class="answer"><p>The protocol doesn't carry memory between requests. Each request stands alone. "Being logged in" is state the <em>application</em> rebuilds on every request from something the client sends again each time: a session cookie that points to server-side state, or a signed token that holds the claims itself.</p></div></details>
+  <details class="q"><summary>CORS blocked my request. Is my API now protected from other websites?</summary><div class="answer"><p>No. CORS is enforced by the <em>browser</em>, to stop pages on other origins reading responses. <code>curl</code>, scripts and other servers ignore it. It isn't access control; that has to be auth on the server.</p></div></details>
+  <details class="q"><summary>Two transfers read balance = 100 at the same moment, and each takes 80. What happened, and name two fixes.</summary><div class="answer"><p>A lost update: both read before either wrote, so both checks passed. Fixes include locking the row while you read it (<code>SELECT … FOR UPDATE</code>), a conditional update (<code>UPDATE … SET balance = balance - 80 WHERE balance &gt;= 80</code>, then check the affected row count), or optimistic locking with a version column.</p></div></details>
+  <details class="q"><summary>Why can a cache make a correct system incorrect?</summary><div class="answer"><p>It's a second copy of the data. Any write that updates the database but not the cache (or does it in the wrong order, or races with a read) leaves the cache serving an old value. You gain speed and take on a consistency problem.</p></div></details>
 
-  <p>CI/CD is chapter 21 on the site, but don't wait that long. You learn it by watching a pipeline grow alongside your code, not by reading about it once.</p>
+  <h2>Track 2 · Learned inside RustMesh</h2>
+  <p>Don't read these in order. Read a chapter <strong>when RustMesh runs into its problem</strong>. The chapter gives you the general idea, and RustMesh is where you use it. Each line has the question that tells you it's time.</p>
 
-  <p>You already run one. Open <code>.github/workflows/hugo.yaml</code> in this site's repo and read it line by line: what triggers it, what runs, where the output goes. That's CI/CD. Your own site is built and deployed by it.</p>
+  <div class="fields">
+    <label for="f-t2">"Working" means</label><input id="f-t2" type="text" placeholder="the checks I'll run on RustMesh">
+  </div>
 
-  <p>Then grow the wallet's pipeline one step per phase:</p>
-  <table>
-    <tr><th>Phase</th><th>Pipeline adds</th></tr>
-    <tr><td>1</td><td>On every push: build, run the tests, fail the PR if they fail</td></tr>
-    <tr><td>2</td><td>Start a Postgres service container, run integration tests against it</td></tr>
-    <tr><td>3</td><td>Linting, <code>go vet</code>/<code>clippy</code>, race detector, a dependency vulnerability scan</td></tr>
-    <tr><td>4</td><td>Build a Docker image, push it to a registry, deploy automatically on merge to main</td></tr>
-  </table>
-  <p>Write the YAML yourself at least the first time. It's config, but the point is to understand it.</p>
+  <ul class="checks" data-group="t2">
+    <li><input type="checkbox" id="c-r03"><label for="c-r03"><strong>03 Serialization</strong> → wire format<span class="build">How does a peer know where one message ends and the next begins on a QUIC stream? What happens when an old node gets a message from a newer version?</span></label></li>
+    <li><input type="checkbox" id="c-r10"><label for="c-r10"><strong>10 Task Queues</strong> (the idempotency and retry parts) → gossip<span class="build">What happens when a node gets the same gossip message from two neighbours? What stops a message from circulating forever?</span></label></li>
+    <li><input type="checkbox" id="c-r12"><label for="c-r12"><strong>12 Error Handling &amp; Fault Tolerance</strong> → peers dying<span class="build">How does a node notice a neighbour is gone, and how quickly? When it reconnects, what stops every node from retrying at the same moment?</span></label></li>
+    <li><input type="checkbox" id="c-r13"><label for="c-r13"><strong>13 gRPC &amp; Inter-Service Communication</strong> → QUIC streams, certs<span class="build">What does QUIC multiplexing give you that one TCP connection doesn't? How do your <code>rcgen</code> certificates compare to mTLS?</span></label></li>
+    <li><input type="checkbox" id="c-r14"><label for="c-r14"><strong>14 Configuration</strong> → node config<span class="build">What should be different between two nodes on the same machine, and how does each one find out?</span></label></li>
+    <li><input type="checkbox" id="c-r15"><label for="c-r15"><strong>15 Logging &amp; Observability</strong> → tracing across nodes<span class="build">A message goes A → B → C and never arrives. Can your logs tell you which hop lost it?</span></label></li>
+    <li><input type="checkbox" id="c-r16"><label for="c-r16"><strong>16 Graceful Shutdown</strong> → leaving the mesh cleanly<span class="build">On Ctrl-C, what happens to messages still in flight? Do neighbours find out now or only after a timeout?</span></label></li>
+    <li><input type="checkbox" id="c-r20"><label for="c-r20"><strong>20 Concurrency &amp; Parallelism</strong> → tokio, the shared routing table<span class="build">Two tasks update the routing table at the same time. What can go wrong, and what are you actually locking?</span></label></li>
+    <li><input type="checkbox" id="c-r22"><label for="c-r22"><strong>22 Automated Testing</strong> → multi-node tests<span class="build">Can a test start three nodes, kill one, and check that the other two still route? Does it pass every time, or only sometimes?</span></label></li>
+    <li><input type="checkbox" id="c-r21"><label for="c-r21"><strong>21 Docker &amp; CI/CD</strong> → a small cluster in CI<span class="build">Can CI start a few nodes in docker compose on every push and run the tests above? Optional, later: run nodes as a Kubernetes StatefulSet on <code>kind</code>. How does a peer find another pod's address when pods get new IPs every time they restart, and does the Service config pass QUIC's UDP traffic?</span></label></li>
+  </ul>
+  <p class="tally" id="t2-tally"></p>
+
+  <h3>CI/CD, one step at a time</h3>
+  <p>Start by reading this site's own <code>.github/workflows/hugo.yaml</code> line by line: what triggers it, what runs, where the output goes. That's already a working pipeline. Then grow RustMesh's pipeline yourself, one step at a time:</p>
+  <ol>
+    <li>On every push: <code>cargo build</code> and <code>cargo test</code>. Fail the PR if they fail.</li>
+    <li>Add <code>clippy</code> and <code>cargo fmt --check</code>.</li>
+    <li>Add the multi-node docker compose test.</li>
+    <li>Build release binaries when you tag a version.</li>
+  </ol>
+  <p>Write the YAML yourself the first time. It's config, but the point is to understand it.</p>
 
   <hr>
-
-  <h2 id="plan">The weekly plan</h2>
-  <p>This follows the site's order, with two changes: automated testing (ch 22) is pulled forward into phase 1, and configuration (ch 14) moves next to caching. Every phase ends with a review week. That week is not wasted: it's slack for the weeks that go wrong, and it's where you step back and see the whole picture.</p>
-
-  <h3>Phase 1 · The request path (weeks 1–6)</h3>
-  <div class="fields">
-    <label for="f-p1">"Working" means</label><input id="f-p1" type="text" placeholder="the checks I'll run at the end of this phase">
-  </div>
-  <ul class="checks" data-group="p1">
-    <li><input type="checkbox" id="c-w1"><label for="c-w1">Week 1 · <strong>01 HTTP &amp; CORS</strong> + read <code>hugo.yaml</code><span class="build">Build: a bare HTTP server with no framework. Send it a request by hand with <code>nc</code> and read the raw bytes. Set up the pipeline that runs on every push.</span></label></li>
-    <li><input type="checkbox" id="c-w2"><label for="c-w2">Week 2 · <strong>02 Routing</strong>, <strong>03 Serialization</strong><span class="build">Build: <code>/v1/accounts/{id}</code>. Store money as integer paisa. Try sending a float amount and see what happens.</span></label></li>
-    <li><input type="checkbox" id="c-w3"><label for="c-w3">Week 3 · <strong>04 Authentication &amp; Authorization</strong><span class="build">Build: login + an auth middleware. Write down why you chose sessions or JWT.</span></label></li>
-    <li><input type="checkbox" id="c-w4"><label for="c-w4">Week 4 · <strong>05 Validations</strong>, <strong>06 Controllers, Services &amp; Middlewares</strong><span class="build">Build: reject negative or zero transfers. Split the code into handler, service and repository layers.</span></label></li>
-    <li><input type="checkbox" id="c-w5"><label for="c-w5">Week 5 · <strong>07 REST API design</strong>, <strong>22 Automated Testing</strong><span class="build">Build: a status-code table for every endpoint, plus table-driven tests that check each row. CI runs them.</span></label></li>
-    <li><input type="checkbox" id="c-w6"><label for="c-w6">Week 6 · <strong>Review</strong><span class="build">Answer the recall questions below cold. Draw a request's full path, from <code>curl</code> to response, from memory.</span></label></li>
-  </ul>
-  <p class="tally" id="p1-tally"></p>
-
-  <p class="prompt">Recall, before week 7</p>
-  <details class="q"><summary>Why is HTTP called stateless if websites remember that I'm logged in?</summary><div class="answer"><p>The protocol itself doesn't carry memory between requests. Each request stands alone. "Being logged in" is state the <em>application</em> rebuilds on every request from something the client sends again each time: a session cookie that points to server-side state, or a signed token that holds the claims itself.</p></div></details>
-  <details class="q"><summary>CORS blocked my request. Is my API now protected from other websites?</summary><div class="answer"><p>No. CORS is enforced by the <em>browser</em>, to protect the user from pages on other origins reading responses. <code>curl</code>, a script or another server ignore it completely. It isn't access control; that has to be auth on the server.</p></div></details>
-  <details class="q"><summary>Authentication vs authorization, in one line each?</summary><div class="answer"><p>Authentication: who are you? Authorization: are you allowed to do <em>this</em> to <em>that</em>? A logged-in user reading someone else's account is an authorization bug, not an authentication bug.</p></div></details>
-
-  <h3>Phase 2 · State &amp; machinery (weeks 7–11)</h3>
-  <div class="fields">
-    <label for="f-p2">"Working" means</label><input id="f-p2" type="text" placeholder="">
-  </div>
-  <ul class="checks" data-group="p2">
-    <li><input type="checkbox" id="c-w7"><label for="c-w7">Week 7 · <strong>08 Databases</strong><span class="build">Build: Postgres. A transfer runs in one transaction. Kill the process halfway through and check that no money moved.</span></label></li>
-    <li><input type="checkbox" id="c-w8"><label for="c-w8">Week 8 · <strong>09 Caching</strong>, <strong>14 Configuration</strong><span class="build">Build: cache balance reads in Redis. Decide when the cache is invalidated, then try to catch it serving a stale balance. All settings come from environment variables.</span></label></li>
-    <li><input type="checkbox" id="c-w9"><label for="c-w9">Week 9 · <strong>10 Task Queues</strong>, <strong>12 Error Handling</strong><span class="build">Build: send receipts from a background job. Add an idempotency key so the same transfer sent twice only happens once. Add retries with backoff and <code>/healthz</code>.</span></label></li>
-    <li><input type="checkbox" id="c-w10"><label for="c-w10">Week 10 · <strong>13 gRPC</strong>, skim <strong>11 Full-Text Search</strong><span class="build">Build: move the notifier into its own service and have the wallet call it over gRPC. Search is optional: read it for the idea of an inverted index.</span></label></li>
-    <li><input type="checkbox" id="c-w11"><label for="c-w11">Week 11 · <strong>Review</strong> + look back at the whole map so far<span class="build">What connects the bugs you hit in phases 1–2? Write one paragraph.</span></label></li>
-  </ul>
-  <p class="tally" id="p2-tally"></p>
-
-  <p class="prompt">Recall, before week 12</p>
-  <details class="q"><summary>A client times out on POST /transfers and retries. What can go wrong, and what prevents it?</summary><div class="answer"><p>The first request may have succeeded on the server; only the response was lost. The retry transfers the money a second time. An idempotency key (the client sends a unique key, the server stores the result for that key and returns it on repeats) makes the retry safe.</p></div></details>
-  <details class="q"><summary>Why can a cache make a correct system incorrect?</summary><div class="answer"><p>It's a second copy of the data. Any write that updates the database but not the cache (or updates them in the wrong order, or races with a read) leaves the cache serving an old value. Caching gives you speed and costs you a consistency problem.</p></div></details>
-
-  <h3>Phase 3 · Running in production (weeks 12–15)</h3>
-  <div class="fields">
-    <label for="f-p3">"Working" means</label><input id="f-p3" type="text" placeholder="">
-  </div>
-  <ul class="checks" data-group="p3">
-    <li><input type="checkbox" id="c-w12"><label for="c-w12">Week 12 · <strong>15 Logging &amp; Observability</strong>, <strong>16 Graceful Shutdown</strong><span class="build">Build: structured logs with a request ID on every line, and one metric. On SIGTERM, stop taking new requests and let the ones in flight finish.</span></label></li>
-    <li><input type="checkbox" id="c-w13"><label for="c-w13">Week 13 · <strong>17 Security</strong>, <strong>20 Concurrency</strong><span class="build">Build: hash passwords properly. Try to read another user's account (BOLA). Fire 100 concurrent transfers from one account and try to spend the same balance twice, then fix it yourself.</span></label></li>
-    <li><input type="checkbox" id="c-w14"><label for="c-w14">Week 14 · <strong>18</strong> + <strong>19 Scaling &amp; Performance</strong><span class="build">Build: load-test it. Find one N+1 query or connection-pool limit. Measure before and after your change, and predict the number before you measure.</span></label></li>
-    <li><input type="checkbox" id="c-w15"><label for="c-w15">Week 15 · <strong>Review</strong><span class="build">Write a short postmortem for the double-spend bug: what broke, first guess, real cause, which boundary it crossed.</span></label></li>
-  </ul>
-  <p class="tally" id="p3-tally"></p>
-
-  <p class="prompt">Recall, before week 16</p>
-  <details class="q"><summary>Two transfers read balance = 100 at the same moment, each takes 80. What happened, and name two fixes.</summary><div class="answer"><p>A lost update: both read before either wrote, so both checks passed. Fixes include locking the row while you read it (<code>SELECT … FOR UPDATE</code>), a conditional update (<code>UPDATE … SET balance = balance - 80 WHERE balance &gt;= 80</code> and check the affected row count), or optimistic locking with a version column.</p></div></details>
-  <details class="q"><summary>Logs, metrics, traces: which one answers "which service made this request slow?"</summary><div class="answer"><p>Traces. Metrics tell you <em>that</em> p99 went up; logs tell you what happened inside one process; a trace follows one request across services and shows where the time went.</p></div></details>
-
-  <h3>Phase 4 · Distribution &amp; scale (weeks 16–18)</h3>
-  <div class="fields">
-    <label for="f-p4">"Working" means</label><input id="f-p4" type="text" placeholder="">
-  </div>
-  <ul class="checks" data-group="p4">
-    <li><input type="checkbox" id="c-w16"><label for="c-w16">Week 16 · <strong>21 Docker, K8s &amp; CI/CD</strong><span class="build">Build: a multi-stage Dockerfile and a compose file. CI builds the image and deploys on merge. Run it on a local <code>kind</code> cluster and do a rolling update with zero dropped requests.</span></label></li>
-    <li><input type="checkbox" id="c-w17"><label for="c-w17">Week 17 · <strong>23 Kafka</strong>, <strong>24 WebSockets</strong><span class="build">Build: publish a <code>transfer.completed</code> event, and push live balance updates to a browser tab.</span></label></li>
-    <li><input type="checkbox" id="c-w18"><label for="c-w18">Week 18 · <strong>25 OpenAPI</strong>, <strong>26 AI Agents</strong> (optional) + final review<span class="build">Build: an OpenAPI spec for the wallet, and generate a client from it. Then show the project, its evals and your notes to someone who'll ask you "why".</span></label></li>
-  </ul>
-  <p class="tally" id="p4-tally"></p>
-
-  <hr>
-
-  <h2>This week</h2>
-  <p>Fill this in at the end of each weekend block. It takes two minutes, and it's the part that shows you whether the plan is working.</p>
-  <div class="fields">
-    <label for="f-hours">Hours this week</label><input id="f-hours" type="text" placeholder="">
-    <label for="f-explain">I can now explain</label><input id="f-explain" type="text" placeholder="in one sentence, no notes">
-    <label for="f-fuzzy">Still fuzzy</label><input id="f-fuzzy" type="text" placeholder="this is next week's first 10 minutes">
-    <label for="f-broke">What broke</label><input id="f-broke" type="text" placeholder="and why, in my words">
-  </div>
 
   <h2>If it falls apart</h2>
-  <p>It will, at least once. Work gets busy, a week disappears. When that happens, don't restart the whole plan and don't redesign this page. Open it, answer the last phase's recall questions, and do one 45-minute session. That's the entire recovery process.</p>
+  <p>It will, at least once. When it does, don't redesign this page and don't restart the whole plan. Open it, answer one recall question, and do one backend hour. That's the entire recovery process.</p>
 
   <footer>Backend from First Principles · backend-from-first-principle.vercel.app</footer>
 </main>
@@ -326,6 +333,31 @@
     label();
   });
 
+  // two-week grid
+  var days = document.getElementById('days');
+  var rows = [['rm', 'RustMesh'], ['be', 'backend']];
+  var html = '<span class="row"></span>';
+  for (var d = 1; d <= 14; d++) html += '<span' + (d > 7 ? ' class="wk2"' : '') + '>' + d + '</span>';
+  rows.forEach(function (r) {
+    html += '<span class="row">' + r[1] + '</span>';
+    for (var d = 1; d <= 14; d++) {
+      html += '<input type="checkbox" id="d-' + r[0] + '-' + d + '" aria-label="' + r[1] + ' day ' + d + '"' + (d > 7 ? ' class="wk2"' : '') + '>';
+    }
+  });
+  days.innerHTML = html;
+  var dayBoxes = days.querySelectorAll('input');
+  var daysTally = document.getElementById('days-tally');
+  function updateDays() {
+    var rm = 0, be = 0;
+    dayBoxes.forEach(function (b) { if (b.checked) { if (b.id.indexOf('d-rm') === 0) rm++; else be++; } });
+    daysTally.textContent = 'RustMesh ' + rm + ' of 14 · backend ' + be + ' of 14';
+  }
+  dayBoxes.forEach(function (b) {
+    b.checked = get('backend:' + b.id) === '1';
+    b.addEventListener('change', function () { set('backend:' + b.id, b.checked ? '1' : '0'); updateDays(); });
+  });
+  updateDays();
+
   // text fields
   document.querySelectorAll('.fields input').forEach(function (el) {
     var v = get('backend:' + el.id);
@@ -341,7 +373,7 @@
     function update() {
       var n = 0;
       boxes.forEach(function (b) { if (b.checked) n++; });
-      tally.textContent = n + ' of ' + boxes.length + ' weeks done';
+      tally.textContent = n + ' of ' + boxes.length + ' done';
     }
     boxes.forEach(function (b) {
       b.checked = get('backend:' + b.id) === '1';
@@ -351,7 +383,7 @@
   });
 
   // timer
-  var total = 45 * 60, left = total, handle = null;
+  var total = 60 * 60, left = total, handle = null;
   var clock = document.getElementById('clock');
   var startBtn = document.getElementById('t-start');
   var timerEl = document.getElementById('timer');
