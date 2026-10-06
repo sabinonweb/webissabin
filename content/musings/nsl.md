@@ -24,4 +24,15 @@ A model which takes any sequence of fingerspellings, and it should give as outpu
 
 **Boundary**: In isolated letters the signs are static but for continuous signing the signs move pretty fast.
 
-## 2026-09-25 - nsl / start-here.md
+## 2026-10-06 - Unisign Paper
+### Methodology
+
+#### Unified Pre-training and finetuning
+
+#####***Preliminaries****
+There are 133 keypoints for the whole body but we specifically utilize 69 keypoints only: 21 for each hand, 9 for the body and 18 for the face. Each group of keypoints `i` has an encoder, which is composed of three-layer spatial GCN(For a single frame, it travels 3 hops across hand per say so that fingertips have information about joints several hops away.)
+It produces an output `Fp_i ∈ R^(T ×Ni×C)` where,
+                        T = number of frames 
+                        Ni = Number of keypoints in group `i`
+                        C = How many features represent keypoints after encoding?
+                        i ∈ {lh, rh, b, f }
