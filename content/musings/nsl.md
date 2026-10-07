@@ -1,6 +1,6 @@
 ---
 title: "NSL"
-date: 2026-09-25
+date: 2026-10-20
 description: "a poem about leaving your old self behind and walking into the dark alone"
 tags: ["poems"]
 back: true
