@@ -1,63 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <script>
-    (function () {
-      var t = localStorage.getItem("theme");
-      if (t !== "dark" && t !== "light") {
-        t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-      }
-      document.documentElement.dataset.theme = t;
-    })();
-  </script>
+    <script>
+        (function () {
+            var t = localStorage.getItem("theme");
+            if (t !== "dark" && t !== "light") {
+                t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            }
+            document.documentElement.dataset.theme = t;
+        })();
+    </script>
 
-  <title>
-      {{if .IsHome}} 
+    <title>
+        {{if .IsHome}}
         {{.Site.Title}}
-      {{else}}
+        {{else}}
         {{.Title}} - {{.Site.Title}}
-      {{end}}
-    </title> 
+        {{end}}
+    </title>
 
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="/favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-  {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
-  <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+    {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$', right: '$', display: false}, {left: '$$', right: '$$', display: true}]});"></script>
 </head>
+
 <body>
-  <div class="wrap">
+    <div class="wrap">
 
-    {{ if and (not .IsHome) (not (and (eq .Kind "page") (in (slice "curiosity" "musings") .Section))) }}
-    <nav class="topnav">
-      <a href="/" class="back">← home</a>
-    </nav>
-    {{ end }}
+        {{ if and (not .IsHome) (not (and (eq .Kind "page") (in (slice "curiosity" "musings") .Section))) }}
+        <nav class="topnav">
+            <a href="/" class="back">← home</a>
+        </nav>
+        {{ end }}
 
-    <main>
-        {{block "main" . }} {{end}}    <!-- ⬅ THE HOLE -->
-    </main>
+        <main>
+            {{block "main" . }} {{end}} <!-- ⬅ THE HOLE -->
+        </main>
 
     </div>
 
     <button class="theme-toggle" id="theme-toggle" type="button">dark</button>
     <script>
-      (function () {
-        var root = document.documentElement;
-        var btn = document.getElementById("theme-toggle");
-        function label() {
-          btn.textContent = root.dataset.theme === "dark" ? "light" : "dark";
-        }
-        label();
-        btn.addEventListener("click", function () {
-          var next = root.dataset.theme === "dark" ? "light" : "dark";
-          root.dataset.theme = next;
-          localStorage.setItem("theme", next);
-          label();
-        });
-      })();
+        (function () {
+            var root = document.documentElement;
+            var btn = document.getElementById("theme-toggle");
+            function label() {
+                btn.textContent = root.dataset.theme === "dark" ? "light" : "dark";
+            }
+            label();
+            btn.addEventListener("click", function () {
+                var next = root.dataset.theme === "dark" ? "light" : "dark";
+                root.dataset.theme = next;
+                localStorage.setItem("theme", next);
+                label();
+            });
+        })();
     </script>
 
 </body>
+
 </html>

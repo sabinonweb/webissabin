@@ -29,12 +29,12 @@ A model which takes any sequence of fingerspellings, and it should give as outpu
 
 #### Unified Pre-training and finetuning
 
-#####***Preliminaries****
+##### ***Preliminaries****
 There are 133 keypoints for the whole body but we specifically utilize 69 keypoints only: 21 for each hand, 9 for the body and 18 for the face. Each group of keypoints `i` has an encoder, which is composed of three-layer spatial GCN(For a single frame, it travels 3 hops across hand per say so that fingertips have information about joints several hops away.)
-It produces an output `Fp_i ∈ R^(T ×Ni×C)` where,
+It produces an output `$\mathcal{F}_{p}^r \in \mathbb{R}^{T \times N_i \times w \times C}$` where,
                         T = number of frames 
-                        Ni = Number of keypoints in group `i`
+                        $mathcal{N_i}$ = Number of keypoints in group `i`
                         C = How many features represent keypoints after encoding?
                         i ∈ {lh, rh, b, f }
 
-In the second part, idea of decoupling visual cues is used. Videos are cropped using keypoint coordinates and resized to 112 * 112 pixels which are processed by Vision Encoder. It gives out results `$\mathcal{F}_{lh}^r \in \mathbb{R}^{T \times h \times w \times C}$ and $\mathcal{F}_{rh}^r \in \mathbb{R}^{T \times h \times w \times C}$`. Then the two ouputs 
+In the second part, idea of decoupling visual cues is used. Videos are cropped using keypoint coordinates and resized to 112 * 112 pixels which are processed by Vision Encoder. It gives out results `$\mathcal{F}_{lh}^r \in \mathbb{R}^{T \times h \times w \times C}$ and $\mathcal{F}_{rh}^r \in \mathbb{R}^{T \times h \times w \times C}$`. Then the two ouputs, $\mathcal{F}_i^p$ and $\mathcal{F}_i^r$ are fused to form $\tilde{\mathcal{F}}_i^p$. Fusion is done in order to ensure the data lost duirng posing is recovered.   
