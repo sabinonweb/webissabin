@@ -36,3 +36,5 @@ It produces an output `Fp_i ∈ R^(T ×Ni×C)` where,
                         Ni = Number of keypoints in group `i`
                         C = How many features represent keypoints after encoding?
                         i ∈ {lh, rh, b, f }
+
+In the second part, idea of decoupling visual cues is used. Videos are cropped using keypoint coordinates and resized to 112 * 112 pixels which are processed by Vision Encoder. It gives out results `$\mathcal{F}_{lh}^r \in \mathbb{R}^{T \times h \times w \times C}$ and $\mathcal{F}_{rh}^r \in \mathbb{R}^{T \times h \times w \times C}$`. Then the two ouputs 
