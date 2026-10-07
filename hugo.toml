@@ -48,4 +48,8 @@ name = "bookmarks ↗"
 pageRef = "/bookmarks"
 weight = 90
 
-
+[markup.goldmark.extensions.passthrough]
+enable = true
+[markup.goldmark.extensions.passthrough.delimiters]
+inline = [['$', '$']]
+block = [['$$', '$$']]
