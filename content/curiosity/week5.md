@@ -6,55 +6,115 @@ tags: ["essays"]
 curious: true
 ---
 
-## week: 2026-10-05 to 2025-10-12
+## week: 2026-10-05 to 2026-10-12
 
-- I have been trying to setup my nvim from scratch because last time I just copied my friend's config and the kind of person that I am, it made me feel guilty. And something that amazed me is the tab vs space. It turns out TAB inserts just one [TAB] character but makes it look like it's moved a certain distance in the screen. So, in nvim `vim.opt.expandtab = true`, I added this in order to set TAB to insert 4 spaces rather than just one [TAB]. 4 spaces come from `vim.opt.tabstop = 4`. `vim.opt.shiftwidth = 4 ` is for nvim's auto indentation, >> and <<.
+## Setting up nvim from scratch
 
-- Why use a plugin manager? Why do I need it was the question I asked. Turns out without one, I have to `git clone` a the plugin in a folder, tell nvim where it is, `git pull` on each update which gets tedious. Therefore, `lazy`.
+I have been trying to set up my nvim from scratch because last time I just copied my friend's config, and the kind of person that I am, it made me feel guilty.
 
-- Okay so neovim doesn't understand any language on it's own. But it needs something to show the errors for dev's convenience. For that reason, a language server runs in the background that sees for errors, type, definitions, autocorrect and communicates to nvim via LSP.
+### Tabs vs spaces
 
-- Default `gd` in nvim searches declaration. It moves to the top of the function, then a line above it and starts searching down. I mapped it to jump to the declaration.
+Something that amazed me is tabs vs spaces. It turns out TAB inserts just one `[TAB]` character but makes it look like it has moved a certain distance on the screen.
 
-- For other languages, I used `lspconfig` instead of
+```lua
 
-```
-vim.lsp.config("rust_analyzer", {
-  cmd = { "rust-analyzer" },
-  filetypes = { "rust" },
-  root_markers = { "Cargo.toml" },
-})
-```
-
-Mason installs it.
-
-- There was another interesting error. I was moving the keymaps to `keymaps.lua` file and leader suddenly stopped working and it fellback to `\`. It is because mapleader is set to `\` by default and my `init.lua` was mapped as:
-
-```
-require("config.keymaps")
-
-vim.g.mapleader = " "
+    vim.opt.expandtab = true -- TAB inserts spaces instead of one [TAB]
+    vim.opt.tabstop = 4      -- the 4 spaces come from here
+    vim.opt.shiftwidth = 4   -- auto indentation, >> and <<
 
 ```
 
-- ## Symlink
-  I stummbled upon something today. It caught my attention. I was trying to create a dotfiles folder but everything was linked to `~/.config`. I got to know about symlinks. These are files that just point to the direction of where the actual file lives.
+### Why a plugin manager?
 
-To actually understand it, I ran 2 experiments:
+Why do I need one? That was the question I asked. Turns out without one, I have to `git clone` the plugin into a folder, tell nvim where it is, and `git pull` on each update, which gets tedious. Therefore, `lazy`.
+
+### Language servers
+
+Neovim doesn't understand any language on its own, but it needs something to show errors for the dev's convenience. For that reason, a language server runs in the background that looks for errors, types, definitions and autocorrect, and talks to nvim via LSP.
+
+For other languages, I used `lspconfig` instead of writing this by hand:
+
+```lua
+
+    vim.lsp.config("rust_analyzer", {
+      cmd = { "rust-analyzer" },
+      filetypes = { "rust" },
+      root_markers = { "Cargo.toml" },
+    })
+
+```
+
+Mason installs the servers.
+
+### `gd`
+
+Default `gd` in nvim searches for the declaration. It moves to the top of the function, then a line above it, and starts searching down. I mapped it to jump to the declaration.
+
+### The leader key bug
+
+I was moving my keymaps to a `keymaps.lua` file and leader suddenly stopped working. It fell back to `\`. That's because `mapleader` is `\` by default, and my `init.lua` looked like this:
+
+```lua
+
+    require("config.keymaps")
+
+    vim.g.mapleader = " "
+
+```
+
+## Symlinks
+
+I stumbled upon something today that caught my attention. I was trying to create a dotfiles folder, but everything was linked to `~/.config`. That's how I learned about symlinks: files that just point to where the actual file lives.
+
+To actually understand it, I ran 2 experiments.
 
 ### Experiment I
 
-1. `mkdir ~/symtest && cd ~/symtest`
-2. `echo "hello" > note.txt`
-3. `ln -s note.txt link.txt`
-4. `ls -l`
-   5 .`echo link.txt` gives "hello". `link.txt`: [note.txt]. That's simlink.
+```sh
+
+    mkdir ~/symtest && cd ~/symtest
+    echo "hello" > note.txt
+    ln -s note.txt link.txt
+    ls -l
+    echo link.txt
+
+```
+
+`echo link.txt` gives "hello". `link.txt` → `note.txt`. That's a symlink.
 
 ### Experiment II
 
-1. `echo "world" >> link.txt` -> It goes to `link.txt`, sees `note.txt` and edits it.
-2. `cat note.txt` -> It gives "world".
-3. `echo "hello" >> link.txt`
-4. `echo "hello" >> link.txt` -> "world\nhello"
+```sh
 
-If we remove the `note.txt`, `cat link.txt` throws an error.
+    echo "world" >> link.txt   # goes to link.txt, sees note.txt, and edits it
+    cat note.txt               # gives "world"
+    echo "hello" >> link.txt
+    echo "hello" >> link.txt   # "world\nhello"
+
+```
+
+If we remove `note.txt`, `cat link.txt` throws an error.
+
+## Why did my 3-year-old codebase break without me touching it?
+
+Spotify stopped sending the `popularity` field, but old rspotify required it. It broke because, while deserializing, serde requires every required field to have a value. It was fixed by upgrading rspotify, whose newer version made it an `Option`.
+
+## Pagination
+
+I needed to download 2688 songs from Spotify, but `client.playlist()` returned 100 songs and stopped. That's because Spotify only sends 100 songs at a time.
+
+With `client.playlist_items()`, I was able to fetch all 2688, because rspotify runs a loop that keeps refilling the stream instead of stopping at 100. Each response has a `next` field:
+
+```json
+
+    "next": "https://api.spotify.com/v1/playlists/7fGZ.../items?offset=100&limit=100"
+
+```
+
+It checks whether `next` is null. If it isn't, it calculates the next offset. `yield` returns a value and pauses until `next()` is called again.
+
+Try my Spotify downloader at [yuck_premium](https://github.com/sabinonweb/yuck_premium).
+
+## Quote of the week
+
+> "Follow your heart" is a marketing slogan, not life advice. Your heart wants tacos at midnight and drunk texts your ex. Try following your mind for once.

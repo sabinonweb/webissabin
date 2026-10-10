@@ -6,10 +6,7 @@ tags: ["essays"]
 curious: true
 ---
 
----
-
-week: 2026-08-25 to 2025-08-31
-----------------
+## week: 2026-08-25 to 2026-08-31
 
 ## Sound
 
@@ -135,23 +132,27 @@ The interesting part is that the deployed system doesn't need the teacher.
 During training:
 
 ```text
-Teacher
-   ↓
-192-dimensional representation
-   ↓
-Encoder
-   ↓
-40-dimensional representation
+
+    Teacher
+    ↓
+    192-dimensional representation
+    ↓
+    Encoder
+    ↓
+    40-dimensional representation
+
 ```
 
 The small acoustic model learns to produce those 40 numbers directly:
 
 ```text
-Phonemes + durations
+
+    Phonemes + durations
         ↓
-Acoustic model
+    Acoustic model
         ↓
-40 numbers / frame
+    40 numbers / frame
+
 ```
 
 Once it has learned this mapping, the teacher and encoder can be thrown away.
@@ -163,23 +164,25 @@ The final step is the vocoder.
 It takes the acoustic representation and turns it into an actual waveform that can be played through a speaker:
 
 ```text
-Text
- ↓
-Normalization
- ↓
-Phonemes
- ↓
-Duration
- ↓
-Acoustic model
- ↓
-40-number representation
- ↓
-Vocoder
- ↓
-Waveform
- ↓
-Sound
+
+    Text
+    ↓
+    Normalization
+    ↓
+    Phonemes
+    ↓
+    Duration
+    ↓
+    Acoustic model
+    ↓
+    40-number representation
+    ↓
+    Vocoder
+    ↓
+    Waveform
+    ↓
+    Sound
+
 ```
 
 What surprised me most was how much happens before the system actually produces a waveform. The tiny model doesn't simply turn text directly into sound. It learns a chain of increasingly useful representations, while the large teacher is used during training and then discarded.
@@ -212,13 +215,15 @@ A useful thing to realize is how quickly the number of parameters grows. If a la
 The basic training loop is then surprisingly simple:
 
 ```text
-predict
-   ↓
-measure error
-   ↓
-adjust parameters
-   ↓
-repeat
+
+    predict
+    ↓
+    measure error
+    ↓
+    adjust parameters
+    ↓
+    repeat
+
 ```
 
 More parameters generally give a model more capacity to represent complicated relationships, although simply adding parameters doesn't automatically make a model better.
@@ -232,15 +237,17 @@ Instead of asking a small model to learn everything from scratch, sanoTTS uses a
 The smaller models can then learn from this compact representation.
 
 ```text
-Large teacher
+
+    Large teacher
      ↓
-192 numbers
+    192 numbers
      ↓
-Encoder
+    Encoder
      ↓
-40 numbers
+    40 numbers
      ↓
-Small model
+    Small model
+
 ```
 
 This is **knowledge distillation**: use a large model to teach a smaller one.
@@ -261,16 +268,18 @@ At 100 frames per second, even one second of speech contains around 100 sequenti
 
 This is where **recurrent neural networks** come in.
 
-A RNN maintains a hidden state — essentially a vector representing what the model currently remembers.
+An RNN maintains a hidden state — essentially a vector representing what the model currently remembers.
 
 ```text
-Frame 1 → hidden state
+
+    Frame 1 → hidden state
               ↓
-Frame 2 → updated hidden state
+    Frame 2 → updated hidden state
               ↓
-Frame 3 → updated hidden state
+    Frame 3 → updated hidden state
               ↓
-...
+    ...
+
 ```
 
 Instead of treating every frame independently, the model carries information from one frame to the next.
