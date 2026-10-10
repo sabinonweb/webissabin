@@ -5,6 +5,7 @@ description: "A week of understanding noise, reading and knowing thyself and a h
 tags: ["essays"]
 curious: true
 ## week: 2026-09-01 to 2026-09-07
+---
 
 - I was talking to my big ass bro Saksham about last week's week of Curiosity and he had a very strong say about it being too technical and more like a summary to my notes. What are humans for? Learning from their mistakes right. So, let's go.
 
