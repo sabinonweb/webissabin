@@ -4,6 +4,7 @@ date: 2026-09-21
 description: "Agency and Rivers"
 tags: ["essays"]
 curious: true
+---
 ## week: 2026-09-15 to 2026-09-21
 
 ![A high-agency person steers their path instead of drifting with it](/curiosity/week4-high-agency.png)
