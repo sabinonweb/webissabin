@@ -130,4 +130,4 @@ A grid of numbers with a dimension.
 - [Training Season -Dua Lipa](https://open.spotify.com/track/6Qb7YsAqH4wWFUMbGsCpap)
 - [Sawari - The Elemenets](https://open.spotify.com/track/1OGG0f0bcA7XXSrcLhFlV9)
 - [Strip That Down - Liam Payne](https://open.spotify.com/track/4Ro98RCK90oHqqSZUnTFq5)
-
+- [Kya Bore Bhayo - Yogeshwor Amatya](https://open.spotify.com/track/06G735TfzXdF2lti2nRzHC)
