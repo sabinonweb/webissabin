@@ -1,12 +1,11 @@
 ---
 title: "Week #2 of Curiosity"
 date: 2026-09-07
-description: "A week of understanding noise, reading and knowing thyself and a hell lot of music."
+description: "If liberty means anything at all, it means the right to tell people what they do not want to hear."
 tags: ["essays"]
 curious: true
 ---
 ## week: 2026-09-01 to 2026-09-07
-
 
 - I was talking to my big ass bro Saksham about last week's week of Curiosity and he had a very strong say about it being too technical and more like a summary to my notes. What are humans for? Learning from their mistakes right. So, let's go.
 
@@ -37,4 +36,4 @@ curious: true
 - [American Pie - Don McLean](https://open.spotify.com/track/1fDsrQ23eTAVFElUMaf38X)
 
 ## Quote of the week
-If liberty means anything at all, it means the right to tell people what they do not want to hear.
+> If liberty means anything at all, it means the right to tell people what they do not want to hear.

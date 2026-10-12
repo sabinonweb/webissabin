@@ -1,7 +1,7 @@
 ---
 title: "Week #4 of Curiosity"
 date: 2026-09-21
-description: "Agency and Rivers"
+description: "You kill me and I kill you. What have we solved?"
 tags: ["essays"]
 curious: true
 ---
@@ -65,5 +65,5 @@ curious: true
 - [Sabai Sakyo - Chumbak](https://open.spotify.com/track/6x8sccmvaKxngXpqPr68qR)
 
 ## Quote of the week
-You kill me and I kill you. What have we solved?
+> You kill me and I kill you. What have we solved?
 

@@ -1,7 +1,7 @@
 ---
 title: "Week #3 of Curiosity"
 date: 2026-09-14
-description: "A week of understanding problem solving and new ways of life."
+description: "The creatures outside looked from a pig to man, and man to pig, and from pig to man again; but already it was impossible to say which was which."
 tags: ["essays"]
 curious: true
 ---
@@ -24,4 +24,4 @@ curious: true
 - [Jindabaad, Pt.2 - Jindabaad](https://open.spotify.com/track/5CI6PKKWXHSMU47UhjFkCK)
 
 ## Quote of the week
-The creatures outside looked from a pig to man, and man to pig, and from pig to man again; but already it was impossible to say which was which.
+> The creatures outside looked from a pig to man, and man to pig, and from pig to man again; but already it was impossible to say which was which.

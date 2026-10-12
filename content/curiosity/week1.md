@@ -1,7 +1,7 @@
 ---
 title: "Week #1 of Curiosity"
 date: 2026-08-31
-description: "A week of understanding how sound becomes numbers, text becomes speech, and neural networks learn to remember with a hell lot of music."
+description: "You are Larger than life. "
 tags: ["essays"]
 curious: true
 ---
@@ -350,4 +350,4 @@ A word or phrase open to two interpretations
 - [Jhoot - Harmeet](https://open.spotify.com/track/1jwKDC0GL5bTLJnu9LegTZ)
 
 ## Quote of the week
-You are Larger than life. 
+> You are Larger than life. 

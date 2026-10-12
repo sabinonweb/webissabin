@@ -1,7 +1,7 @@
 ---
 title: "Week #5 of Curiosity"
 date: 2026-09-28
-description: "Agency and Rivers"
+description: "Follow your heart" is a marketing slogan, not life advice. Your heart wants tacos at midnight and drunk texts your ex. Try following your mind for once."
 tags: ["essays"]
 curious: true
 ---
@@ -115,6 +115,19 @@ It checks whether `next` is null. If it isn't, it calculates the next offset. `y
 
 Try my Spotify downloader at [yuck_premium](https://github.com/sabinonweb/yuck_premium).
 
+## Tensor
+A grid of numbers with a dimension.
+- 5 is a 0-dimensional Tensor
+- [1, 2] is a 1-dimensional Tensor -> Embedding
+- [[1, 2], [3, 4]] is a 2-dimensional Tensor
+
 ## Quote of the week
 
-> "Follow your heart" is a marketing slogan, not life advice. Your heart wants tacos at midnight and drunk texts your ex. Try following your mind for once.
+> Follow your heart" is a marketing slogan, not life advice. Your heart wants tacos at midnight and drunk texts your ex. Try following your mind for once.
+
+## Music This week
+- [Naam Chale - Vikram Sarkar](https://open.spotify.com/track/6M6Jgms4Z3x5xYLbnMk5TU)
+- [Training Season -Dua Lipa](https://open.spotify.com/track/6Qb7YsAqH4wWFUMbGsCpap)
+- [Sawari - The Elemenets](https://open.spotify.com/track/1OGG0f0bcA7XXSrcLhFlV9)
+- [Strip That Down - Liam Payne](https://open.spotify.com/track/4Ro98RCK90oHqqSZUnTFq5)
+
