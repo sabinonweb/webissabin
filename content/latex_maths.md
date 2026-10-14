@@ -8,7 +8,11 @@ sitemap:
   disable: true
 ---
 
+## Delimiters
+
 Inline: `$...$` · Block: `$$...$$`
+
+## Commands
 
 | What | Write | Renders |
 |---|---|---|
@@ -27,7 +31,9 @@ Inline: `$...$` · Block: `$$...$$`
 | hat / bar | `\hat{y}`, `\bar{x}` | $\hat{y}$, $\bar{x}$ |
 | sized brackets | `\left( \frac{a}{b} \right)` | $\left( \frac{a}{b} \right)$ |
 
-Multi-line aligned (`&` = align point, `\\` = newline):
+## Multi-line aligned
+
+`&` = align point, `\\` = newline.
 
 ```latex
 \begin{aligned}

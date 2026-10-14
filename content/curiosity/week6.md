@@ -1,7 +1,7 @@
 ---
 title: "Week #6 of Curiosity"
 date: 2026-10-19
-description: 'Andy Dufresne literally swam through three hundred yards of piss and shit for the opportunity to have freedom. Are you sure you're not wasting yours?'
+description: "Andy Dufresne literally swam through three hundred yards of piss and shit for the opportunity to have freedom. Are you sure you're not wasting yours?"
 tags: ["essays"]
 curious: true
 ---
