@@ -6,7 +6,7 @@ tags: ["essays"]
 curious: true
 ---
 
-## week: 2026-08-25 to 2026-08-31
+# week: 2026-08-25 to 2026-08-31
 
 ## Sound
 

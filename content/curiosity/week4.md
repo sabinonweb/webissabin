@@ -5,7 +5,7 @@ description: "You kill me and I kill you. What have we solved?"
 tags: ["essays"]
 curious: true
 ---
-## week: 2026-09-15 to 2026-09-21
+# week: 2026-09-15 to 2026-09-21
 
 ![A high-agency person steers their path instead of drifting with it](/curiosity/week4-high-agency.png)
 

@@ -43,3 +43,25 @@ $[(N, M, V, C, T)]$
 
 View changes the permuted input into:
 $[(N*M, V*C, T)]$
+
+## Why do we need BatchNorm1d?
+Real joints coordinates vary along a very large range and are quite messy. If they are fed directly into the model, it has to spend time first to figure out those scales rather than actual ranges. 
+
+## Actual Operations
+***Goal***: Mean = 0, Spread = 1 
+- Find the mean and subract mean from every element in the list
+- Find the spread of the newly found list and divide each element by the spread
+- The new obtained list is centered at 0 with mean = 0 and spread = 1.
+
+BatchNorm1d takes the input in the format `(batch, channels, length)`, permute and view help convert 5D tensor into the format needed.
+
+# ST-GCN Block
+
+![st-gcn](/nsl/st.png)
+
+There are two new terms that we need to get familiar with in the first place.
+***Spatial Ker***: It indicates the number of relationships that exist between the nodes.
+***Temporal Ker***: It indicates the number of frames that blend together.
+
+
+

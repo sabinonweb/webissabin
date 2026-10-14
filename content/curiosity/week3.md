@@ -5,7 +5,7 @@ description: "The creatures outside looked from a pig to man, and man to pig, an
 tags: ["essays"]
 curious: true
 ---
-## week: 2026-09-08 to 2026-09-15
+# week: 2026-09-08 to 2026-09-15
 
 - This was a week of interviews, a series of them. The thing about them is when you don't know the stack for the interview you are giving, you have to put in extra efforts to be competent which I think was hard to manage for me this week.
 

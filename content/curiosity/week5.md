@@ -1,12 +1,12 @@
 ---
 title: "Week #5 of Curiosity"
 date: 2026-09-28
-description: "Follow your heart" is a marketing slogan, not life advice. Your heart wants tacos at midnight and drunk texts your ex. Try following your mind for once."
+description: 'Follow your heart is a marketing slogan, not life advice. Your heart wants tacos at midnight and drunk texts your ex. Try following your mind for once.'
 tags: ["essays"]
 curious: true
 ---
 
-## week: 2026-10-05 to 2026-10-12
+# week: 2026-10-05 to 2026-10-12
 
 ## Setting up nvim from scratch
 
