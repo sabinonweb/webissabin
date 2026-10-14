@@ -79,8 +79,19 @@ The pose encoder misses many important encodings. It occluded the hand data. So,
 - Pose data is sparse(only 21 for hand) list of named(wrist, tip) points.
 
 #### There is a mention of resizing back to 112 * 112, why do we resize?
-We will come back to it in a while. Maybe, it will make sense.
 
+##### Batch 
+- Group of several tasks executing in parallel. 
+
+- GPU is designed to perform these calculations in parallel, rather than one at a time.
+
+##### Condition for Batching 
+The tensors need to be of same side. 
+
+##### Problem with pictures
+Due to camera angle and distance, the cropped pictures have different sizes and resizing is necessary to make batches
+
+### I'm backkkkkkkkk
 The short term temporal encoder is used in Vision Encoding which is constructed employing ST-GCN. It crops the hand data using pose coordinates. It then resizes the image to 112 * 112 size grids. It performs CNN to convolve the pixels. It then produces $\mathcal{F}_{lh}^r \in \mathbb{R}^{T \times h \times w \times C}$ and $\mathcal{F}_{rh}^r \in \mathbb{R}^{T \times h \times w \times C}$. The two features $\mathcal{F}_{i}^r$ and $\mathcal{F}_{i}^p$ are fused in order to receive $\tilde{\mathcal{F}}_i^p$. The temporal encoder is fed with ({$\tilde{\mathcal{F}}_i^p$} or $\mathcal{F}_i^p$). 
 
 #### $\mathcal{F}_i^p$ as input
