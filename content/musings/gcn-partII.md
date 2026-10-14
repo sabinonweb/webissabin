@@ -63,5 +63,6 @@ There are two new terms that we need to get familiar with in the first place.
 ***Spatial Ker***: It indicates the number of relationships that exist between the nodes.
 ***Temporal Ker***: It indicates the number of frames that blend together.
 
-
+## Zoom out
+> Take a sequence of pose data of the body and figure out the actual sign.
 

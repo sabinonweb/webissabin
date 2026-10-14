@@ -1,6 +1,6 @@
 ---
 title: "NSL"
-date: 2026-10-20
+date: 2026-10-12
 description: "a poem about leaving your old self behind and walking into the dark alone"
 tags: ["poems"]
 back: true
@@ -30,11 +30,32 @@ A model which takes any sequence of fingerspellings, and it should give as outpu
 #### Unified Pre-training and finetuning
 
 ##### ***Preliminaries****
-There are 133 keypoints for the whole body but we specifically utilize 69 keypoints only: 21 for each hand, 9 for the body and 18 for the face. Each group of keypoints `i` has an encoder, which is composed of three-layer spatial GCN(For a single frame, it travels 3 hops across hand per say so that fingertips have information about joints several hops away.)
+There are 133 keypoints for the whole body but we specifically utilize 69 keypoints only: 21 for each hand, 9 for the body and 18 for the face. Each group of keypoints `i` has an encoder, which is composed of three-layer spatial GCN(For a single frame, it travels 3 hops across hand per say so that fingertips have information about joints several hops away). Learn more about it at [GCN-PartI](https://sabinonweb.tech/musings/gcn-parti/) and [GCN-PartII](https://sabinonweb.tech/musings/gcn-partii/).
 It produces an output `$\mathcal{F}_{p}^r \in \mathbb{R}^{T \times N_i \times w \times C}$` where,
                         T = number of frames 
                         $mathcal{N_i}$ = Number of keypoints in group `i`
                         C = How many features represent keypoints after encoding?
                         i ∈ {lh, rh, b, f }
 
-In the second part, idea of decoupling visual cues is used. Videos are cropped using keypoint coordinates and resized to 112 * 112 pixels which are processed by Vision Encoder. It gives out results `$\mathcal{F}_{lh}^r \in \mathbb{R}^{T \times h \times w \times C}$ and $\mathcal{F}_{rh}^r \in \mathbb{R}^{T \times h \times w \times C}$`. Then the two ouputs, $\mathcal{F}_i^p$ and $\mathcal{F}_i^r$ are fused to form $\tilde{\mathcal{F}}_i^p$. Fusion is done in order to ensure the data lost duirng posing is recovered.   
+In the second part, idea of decoupling visual cues is used. Videos are cropped using keypoint coordinates and resized to 112 * 112 pixels which are processed by Vision Encoder. It gives out results `$\mathcal{F}_{lh}^r \in \mathbb{R}^{T \times h \times w \times C}$ and $\mathcal{F}_{rh}^r \in \mathbb{R}^{T \times h \times w \times C}$`. Then the two ouputs, $\mathcal{F}_i^p$ and $\mathcal{F}_i^r$ are fused to form $\tilde{\mathcal{F}}_i^p$. Fusion is done in order to ensure the data lost duirng posing is recovered.  
+
+###### Zoom out
+A sequence of keypoints 133 keypoints for each frame arrive, then it is divided into 4 body parts(face, body, lh, rh) 21 points for hands, 9 for body and 18 for face by taking 69 points and discarding the other 64. It is then processed by 3 layer spatial GCN which takes each group of points and for each joint point aggregates it with the first neighbour thne the resulting to second then to third which gives the result Fpi belongs to R^(T×Ni×C) which means a tensor of 3 dimension consisting of real numbers, Fpi = pose features for gorup i T = number of frames, Ni = number of points in froup i and C = channel or the dimension of points features or the number of points used to represent a feature.
+
+## How it works?
+
+There are two parts of it. Let's look at one part of it first.
+
+![Unisign](/nsl/uni1.png)
+
+There are 133 keypoints in pose data but only 69 are taken. There are 69 sub-pose groups: 21 for each hand, 18 for the face and 9 for the body. These sub-groups are fed into each of their own PoseEncoder which is composed of three-layer spatial GCN. It gives out an ouput: $\mathcal{F}_{i}^p \in \mathbb{R}^{T \times N_i \times w \times C}$
+
+where,
+
+$$
+\begin{aligned}
+T   &= \text{number of frames} \\
+N_i &= \text{number of keypoints in frame } i \\
+C   &= \text{number of values used to represent each keypoint}
+\end{aligned}
+$$
