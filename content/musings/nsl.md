@@ -117,3 +117,12 @@ A lot of researches used an intermediary step in order to predict the sign langu
 $$\mathcal{L}_{lm} = - \sum_{u=1}^{U}\log\mathcal{P}(s_u | s_{ \lt u}, \mathcal{F}_{sign})$$
 
 ## Fine-tuning Uni-Sign
+There are specific fine tuning methods tailored to each task(MLP head for ISLR, CTC loss for CSLR). But in this paper, SLU tasks(ISLR, CSLR, SLT) are fine-tuned using an unified fine-tuning paradigm by treating three tasks as a single SLT task. To construct supervision targets(ground truth to compute loss), ISLR uses action recognition, CSLR uses gloss sequence and SLT uses translated tasks. Through this method, the model which learnt robust SLU capabilities during pre-training are seamlessly transferred to downstream tasks.
+
+### Pre-training
+$$\mathcal{L}_{PSLT} = \mathcal{L}_{lm}(\mathcal{F}_{sign}, \mathcal{y}_{sentence})$$
+
+### Fine-tuning
+$$\mathcal{L}_{ISLR} = \mathcal{L}_{lm}(\mathcal{F}_{sign}, \mathcal{y}_{word})$$
+$$\mathcal{L}_{CSLR} = \mathcal{L}_{lm}(\mathcal{F}_{sign}, \mathcal{y}_{gloss})$$
+$$\mathcal{L}_{SLT} = \mathcal{L}_{lm}(\mathcal{F}_{sign}, \mathcal{y}_{sentence})$$
