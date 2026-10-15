@@ -6,7 +6,6 @@ tags: ["poems"]
 back: true
 ---
 
-
 ## What are we trying to achieve?
 A model which takes any sequence of fingerspellings, and it should give as output, the continuous signing with pauses and natural motion of hands which will be used as a synthetic dataset for the project.
 
@@ -24,12 +23,10 @@ A model which takes any sequence of fingerspellings, and it should give as outpu
 
 **Boundary**: In isolated letters the signs are static but for continuous signing the signs move pretty fast.
 
-## 2026-10-06 - Unisign Paper
-### Methodology
+## 2026-10-06 - Uni-Sign Paper
+## Methodology
 
-#### Unified Pre-training and finetuning
-
-##### Preliminaries
+## Unified Pre-training and finetuning: Preliminaries
 
 There are 133 keypoints for the whole body but we specifically utilize 69 keypoints only: 21 for each hand, 9 for the body and 18 for the face. Each group of keypoints `i` has an encoder, which is composed of three-layer spatial GCN(For a single frame, it travels 3 hops across hand per say so that fingertips have information about joints several hops away). Learn more about it at [GCN-PartI](https://sabinonweb.tech/musings/gcn-parti/) and [GCN-PartII](https://sabinonweb.tech/musings/gcn-partii/).
 It produces an output $\mathcal{F}_{p}^r \in \mathbb{R}^{T \times N_i \times w \times C}$ where,
@@ -48,7 +45,7 @@ A sequence of keypoints 133 keypoints for each frame arrive, then it is divided 
 There are two parts of it. Let's look at one part of it first.
 
 ### Pose Encoding
-![Unisign](/nsl/uni1.png)
+![Uni-Sign](/nsl/uni1.png)
 
 There are 133 keypoints in pose data but only 69 are taken. There are 69 sub-pose groups: 21 for each hand, 18 for the face and 9 for the body. These sub-groups are fed into each of their own PoseEncoder which is composed of three-layer spatial GCN. It gives out an ouput: $\mathcal{F}_{i}^p \in \mathbb{R}^{T \times N_i \times w \times C}$
 
@@ -64,7 +61,7 @@ $$
 
 ## Vision Encoding
 
-![Unisign](/nsl/uni2.png)
+![Uni-Sign](/nsl/uni2.png)
 
 The pose encoder misses many important encodings. It occluded the hand data. So, vision encoder is used to improve on that data. 
 
@@ -101,3 +98,18 @@ The short term temporal encoder is used in Vision Encoding which is constructed 
 ![uni](/nsl/uni4.png)
 
 The temporal encoder outputs are aggregated intra-group via mean pooling layer and concatenated across all groups(face, body, hands) to get final $\mathcal{F}_{sign} \in \mathbb{R}^{T \times 4C}$ which is then fed as input into Pre-trained LLM. 
+
+## Pre-training Uni-Sign
+
+### Let's get familiar, shall we?
+#### Generative Pre-training
+- ##### Generative: Task is to predict/generate text, not classify.
+- ##### Pre-training: This happens as a foundation. 
+
+It is collectively a process where a model is trained on a specific task. For an example, we give it text and make it predict the next word, punish it based on the loss function and it adjusts it's weights in order to get better at predicting words. With this training, it can generate text given a prompt. 
+
+A lot of researches used an intermediary step in order to predict the sign languages. They used gloss to text models in order to teach the model to recognize the sign but were actually never shown the videos. But Uni-Sign uses a different approach. LLMs are generalized upon a large amout of text data. Uni-Sign utilizes that by feeding $F_{sign}$ data by converting it's dimension into whatever LLM takes. Basically, the model is fed with labeled data and $F_{sign}$, and given the data it has to predict what the video sign means. The labeled data is fed one token at a time. $s_{\lt u}$ stores the tokens before the current word. The loss function calculates the loss and the needful weights refactoring done using backpropagation. 
+
+$$\mathcal{L}_{lm} = - \sum_{u=1}^{U}\log\mathcal{P}(s_u | s_{ \lt u}, \mathcal{F}_{sign})$$
+
+## Fine-tuning Uni-Sign
