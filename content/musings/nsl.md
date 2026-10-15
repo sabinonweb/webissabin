@@ -106,6 +106,10 @@ The temporal encoder outputs are aggregated intra-group via mean pooling layer a
 - ##### Generative: Task is to predict/generate text, not classify.
 - ##### Pre-training: This happens as a foundation. 
 
+#### Gloss text
+When the signers sign the sentences or words, they don't really consider words like 'the', 'is', or any kind of verb or puntuation. The sentences are just glosses. 
+For example, `The cat is running` -> `Cat, Run`(Text to Gloss).
+
 It is collectively a process where a model is trained on a specific task. For an example, we give it text and make it predict the next word, punish it based on the loss function and it adjusts it's weights in order to get better at predicting words. With this training, it can generate text given a prompt. 
 
 A lot of researches used an intermediary step in order to predict the sign languages. They used gloss to text models in order to teach the model to recognize the sign but were actually never shown the videos. But Uni-Sign uses a different approach. LLMs are generalized upon a large amout of text data. Uni-Sign utilizes that by feeding $F_{sign}$ data by converting it's dimension into whatever LLM takes. Basically, the model is fed with labeled data and $F_{sign}$, and given the data it has to predict what the video sign means. The labeled data is fed one token at a time. $s_{\lt u}$ stores the tokens before the current word. The loss function calculates the loss and the needful weights refactoring done using backpropagation. 
