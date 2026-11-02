@@ -1,0 +1,42 @@
+---
+title: "A terminal deep dive"
+date: 2026-09-02
+description: "an essay about terminal"
+tags: ["essays"]
+back: true
+---
+
+I always wanted to learn the terminal and how the programs run on it and it always seemed like something esoteric to me. But there is a new approach that I am trying right now, that is being problem specific and one of it, required me to finally poke the inner demon.
+
+# ls 
+When you type ls, shell looks for a $PATH environment variable. shell skims it from left to right, if no program is found then it prints `command not found`. We can also give the path of the executable file that we wanna run. It's stored in /bin folder(executable files are stored here). `ls` is nothing but a program.
+
+# What does .venv do in python? 
+Activating adds the folder .venv/bin to the front of $PATH.
+
+But let's start from what a terminal is. It is an window which shows the prompt and sends our keystrokes to the shell.
+
+# shell
+It is a program that runs other programs. It basically:
+- takes the command typed 
+- divides it into comamnd and argument 
+- finds the command's program
+- runs it, waits for the output
+- repeat
+
+# What's up with the terminal emulator? 
+Let's take an example of kitty. It is a terminal emulator app which just imitates physicals terminals of the 70s. 
+In the 70s, the program/shell ran on a powerful computer and commands were typed in from a completely different device. They were connected with a telephone cable. 
+
+## Modem
+The phone network was the only wire that reached long distances, and it could only carry sound. A modem (modulator + demodulator) sat at each end. It turned 0s and 1s into tones to send, and turned incoming tones back into 0s and 1s. 
+Everything is now squeezed into one machine and zsh is a shell program.
+
+# How does this whole process take place?
+1. Shell is attached to the terminal. When shell starts a program, OS creates a process with it's own PID and memory. And everything shell starts is attached to terminal which is called a terminal session.
+2. Signals is how OS sends the message to these processes. SIGINT means INTERRUPT. Every process has 3 responses: 
+- do the default action, i.e exit 
+- catch it, run its own code(save and exit)
+- ignore
+3. SIGHUP means when terminal closes, the OS sends this signal to the processes and they exit because we have no way to access or see these. 
+4. nohup = "ignote SIGHUP". It has no way to give output, so nohup sends its output to a file (nohup.out) or redirect it to some file we ask it. 
