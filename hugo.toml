@@ -53,3 +53,7 @@ enable = true
 [markup.goldmark.extensions.passthrough.delimiters]
 inline = [['$', '$']]
 block = [['$$', '$$']]
+
+# lets markdown blocks take a class, e.g. `{.contrapuntal}` under a table
+[markup.goldmark.parser.attribute]
+block = true
