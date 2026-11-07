@@ -13,7 +13,7 @@ got burnt just to get a touch of you
 
 you give me all the power\
 a kingmaker\
-gooning to my good-ol success\
+gloating over my good-ol success\
 i was jose mourinho, the special one
 
 feed my burning desire\
