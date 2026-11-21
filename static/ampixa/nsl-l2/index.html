@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NSL L2 — signer-independent word matching · ampixa labs</title>
+<meta name="description" content="NSL word-sign recognition: frozen Uni-Sign retrieval, filmstrip matching, sentence spotting. All experiments, numbers, and plans.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+Devanagari:wght@500;700&family=Rubik+Vinyl&display=swap">
+<style>
+:root{--paper:#faf5ea;--card:#fffdf6;--ink:#191817;--ink2:#5e5a57;--rule:#d8d2c2;--crimson:#dc143c;--lane:#1a7f4b;--amber:#b97b00}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 Georgia,serif}
+.wrap{max-width:1020px;margin:0 auto;padding:0 18px}
+header.top{border-bottom:3px solid var(--ink);padding:14px 0;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+.brand{font:400 26px "Rubik Vinyl",cursive} .brand a{color:var(--ink);text-decoration:none}
+nav.mono{font:12px "IBM Plex Mono",monospace} nav.mono a{color:var(--ink2);margin-left:14px;text-decoration:none} nav.mono a:hover{color:var(--crimson)}
+.hero{padding:38px 0 8px} .kicker{font:11px "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+h1{font:400 52px/1.02 "Archivo Black",sans-serif;margin:10px 0 6px} h1 .accent{color:var(--crimson)}
+.sub{font-size:17px;max-width:62ch} .sub .np{font-family:"Noto Sans Devanagari",sans-serif}
+.score{display:flex;gap:14px;flex-wrap:wrap;margin:22px 0 6px}
+.score .box{background:var(--card);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:12px 16px;min-width:150px}
+.score .box b{font:400 30px "Archivo Black",sans-serif;display:block} .score .box span{font:12px "IBM Plex Mono",monospace;color:var(--ink2)}
+.sec{padding:34px 0 0} .sec>h2{font:700 30px/1.1 Georgia,serif;margin:6px 0 4px;border-bottom:3px solid var(--crimson);display:inline-block;padding-bottom:2px}
+.sec>p.lede{color:var(--ink2);max-width:70ch}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px;background:var(--card);border:2px solid var(--ink)}
+th{font:11px "IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.08em;text-align:left;background:var(--ink);color:var(--paper);padding:9px 10px}
+td{padding:9px 10px;border-bottom:1px solid var(--rule);vertical-align:top} tr:last-child td{border-bottom:0}
+td.num{font-family:"IBM Plex Mono",monospace;white-space:nowrap} td .np{font-family:"Noto Sans Devanagari",sans-serif}
+.chip{display:inline-block;font:600 11px "IBM Plex Mono",monospace;padding:2px 8px;border:1.5px solid var(--ink);text-transform:uppercase;white-space:nowrap}
+.chip.real{background:var(--lane);color:#fff;border-color:var(--lane)} .chip.luck{background:#fff;color:var(--ink2);border-style:dashed}
+.chip.fail{background:var(--crimson);color:#fff;border-color:var(--crimson)} .chip.base{background:var(--ink);color:var(--paper)}
+.chip.plan{background:var(--amber);color:#fff;border-color:var(--amber)}
+.card{background:var(--card);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:16px 18px;margin:14px 0}
+.card h3{margin:0 0 6px;font-size:19px} .card h3 code{font:600 13px "IBM Plex Mono",monospace;background:#efe9d8;padding:2px 6px}
+.card p{margin:8px 0} .card .mono{font:13px "IBM Plex Mono",monospace;color:var(--ink2)}
+.hand{font-family:"Caveat",cursive;font-size:21px;color:var(--crimson)}
+ol.plans>li{margin:12px 0} footer{margin:56px 0 0;padding:16px 0 42px;border-top:2px solid var(--ink);font:12px "IBM Plex Mono",monospace;color:var(--ink2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+a{color:var(--crimson)} code.inline{font:600 13px "IBM Plex Mono",monospace;background:#efe9d8;padding:1px 5px}
+@media(max-width:700px){h1{font-size:34px}table{font-size:13px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand"><a href="/">ampixa labs</a></div>
+  <nav class="mono"><a href="/">home</a><a href="#exps">experiments</a><a href="#plans">plans</a><a href="#files">files</a></nav>
+</header>
+
+<section class="hero">
+  <div class="kicker">NSL · signer-independent word recognition · frozen Uni-Sign retrieval</div>
+  <h1>One sign, <span class="accent">new signer,</span> find it.</h1>
+  <p class="sub">A person signs a Nepali word (<span class="np">घर</span>, <span class="np">पानी</span>, …). The system finds the same word signed by <em>other</em> signers. Leave-one-source-out over three piles — <span class="inline code">ndfn / ole / mero</span> — 1,056 test clips pooled. Every number below links to the script that produced it.</p>
+  <div class="score">
+    <div class="box"><b>32.0%</b><span>plain 1-NN baseline</span></div>
+    <div class="box"><b>39.3%</b><span>K=2 filmstrip · current best ★</span></div>
+    <div class="box"><b>56.2%</b><span>top-5 of best</span></div>
+    <div class="box"><b>27.3%</b><span>sentence spot · failing</span></div>
+  </div>
+</section>
+
+<section class="sec" id="exps">
+  <h2>All experiments</h2>
+  <p class="lede">Verdict rule used throughout: paired change vs baseline, REAL if |D| &gt; 2√n else LUCK. Train/test boundary: the tested source is never in the pile.</p>
+  <table>
+    <tr><th>Exp</th><th>What</th><th>Result</th><th>Verdict</th></tr>
+    <tr><td class="num"><b>0 · baseline</b></td><td>Frozen Uni-Sign, mean-pooled vector per clip, nearest pile clip wins. <span class="mono">src/unisign_fold_eval.py</span></td><td class="num">32.0% top-1 (n=1056)</td><td><span class="chip base">baseline</span></td></tr>
+    <tr><td class="num"><b>FT · fine-tune</b></td><td>Fine-tuned encoder + word-list classifier on pile clips. <span class="mono">src/unisign_ft.py</span></td><td class="num">28% (below baseline)</td><td><span class="chip fail">worse</span></td></tr>
+    <tr><td class="num"><b>S · same-word</b></td><td>Small layer on frozen encoder; pull same-word pile clips together, push others apart. Pile-only training. <span class="mono">src/unisign_sameword_eval.py</span></td><td class="num">29.7% · D=−24, LUCK</td><td><span class="chip fail">doesn't help</span></td></tr>
+    <tr><td class="num"><b>D · diagnose</b></td><td>No training. Split frozen scores by pile answers per word + top-5. <span class="mono">src/unisign_diag_eval.py</span></td><td class="num">1-chance 28.0% (778) vs 2+ 43.2% (278); top-5 51.2%</td><td><span class="chip real">ceiling found</span></td></tr>
+    <tr><td class="num"><b>A · fake 2nds</b></td><td>Speed-warped copies (0.8×, 1.25×) added to thin pile words, frozen model. <span class="mono">src/unisign_augment_eval.py</span></td><td class="num">32.0% → 32.3% · D=+3 LUCK</td><td><span class="chip fail">warps don't help</span></td></tr>
+    <tr><td class="num"><b>T · filmstrip</b></td><td>Keep time: K=4 ordered chunk means, start-start + end-end, no training. <span class="mono">src/unisign_seq_eval.py</span></td><td class="num">37.5% · D=+58 REAL</td><td><span class="chip real">keep</span></td></tr>
+    <tr><td class="num"><b>T2 · K sweep</b></td><td>K ∈ {2,4,8} chunk match vs plain. <span class="mono">src/unisign_k_sweep.py</span></td><td class="num">K=2 <b>39.3%</b> · K=4 37.5% · K=8 36.5%, all REAL</td><td><span class="chip real">K=2 baseline ★</span></td></tr>
+    <tr><td class="num"><b>T3 · K=2 split</b></td><td>Same K=2, split 1 vs 2+ answers + top-5. <span class="mono">src/unisign_t3_eval.py</span></td><td class="num">1-ch 34.7%/50.8 · 2+ 52.2%/71.2 · pooled 39.3%/56.2%</td><td><span class="chip real">film real 2nds</span></td></tr>
+    <tr><td class="num"><b>L · spot</b></td><td>Citation gallery (2 clips/word, Shilu expert set) slides windows over 22 sentence clips; rank 35. <span class="mono">src/unisign_spot_eval.py</span></td><td class="num">6/22 = 27.3% (bar was ≥60%)</td><td><span class="chip fail">insufficient</span></td></tr>
+    <tr><td class="num"><b>L2 · de-rest</b></td><td>Same as L + strip boundary rest (motion &lt; median/2), skip still windows. <span class="mono">src/unisign_spot_trim_eval.py</span></td><td class="num">6/22 = 27.3%, identical hits</td><td><span class="chip fail">rest ruled out</span></td></tr>
+    <tr><td class="num"><b>H · head</b></td><td>Tiny learned spotter (5 weights), leave-one-word-out over 22 sentences. <span class="mono">src/unisign_spot_head.py</span></td><td class="num">ran unapproved; internal baseline 18.2% ≠ L's 27.3% — unresolved</td><td><span class="chip plan">parked</span></td></tr>
+  </table>
+</section>
+
+<section class="sec">
+  <h2>What the failures taught</h2>
+  <div class="card"><h3>Fine-tuning memorises the pile <code>28% · 29.7%</code></h3>
+  <p>Both trainings drove pile loss near zero (4.9 → 0.2) and lost on new signers. ~590k weights vs ~180 paired pile clips: the shortcut (camera, rest pose, one signer's habit) always wins. <span class="hand"> memorised, not learned.</span></p></div>
+  <div class="card"><h3>The ceiling is chances, not weights <code>D · T3</code></h3>
+  <p>Same frozen model: 28.0% with one pile answer vs 43.2% with two or more (clipped); 34.7% vs 52.2% under K=2. 778 of 1,056 tests get a single shot. No layer invents a missing second example — only filming (or mining) does.</p></div>
+  <div class="card"><h3>Order beats blur <code>T · T2</code></h3>
+  <p>Mean-pooling erases speed: [up + roof]/2 looks the same for fast and slow. Keeping start/end halves (K=2) lets roof find roof: 32.0% → 39.3%, REAL. Finer slices (K=8) re-brittle on speed — coarser wins.</p></div>
+  <div class="card"><h3>Sentences break the finder <code>L · L2</code></h3>
+  <p>Citation matching inside sentences: 27.3%, and trimming rest doesn't move it (identical 6 hits). Best windows land on hands-down; whole-clip averaging ties windows at 27.3% — the fixed rule family is exhausted. Neighbours blend in (coarticulation), rest matches rest (~0.9 &gt; true 0.85), hubs (नागरिक wins 4 unrelated sentences) dominate.</p></div>
+</section>
+
+<section class="sec">
+  <h2>Data in hand</h2>
+  <table>
+    <tr><th>Asset</th><th>What</th><th>Status</th></tr>
+    <tr><td>Teaching corpus</td><td>ndfn + ole + mero word clips, 133-pt poses; 468 multi-source words, 3,653 glosses total (3,136 singletons)</td><td><span class="chip base">core eval</span></td></tr>
+    <tr><td>Shilu expert set</td><td>82 reviewed clips, 35 parliament words (citation_1/2 + sentence), HF <span class="mono">ampixa/nsl-expert-session-20260815</span> → <span class="mono">data/expert_hf/</span>, poses 82/82</td><td><span class="chip real">mined 22 sents</span></td></tr>
+    <tr><td>Filming list</td><td>388 thin words with per-source counts + protocol, <span class="mono">film_second_clips.md</span></td><td><span class="chip plan">ready to film</span></td></tr>
+    <tr><td>Parliament</td><td>112h poses + weak (span,text) pairs (gold/g2/silver tiers, ~+0.9s lag, gist labels)</td><td><span class="chip plan">tight subset next</span></td></tr>
+    <tr><td>Review pack</td><td>22 sentence clips + <span class="mono">data/expert_review/review.json</span> (ticks: #1 wrong, #2 wrong)</td><td><span class="chip plan">2/22 ticked</span></td></tr>
+  </table>
+</section>
+
+<section class="sec" id="plans">
+  <h2>What we're planning</h2>
+  <ol class="plans">
+    <li><b>Resolve the H mismatch first.</b> Same data scores 27.3% in <span class="mono">spot_eval</span> but 18.2% inside <span class="mono">spot_head</span> — check-everything before any head claim lives or dies.</li>
+    <li><b>Spotter head on watched windows (Exp H).</b> 5 learned weights, leave-one-word-out over 22 watched sentences; bar ≥40% + REAL to scale, tie ~27% parks sentences for good. Prediction: supervision, not cutoffs, is the missing ingredient.</li>
+    <li><b>Ship the clipped finder.</b> K=2 at 39.3% first guess / 56.2% top-5 (71.2% on 2+ pile words): dictionary lookup with 5 human-pickable candidates, no training, nothing blocked.</li>
+    <li><b>Film the 388 seconds.</b> Pilot the top 10 rows, re-run T3; mass-film only if thin words flip 1→2+ and move the score. Proven lift: +15 pts real vs +0.3 fake.</li>
+    <li><b>Parliament tight-subset mining.</b> Re-anchor gold/g2 rows with citation galleries, spot-check ~20, harvest sentence examples for the spotter — never train on raw weak labels (lag + gist + 40% unlabeled).</li>
+  </ol>
+  <p class="mono">Write-up: docs/notes/20261119_spot_eval_L_L2.md · Spec style: Background / Problem / Hypothesis / Risk / Prediction / Decision — prediction locked before every run.</p>
+</section>
+
+<section class="sec" id="files">
+  <h2>Files</h2>
+  <p class="mono">src/unisign_{fold_eval,paired_eval,diag_eval,sameword_eval,augment_eval,seq_eval,k_sweep,t3_eval,spot_eval,spot_trim_eval,spot_head,review_clips}.py · src/{fold,probe,center,augment,seq}_eval · data/expert_{hf,demo,review} · film_second_clips.md</p>
+</section>
+
+<footer><span>ampixa labs · NSL L2 · all numbers from pooled leave-one-source-out 1-NN unless noted</span><span>baseline K=2 39.3% ★</span></footer>
+
+</div>
+</body>
+</html>
