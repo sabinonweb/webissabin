@@ -233,7 +233,7 @@ If the host and port are hardcoded then in prod they can only deploy it in one m
 
 DB's name would be changed for different tests for different requirements. This can cause flaky tests which can be solved by giving each database its own name.
 
-```
+```shell
 
     A and B share one database. A inserts "Pay Bills", and B inserts "Payout Help". Then A searches for pay.
 
