@@ -244,3 +244,68 @@ DB's name would be changed for different tests for different requirements. This 
 
 ```
 
+## Database 
+For connecting to database:
+
+```rust 
+
+    // configutation.rs 
+    impl DatabaseSettings {
+        pub fn connect_options(&self) -> PgConnectOptions {
+            let options = PgConnectOptions::new()
+                .username(&self.user)
+                .host(&self.host)
+                .port(self.port) 
+                .database(&self.db_name);
+
+            match &self.password {
+                Some(p) => options.password(p.expose_secret()),
+                None => options,
+            }
+        }
+    }
+
+```
+
+```rust
+
+    // lib.rs 
+    
+    let app = Router::new().route("/health_check", get(health));
+    axum::serve::serve(listener, app)
+        .await
+        .unwrap()
+        .with_state(connection);
+
+```
+
+```rust 
+    
+    // main.rs 
+    let connection = PgConnection::connect_with(&settings.database.conne        ct_options())
+        .await
+        .expect("Failed to connect to database");
+    run(listener, connection).await;
+
+```
+
+When we compile this:
+
+```shell
+    
+    error[E0277]: the trait bound `PgConnection: Clone` is not satisfied
+       --> src/lib.rs:12:15
+        |
+     12 |     let app = Router::new()
+        |               ^^^^^^^^^^^^^ the trait `Clone` is not implemented for `PgConnection`
+
+
+```
+
+It is because, axum gives a connection to each handler and it cannot be cloned because it is a TcpConnection underneath. We can use `Arc` but each handler needs a `&mut PgConnnection` and `Arc` doesn't give that. `Mutex` would create a long waiting time: when a query is running, we cannot run any other query until it finishes. 
+
+#### The Solution 
+The solution is using a `PgPool`. It is a manager not a waiter. It points to a pool of `PgConnection`, so it can be cloned. It provides one `PgConnection` to one query so only one query gets one &mut use of one connection. The waiting time is only for the (N+1)th query and only until a connection returns.
+When multiple connections access the same database:
+- if the rows are different, it makes changes to two rows in parallel
+- if the rows are same then, database locks the row until the first transaction finishes.
