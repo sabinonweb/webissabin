@@ -244,7 +244,8 @@ DB's name would be changed for different tests for different requirements. This 
 
 ```
 
-## Database 
+## Database
+
 For connecting to database:
 
 ```rust 
@@ -304,8 +305,95 @@ When we compile this:
 
 It is because, axum gives a connection to each handler and it cannot be cloned because it is a TcpConnection underneath. We can use `Arc` but each handler needs a `&mut PgConnnection` and `Arc` doesn't give that. `Mutex` would create a long waiting time: when a query is running, we cannot run any other query until it finishes. 
 
+## SQL Design Choice
+
+```rust
+
+    // search.rs 
+    use axum::{extract::{Query, State}, Json,};
+    use sqlx::PgPool;
+    use crate::types::{SearchHit, SearchParams};
+
+    pub async fn search(
+        State(pool): State<PgPool>,
+        Query(params): Query<SearchParams>,
+    ) -> Json<Vec<SearchHit>> {
+        let hits = sqlx::query_as(
+            "SELECT idx, title, service_type, search_order FROM nodes WHERE title ILIKE $1 AND is_obsolete IS NOT TRUE ORDER BY search_order;",
+        )
+            .bind(format!("%{}%", params.q))
+            .fetch_all(&pool)
+            .await
+            .unwrap();
+        Json(hits)
+    }
+
+```
+
+Instead of this:
+
+```rust 
+
+    let sql = format!(
+        "SELECT idx, title FROM nodes WHERE title ILIKE '%{}%'",
+        params.q
+    );
+    sqlx::query(&sql).fetch_all(&pool).await
+
+```
+If we use this and if user sends `x'; DROP TABLE nodes; --'` then it deletes the nodes table, which is SQL injection. -- comments out the rest and user's ' closes the quote. The query becomes `SELECT idx, title FROM nodes WHERE title ILIKE '%x'; DROP TABLE nodes; --%'.
+
+But if we write it:
+
+```rust 
+
+    sqlx::query_as("SELECT idx, title FROM nodes WHERE title ILIKE $1")
+        .bind(format!("%{}%", params.q))
+
+```
+
+Postgres receives query and value. It first parses the query and then plugs in the value, which it receives not as a query but as a string to compare. Postgres searches for columns with `x'; DROP TABLE nodes; --` literal value.
+
 #### The Solution 
 The solution is using a `PgPool`. It is a manager not a waiter. It points to a pool of `PgConnection`, so it can be cloned. It provides one `PgConnection` to one query so only one query gets one &mut use of one connection. The waiting time is only for the (N+1)th query and only until a connection returns.
 When multiple connections access the same database:
 - if the rows are different, it makes changes to two rows in parallel
 - if the rows are same then, database locks the row until the first transaction finishes.
+
+## Dockerfile 
+
+```Dockerfile
+    
+    FROM rust:1.99 
+    WORKDIR /app 
+    COPY . . 
+    RUN cargo build --release 
+    ENTRYPOINT ["./target/release/teletest"]
+
+```
+
+- FROM rust:1.99 -> Start from a rust image 
+- WORKDIR /app -> create an app directory and cds into the /app
+- COPY . . -> copy the project into the /app excluding the files in .dockerignore
+- RUN cargo build --release  -> run this while building image 
+- ENTRYPOINT ["./target/release/teletest"] -> it runs every time a new container runs
+
+Now `docker build -t teletest .`. `-t` gives a tag to the image, without it we would have to copy paste the id everytime. Docker looks for Dockerfile in directory `.`.
+
+We then run `docker run -p 3000:3000 teletest` which redirects every request on `localhost:3000` to the port `3000` of the container. But this command fails with:
+
+```shell
+    
+    hread 'main' (1) panicked at src/main.rs:12:10:
+    Failed to connect to database: PoolTimedOut
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+    What's next:
+        Debug this container error with Gordon → docker ai "help me fix this container error"
+
+
+```
+
+Not immediately but after a while. This happens because the app tries to connet to postgres at `127.0.0.1:5432` which is a loopback address i.e. it can listen to connections only inside the machine it is running in. The postgres is running inside my computer not in the container, so it cannot connect to the postgres. The connection is refused, sqlx keeps retrying until the pool's 30-second timeout, then panics with PoolTimedOut. So, the solution is `0.0.0.0`.
+
+The solution is to use name the host in database settings as host.docker.internal which points to the machine the container is running on. Similarly, loopback address accepts connections from its own machine only but using `0.0.0.0` accepts connections from any network interface.
