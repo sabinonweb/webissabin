@@ -397,3 +397,142 @@ We then run `docker run -p 3000:3000 teletest` which redirects every request on 
 Not immediately but after a while. This happens because the app tries to connet to postgres at `127.0.0.1:5432` which is a loopback address i.e. it can listen to connections only inside the machine it is running in. The postgres is running inside my computer not in the container, so it cannot connect to the postgres. The connection is refused, sqlx keeps retrying until the pool's 30-second timeout, then panics with PoolTimedOut. So, the solution is `0.0.0.0`.
 
 The solution is to use name the host in database settings as host.docker.internal which points to the machine the container is running on. Similarly, loopback address accepts connections from its own machine only but using `0.0.0.0` accepts connections from any network interface.
+
+## Test Result 
+`curl -i "http://localhost:3000/search?q=%25"` gives out even electricity. `%` means match everything. Eg: `%pay` anything + pay, `pay%` pay + anything and `%pay%` anything + pay + anything. 25 in hex is 37 which in ASCII is `%`. `format!("%{}%", params.q)` converts it to `%%%`. So, it mactches all the titles.
+
+## Telemetry 
+Telemetry data is information about the running application collected automatically, used to inspect the state of the appliation. 
+
+Observability is about asking arbitrary questions without having to know what to ask in the first place. We look at the logs, look at the logs and find out the problem. 
+
+Logger is a middleware that captures every incoming reqeuest in the server. And instrumentation is the act of inserting the log statements in the application. It is done by the log crate. It doesn't print the log to the terminal or to the file itself. Rather, log stores a pointer to the backend which processes the log. 
+
+### Problem with log 
+Log is isolated but a request is a tree: `request -> search -> DB query`. If we add request_id to each request then we can solve it to a certain exent but what about the code which is not in our control: like `sqlx`, `axum`. Passing request_id to downstream functions is not a great and sustainable idea. 
+
+### Tracing
+Tracing has spans which can be entered and exited by a particular request. But the problem here is, in rust async functions can't run in one go. An async function might enter the span and it's span is read from the thread. Only dropping the guard(going out of scope) resets the span. But in this case when an async function is awaiting, it is removed from a thread, and the new async function reads the same old span and uses it as a parent. 
+
+```rust
+
+    async fn search_broken(q: &'static str, db_ms: u64) {
+        let span = info_span!("search", q);
+        let _guard = span.enter();
+        info!("searching");
+        tokio::time::sleep(Duration::from_millis(db_ms)).await; // pretend DB query
+        info!("found results");
+    }
+
+```
+
+```shell
+
+    2026-11-25T08:24:03.333400Z  INFO span_demo: ===== BROKEN =====
+    2026-11-25T08:24:03.333478Z  INFO search{q="pay"}: span_demo: searching
+    2026-11-25T08:24:03.333506Z  INFO search{q="pay"}:search{q="topup"}: span_demo: searching
+    2026-11-25T08:24:03.436032Z  INFO search{q="pay"}:search{q="topup"}: span_demo: found results
+    2026-11-25T08:24:03.535063Z  INFO search{q="pay"}: span_demo: found results
+
+
+```
+
+.instrument(span) attaches the span to the future instead of the thread. Every time the executor polls the future, the span is entered; every time the future pauses at an .await, the span is exited. So the span can be entered and exited many times, and it closes once when the future completes. Because it travels with the future, it stays correct even if the future resumes on a different thread.
+
+```rust 
+
+    async fn search_fixed(q: &'static str, db_ms: u64) {
+        let span = info_span!("search", q);
+        async move {
+            info!("searching");
+            tokio::time::sleep(Duration::from_millis(db_ms)).await; // pretend DB query
+            info!("found results");
+        }
+        .instrument(span)
+        .await
+    }
+
+```
+
+```shell
+    
+    2026-11-25T08:24:03.535202Z  INFO span_demo: ===== FIXED =====
+    2026-11-25T08:24:03.535251Z  INFO search{q="pay"}: span_demo: searching
+    2026-11-25T08:24:03.535303Z  INFO search{q="topup"}: span_demo: searching
+    2026-11-25T08:24:03.637792Z  INFO search{q="topup"}: span_demo: found results
+    2026-11-25T08:24:03.737158Z  INFO search{q="pay"}: span_demo: found results
+
+```
+
+### Log
+```shell
+
+    log::info!("search for {} found {} results in {}ms", q, n, ms);
+    ELK receives one string:
+    search for electricity found 0 results in 42ms
+    search for top up found 5 results in 31ms
+    search for ncell found 0 results in 28ms
+
+```
+
+If I want searches that resulted in zero searches, a regex needs to be written. 
+
+### Tracer 
+```shell
+    
+    tracing::info!(query = %q, results = n, duration_ms = ms, "search done");
+    ELK receives separate, named values (with the JSON formatter):
+    {"msg":"search done", "query":"electricity", "results":0, "duration_ms":42}
+    {"msg":"search done", "query":"top up",      "results":5, "duration_ms":31}
+    {"msg":"search done", "query":"ncell",       "results":0, "duration_ms":28}
+
+```
+
+But in tracing everything is stored as a key-value pair and not using String interpolation. After string interpolation, q and results stop becoming separate values and are merged. 
+
+## Subscriber
+
+```rust
+
+    let span = info_span!("search", q = "pay");
+    info!("found s");
+
+```
+
+It logs:
+
+```shell
+    
+    INFO search{q = "pay"}: found s
+
+```
+
+How does `INFO search{q = "pay"}` appear in the log even when it is not in `found s`. It is because Subscriber stores the span context when it is created. 
+But different use cases might differ the way we want to use it. Someone might just want text, another might want json, another person might want a trace level of info and so forth. So, for that reason, the four jobs of Subscriber trait(what the receiver must be able to do):
+- store span context
+- filter 
+- format(text/json)
+- output
+
+Registry is a struct which implements Subscriber trait but only stores the span context(bookkeeping). 
+Layer is a trait which allows for composable processing on top of Registry. It reads Registry's data, adds focused behavior, and allows us to create processing pipeline for span data. 
+
+tracing gives macros that announce spans and events. App installs a subscriber into the global dispatcher which listens to those events. Every macro call looks it up there and hands it the span or the event. Registry stores the span context and Layer filters, formats and prints them.
+
+```rust 
+
+    use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter, Registry};
+
+    pub fn init_tracing() {
+        let filter = EnvFilter::try_from_default_env()
+            .unwrap_or_else(|_| EnvFilter::new("info"));
+
+        Registry::default()
+            .with(filter)
+            .with(fmt::layer())
+            .init();
+    }
+
+```
+
+The two new imports, SubscriberExt and SubscriberInitExt, are extension traits. They're what add the .with() and .init() methods to Registry. Without them in scope, the compiler says the methods don't exist.
