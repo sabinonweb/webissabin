@@ -8,12 +8,19 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+Devanagari:wght@500;700&family=Rubik+Vinyl&display=swap">
 <link rel="stylesheet" href="../../assets/ampixa.css">
 <style>
+.yt-box{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:2px solid var(--ink)}
+.yt-box>*{position:absolute;inset:0;width:100%;height:100%}
 .stage{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start}
 @media(max-width:820px){.stage{grid-template-columns:1fr}}
 #answers{display:grid;gap:10px}#answers button{font-size:16px;padding:14px}
 .big{font:700 44px/1.1 "Noto Sans Devanagari",sans-serif;margin:4px 0}
 .prog{height:8px;background:var(--rule);margin:8px 0}.prog i{display:block;height:100%;background:var(--lane);width:0}
-.setup{display:grid;gap:14px;max-width:620px;padding:20px 0}
+.setup{display:grid;gap:14px;max-width:680px;padding:20px 16px}
+.presets{display:grid;gap:8px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.rules .card h4{margin:0 0 6px;font:700 17px Georgia,serif}
+.rules ul{margin:0;padding-left:1.1em;font-size:15px}
+.h-ok{color:var(--lane)}.h-no{color:var(--crimson)}.h-maybe{color:var(--amber)}
 </style>
 </head>
 <body data-mode="word">
@@ -25,26 +32,31 @@
 <section class="hero">
   <div class="kicker">NSL · is this the labelled word? · needs a signer</div>
   <h1>Word check</h1>
-  <p class="sub">The timing check said these spans hold signing. This one asks whether the word label is right. Only a signer can answer it.</p>
+  <p class="sub">The timing check showed these spans hold signing. This asks whether the word label is right, which only a signer can tell.</p>
+  <p class="mono"><a href="#rules">How to decide →</a></p>
 </section>
 
 <div id="setup" class="setup card">
   <label for="who">Your name or ID / तपाईंको नाम<input id="who" placeholder="e.g. dua"></label>
-  <label for="list">1. The clip list the team sent you (.json)<input id="list" type="file" accept=".json,application/json"></label>
+  <div class="presets"><h3 style="margin:0">Start a list</h3><p class="mono" style="margin:0">No word list yet. The team publishes one here once the spans have their word labels; until then use a list they send you.</p></div>
+  <details><summary class="mono" style="cursor:pointer">Use a list the team sent you</summary>
+    <div style="display:grid;gap:10px;margin-top:10px">
+      <label for="list">Clip list (.json)<input id="list" type="file" accept=".json,application/json"></label>
+      <div id="folderRow" hidden><label for="folder">Folder of clips on your computer (never uploaded)<input id="folder" type="file" accept="video/*" multiple webkitdirectory></label><span class="mono" id="folderInfo"></span></div>
+    </div>
+  </details>
   <span class="mono" id="listInfo"></span>
-  <label for="folder">2. The folder of clips on your computer<input id="folder" type="file" accept="video/*" multiple webkitdirectory></label>
-  <span class="mono" id="folderInfo"></span>
-  <p class="note"><b>Private by design.</b> Clips play from your own computer and are never uploaded. Answers save in this browser as you go.</p>
 </div>
 
 <div id="work" hidden>
-  <p class="mono">Clip <span id="pos"></span> · <span id="cid"></span> · <span id="prog"></span></p>
+  <p class="mono">Clip <span id="pos"></span> · <span id="cid"></span> · <span id="prog"></span> · <a href="#" id="change">change list</a></p>
   <div class="prog"><i id="pbar"></i></div>
   <div class="stage">
     <div>
-      <video id="video" controls loop playsinline muted></video>
+      <div id="stage"></div>
       <p class="mono" id="missing" hidden></p>
       <div class="row" style="margin-top:10px"><button id="prev">← Back</button><button id="replay">Replay <kbd>r</kbd></button><button id="slow">Slow 0.5×</button><button id="next">Skip →</button></div>
+      <p class="mono" style="font-size:12px;color:var(--ink2)">The clip loops between its start and end. Click outside the video so the number keys reach this page.</p>
     </div>
     <div class="card" style="display:grid;gap:12px">
       <h3 style="margin:0">Is this sign the word below? / यो संकेत तलको शब्द हो?</h3>
@@ -56,12 +68,15 @@
   <h2>Send your answers</h2>
   <div class="row"><button id="download" class="good">Download answers</button><button id="copy">Copy as text</button></div>
   <textarea id="out" hidden rows="5" style="width:100%;margin-top:10px"></textarea>
-  <h2>How to decide</h2>
-  <ul><li><b>Yes</b>: the clip contains this sign, even if other signs are around it.</li><li><b>No</b>: the sign is a different word. Type the real word if you know it.</li><li><b>Not sure</b>: regional variant, too fast, or unclear. That is a useful answer too.</li></ul>
 </div>
-<footer><span>ampixa labs · word check · clips never leave your computer</span><span><a href="../../">all tools</a></span></footer>
+
+<h2 id="rules">How to decide</h2>
+<div class="rules"><div class="card"><h4 class="h-ok">Yes ✓</h4><ul><li>The clip contains this sign, even if other signs come before or after it.</li><li>A regional variant of the same word still counts as yes; add a note in the box.</li><li>Same meaning, different but standard form of the word (e.g. plural): yes.</li></ul></div><div class="card"><h4 class="h-no">No ✗</h4><ul><li>The sign in the clip is a different word.</li><li>There is signing, but not this word anywhere in the clip.</li><li>Type the word that was really signed if you know it: it becomes a new labelled example.</li></ul></div><div class="card"><h4 class="h-maybe">Not sure ?</h4><ul><li>Too fast, half cut off, or you do not know this sign.</li><li>Two signs look alike and you cannot tell which.</li><li>"Not sure" is a useful answer. Do not guess yes or no to avoid it.</li></ul></div></div>
+
+<footer><span>ampixa labs · word check · clips stream from YouTube or your own computer; nothing is re-hosted</span><span><a href="../../">all tools</a></span></footer>
 </div>
 <div class="toast" id="toast" role="status"></div>
+<script src="../../assets/player.js"></script>
 <script src="../../assets/check.js"></script>
 </body>
 </html>

@@ -8,12 +8,19 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+Devanagari:wght@500;700&family=Rubik+Vinyl&display=swap">
 <link rel="stylesheet" href="../../assets/ampixa.css">
 <style>
+.yt-box{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:2px solid var(--ink)}
+.yt-box>*{position:absolute;inset:0;width:100%;height:100%}
 .stage{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start}
 @media(max-width:820px){.stage{grid-template-columns:1fr}}
 #answers{display:grid;gap:10px}#answers button{font-size:16px;padding:14px}
 .big{font:700 44px/1.1 "Noto Sans Devanagari",sans-serif;margin:4px 0}
 .prog{height:8px;background:var(--rule);margin:8px 0}.prog i{display:block;height:100%;background:var(--lane);width:0}
-.setup{display:grid;gap:14px;max-width:620px;padding:20px 0}
+.setup{display:grid;gap:14px;max-width:680px;padding:20px 16px}
+.presets{display:grid;gap:8px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.rules .card h4{margin:0 0 6px;font:700 17px Georgia,serif}
+.rules ul{margin:0;padding-left:1.1em;font-size:15px}
+.h-ok{color:var(--lane)}.h-no{color:var(--crimson)}.h-maybe{color:var(--amber)}
 </style>
 </head>
 <body data-mode="timing">
@@ -25,26 +32,31 @@
 <section class="hero">
   <div class="kicker">NSL · is there signing in this span? · no NSL needed</div>
   <h1>Timing check</h1>
-  <p class="sub">Measures whether our cut spans contain real signing. Anyone can do this one. 100 clips gives the answer to about ±10 points.</p>
+  <p class="sub">Measures whether our cut spans really contain signing. Anyone can do it. 100 clips give the answer to about ±10 points.</p>
+  <p class="mono"><a href="#rules">How to decide →</a></p>
 </section>
 
 <div id="setup" class="setup card">
   <label for="who">Your name or ID / तपाईंको नाम<input id="who" placeholder="e.g. dua"></label>
-  <label for="list">1. The clip list the team sent you (.json)<input id="list" type="file" accept=".json,application/json"></label>
+  <div class="presets"><h3 style="margin:0">Start a list</h3><button data-preset="../../assets/data/yt_teaching_spans.json" data-name="review_yt_teaching" class="good">YouTube teaching spans: 100 clips (Hari Adhikari lessons)</button><p class="mono" style="margin:0">News spans and parliament tiers appear here when the team publishes their lists.</p></div>
+  <details><summary class="mono" style="cursor:pointer">Use a list the team sent you</summary>
+    <div style="display:grid;gap:10px;margin-top:10px">
+      <label for="list">Clip list (.json)<input id="list" type="file" accept=".json,application/json"></label>
+      <div id="folderRow" hidden><label for="folder">Folder of clips on your computer (never uploaded)<input id="folder" type="file" accept="video/*" multiple webkitdirectory></label><span class="mono" id="folderInfo"></span></div>
+    </div>
+  </details>
   <span class="mono" id="listInfo"></span>
-  <label for="folder">2. The folder of clips on your computer<input id="folder" type="file" accept="video/*" multiple webkitdirectory></label>
-  <span class="mono" id="folderInfo"></span>
-  <p class="note"><b>Private by design.</b> Clips play from your own computer and are never uploaded. Answers save in this browser as you go.</p>
 </div>
 
 <div id="work" hidden>
-  <p class="mono">Clip <span id="pos"></span> · <span id="cid"></span> · <span id="prog"></span></p>
+  <p class="mono">Clip <span id="pos"></span> · <span id="cid"></span> · <span id="prog"></span> · <a href="#" id="change">change list</a></p>
   <div class="prog"><i id="pbar"></i></div>
   <div class="stage">
     <div>
-      <video id="video" controls loop playsinline muted></video>
+      <div id="stage"></div>
       <p class="mono" id="missing" hidden></p>
       <div class="row" style="margin-top:10px"><button id="prev">← Back</button><button id="replay">Replay <kbd>r</kbd></button><button id="slow">Slow 0.5×</button><button id="next">Skip →</button></div>
+      <p class="mono" style="font-size:12px;color:var(--ink2)">The clip loops between its start and end. Click outside the video so the number keys reach this page.</p>
     </div>
     <div class="card" style="display:grid;gap:12px">
       <h3 style="margin:0">Is the person signing during most of this clip? / यो क्लिपमा संकेत भइरहेको छ?</h3>
@@ -56,12 +68,15 @@
   <h2>Send your answers</h2>
   <div class="row"><button id="download" class="good">Download answers</button><button id="copy">Copy as text</button></div>
   <textarea id="out" hidden rows="5" style="width:100%;margin-top:10px"></textarea>
-  <h2>How to decide</h2>
-  <ul><li><b>Signing ✓</b>: hands are signing through more than about half the clip, even with several signs or no caption on screen.</li><li><b>Not signing ✗</b>: hands still, talking head, title card, intro, or a different segment.</li><li>Decide in a few seconds. Don't skip hard ones: skipping biases the result.</li></ul>
 </div>
-<footer><span>ampixa labs · timing check · clips never leave your computer</span><span><a href="../../">all tools</a></span></footer>
+
+<h2 id="rules">How to decide</h2>
+<div class="rules"><div class="card"><h4 class="h-ok">Signing ✓</h4><ul><li>Hands are signing for <b>more than about half</b> of the clip.</li><li>Several signs in a row: still ✓.</li><li>Starts or ends a little early or late, but signing fills most of it: ✓.</li><li>Signing with no caption or word on screen: ✓. You judge the hands, not the text.</li></ul></div><div class="card"><h4 class="h-no">Not signing ✗</h4><ul><li>Hands down or still for most of the clip.</li><li>Mostly talking or explaining to camera without signing.</li><li>Title card, intro, logo, blank screen, or a different part of the video.</li><li>The signer is out of frame or the picture is unreadable.</li></ul></div><div class="card"><h4 class="h-maybe">Keep it honest</h4><ul><li>Decide in a few seconds. Over 100 clips a few close calls do not change the result.</li><li>Do not skip hard clips: skipping only the hard ones makes the number look better than it is.</li><li>You are <b>not</b> judging which word it is. That is the word check.</li><li>Example already decided: t000 is ✓.</li></ul></div></div>
+
+<footer><span>ampixa labs · timing check · clips stream from YouTube or your own computer; nothing is re-hosted</span><span><a href="../../">all tools</a></span></footer>
 </div>
 <div class="toast" id="toast" role="status"></div>
+<script src="../../assets/player.js"></script>
 <script src="../../assets/check.js"></script>
 </body>
 </html>

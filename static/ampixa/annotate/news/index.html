@@ -8,17 +8,25 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+Devanagari:wght@500;700&family=Rubik+Vinyl&display=swap">
 <link rel="stylesheet" href="../../assets/ampixa.css">
 <style>
+.yt-box{position:relative;width:100%;aspect-ratio:16/9;background:#000;border:2px solid var(--ink)}
+.yt-box>*{position:absolute;inset:0;width:100%;height:100%}
+#stage video{max-height:none}
 .bar{position:relative;height:34px;background:var(--card);border:2px solid var(--ink);margin-top:8px;cursor:pointer}
 .bar .tok{position:absolute;top:4px;bottom:4px;background:var(--lane);opacity:.85}
-.bar .tok.fs{background:var(--amber)}.bar .tok.point{background:var(--ink2)}.bar .tok.rest{background:var(--rule)}
-.bar .tok.unsure{opacity:.45}
+.bar .tok.fs{background:var(--amber)}.bar .tok.point{background:var(--ink2)}.bar .tok.rest{background:var(--rule)}.bar .tok.unsure{opacity:.45}
 .bar .head{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--crimson)}
-.mark{display:grid;gap:10px}
-.marks{display:flex;gap:10px;align-items:center;font:13px "IBM Plex Mono",monospace}
-.marks b{color:var(--crimson)}
+.mark{display:grid;gap:10px;position:sticky;top:10px}
+.marks{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font:13px "IBM Plex Mono",monospace}.marks b{color:var(--crimson)}
 .keys{font-size:13px;color:var(--ink2);line-height:1.9}
-#empty{padding:30px 0}
-.drop{display:grid;gap:12px;max-width:560px}
+.videos{display:grid;gap:6px;max-height:340px;overflow:auto;border:2px solid var(--ink);background:var(--card);padding:6px}
+.vid{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:10px;text-align:left;font:15px Georgia,serif;border:1px solid var(--rule);background:#fff;padding:8px 10px;align-items:center}
+.vid .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vid.has{border-left:5px solid var(--lane)}
+.pick{display:grid;gap:14px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.rules .card h4{margin:0 0 6px;font:700 17px Georgia,serif}
+.rules ul{margin:0;padding-left:1.1em;font-size:15px}
+.ok-h{color:var(--lane)}.no-h{color:var(--crimson)}
 </style>
 </head>
 <body data-kind="news">
@@ -28,48 +36,45 @@
   <nav class="mono"><a href="../../">all tools</a><a href="../../annotate/news/">news</a><a href="../../annotate/parliament/">parliament</a><a href="../../check/timing/">timing</a><a href="../../check/word/">word</a><a href="../../check/mining/">mining</a><a href="../../record/">recording</a></nav>
 </header>
 <section class="hero">
-  <div class="kicker">NSL · NTV news interpreter · sign-by-sign</div>
+  <div class="kicker">NSL · NTV 8 pm bulletins · sign by sign</div>
   <h1>News <span class="accent">annotation</span></h1>
-  <p class="sub">Mark each sign the news interpreter makes, with its start and end. This gives us the first labelled news signing, the ruler for every mining round.</p>
+  <p class="sub">Pick a bulletin, watch the interpreter, and mark each sign with its start and end. This is the first labelled news signing we will have, and the ruler for every mining round.</p>
+  <p class="mono"><a href="#rules">Read the rules first →</a></p>
 </section>
 
-<div id="empty">
-  <div class="drop card">
-    <label for="annotator">Your name or signer ID / तपाईंको नाम
-      <input id="annotator" placeholder="e.g. dua">
-    </label>
-    <label for="file">Open a video from your computer / भिडियो खोल्नुहोस्
-      <input id="file" type="file" accept="video/*">
-    </label>
-    <p class="note"><b>Private by design.</b> The video plays from your own computer. Nothing is uploaded. Your work saves in this browser and you send the exported file to the team.</p>
-  </div>
+<div class="pick">
+  <label for="annotator" style="max-width:360px">Your name or signer ID / तपाईंको नाम<input id="annotator" placeholder="e.g. dua"></label>
+  <div><h3>Pick an NTV bulletin / समाचार छान्नुहोस्</h3>
+  <p style="margin:0 0 8px">91 NTV 8 pm bulletins with an interpreter. A green edge means you have already marked signs in it. Aim for <b>1–2 minutes from each of 15–20 bulletins</b> (about 30 minutes in total), rather than one bulletin end to end: different days give different signs.</p>
+  <div class="videos" id="videos" data-src="../../assets/data/ntv_news.json"><p class="mono">Loading…</p></div></div>
+  <details><summary class="mono" style="cursor:pointer">Other ways to open a video</summary>
+    <div class="row" style="margin-top:10px">
+      <label for="ytUrl" style="flex:1 1 320px">Paste a YouTube link<input id="ytUrl" placeholder="https://www.youtube.com/watch?v=..."></label><button id="ytGo">Open</button>
+      <label for="file">Or a video on your computer (never uploaded)<input id="file" type="file" accept="video/*"></label>
+    </div>
+  </details>
 </div>
 
 <div id="work" hidden>
-  <p class="mono"><span id="vname"></span> · <span id="now">0:00.0</span> · <span class="stat" id="count"></span></p>
+  <h2 style="margin-top:22px">Annotate</h2>
+  <p class="mono"><span class="np" id="vname"></span> · <span id="now">0:00.0</span> · <span class="stat" id="count"></span></p>
   <div class="grid2">
     <div>
-      <video id="video" controls playsinline tabindex="0"></video>
+      <div id="stage"></div>
       <div class="bar" id="bar" title="Click to jump"><div class="head" id="head"></div></div>
-      <div class="row" style="margin-top:10px">
-        <button data-rate="0.5">0.5×</button><button data-rate="0.75">0.75×</button><button data-rate="1">1×</button>
-      </div>
-      <p class="keys"><kbd>Space</kbd> play/pause · <kbd>←</kbd><kbd>→</kbd> 2 s (<kbd>Shift</kbd> 0.2 s) · <kbd>[</kbd> sign starts · <kbd>]</kbd> sign ends · <kbd>Enter</kbd> save · <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> speed</p>
+      <div class="row" style="margin-top:10px"><button data-rate="0.5">0.5×</button><button data-rate="0.75">0.75×</button><button data-rate="1">1×</button></div>
+      <p class="keys"><kbd>Space</kbd> play/pause · <kbd>←</kbd><kbd>→</kbd> 2 s · <kbd>Shift</kbd>+<kbd>←</kbd><kbd>→</kbd> 0.2 s · <kbd>[</kbd> sign starts · <kbd>]</kbd> sign ends · <kbd>Enter</kbd> save · <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> speed · click outside the video first so keys reach this page</p>
     </div>
     <div class="mark card">
       <h3 style="margin:0">Mark one sign / एउटा संकेत</h3>
       <div class="marks"><button id="bStart">[ Start</button><b id="mStart">–</b><button id="bEnd">] End</button><b id="mEnd">–</b></div>
-      <label for="gloss">What was signed? / के संकेत गरियो?
-        <input id="gloss" class="np" list="vocab" autocomplete="off" placeholder="सरकार">
-      </label>
+      <label for="gloss">What was signed? / के संकेत गरियो?<input id="gloss" class="np" list="vocab" autocomplete="off" placeholder="सरकार"></label>
       <datalist id="vocab"></datalist>
       <div class="row">
-        <label for="ttype">Type
-          <select id="ttype"><option value="sign">sign</option><option value="fs">fingerspelled</option><option value="point">pointing / gesture</option><option value="rest">rest / not signing</option></select>
-        </label>
+        <label for="ttype">Type<select id="ttype"><option value="sign">sign</option><option value="fs">fingerspelled</option><option value="point">pointing / gesture</option><option value="rest">rest / not signing</option></select></label>
         <label style="display:flex;gap:6px;align-items:center;font-size:13px"><input id="sure" type="checkbox" checked> I'm sure</label>
       </div>
-      <label for="tnote">Note (optional)<input id="tnote" placeholder="e.g. regional variant, mouthing"></label>
+      <label for="tnote">Note (optional)<input id="tnote" placeholder="e.g. phrase, variant, mouthing"></label>
       <button id="bAdd" class="good">Save sign (Enter)</button>
     </div>
   </div>
@@ -79,26 +84,60 @@
 
   <h2>Send your work</h2>
   <div class="row">
-    <button id="bDownload" class="good">Download annotations</button>
-    <button id="bCopy">Copy as text</button>
+    <button id="bDownload" class="good">Download annotations</button><button id="bCopy">Copy as text</button>
     <label for="imp">Continue from a saved file<input id="imp" type="file" accept=".json,application/json"></label>
     <label for="vocabFile">Add word suggestions (.txt)<input id="vocabFile" type="file" accept=".txt,.csv"></label>
   </div>
   <textarea id="out" hidden rows="6" style="width:100%;margin-top:10px"></textarea>
-
-  <h2>How to annotate</h2>
-  <ul><li>Watch a short stretch first at 1×, then go back and mark at 0.5×.</li>
-<li>Mark every sign you recognise: start when the hand begins the sign, end when it finishes. Don't include the movement to the next sign.</li>
-<li>Write the Nepali word you'd use for the sign, not the caption text.</li>
-<li>Not sure what it is? Still mark it and untick <b>I'm sure</b>. Unsure marks are useful.</li>
-<li>Names and places spelled letter by letter: choose <b>fingerspelled</b> and type the word.</li>
-<li>Work in 10–15 minute stretches. Your work saves automatically in this browser.</li><li>Goal for the first week: about <b>30 minutes</b> of news, in 1–2 minute segments.</li></ul>
 </div>
 
-<footer><span>ampixa labs · news annotation · videos never leave your computer</span><span><a href="../../">all tools</a></span></footer>
+<h2 id="rules">Rules: what to mark and how</h2>
+<div class="rules">
+  <div class="card"><h4>Who to watch</h4><ul>
+    <li>Only the <b>sign language interpreter</b> (often a small box in the corner). Ignore the news reader and the pictures.</li>
+    <li>If the interpreter box disappears, mark that stretch as <b>rest / not signing</b> and move on.</li>
+  </ul></div>
+  <div class="card"><h4>Where a sign starts and ends</h4><ul>
+    <li><b>Start</b> <kbd>[</kbd>: the moment the hand takes the shape and begins the sign's own movement.</li>
+    <li><b>End</b> <kbd>]</kbd>: when that movement finishes, before the hand travels to the next sign.</li>
+    <li>Do <b>not</b> include the travel between signs. Gaps between marks are normal.</li>
+    <li>Use 0.5× speed and <kbd>Shift</kbd>+<kbd>←</kbd>/<kbd>→</kbd> (0.2 s steps) to place marks.</li>
+  </ul></div>
+  <div class="card"><h4>What to write</h4><ul>
+    <li>The <b>Nepali word for the sign</b>, the way you would gloss it. Not the caption text, and not what the reader said.</li>
+    <li>Use the base form: <span class="np">सरकार</span>, not <span class="np">सरकारले</span>; <span class="np">जानु</span>, not <span class="np">जानुभयो</span>.</li>
+    <li>A fixed phrase signed as one unit (<span class="np">प्रतिनिधि सभा</span>): one mark, and say so in the note.</li>
+    <li>The same sign repeated: one mark per repetition only if the hands clearly stop between them.</li>
+  </ul></div>
+  <div class="card"><h4>Choosing the type</h4><ul>
+    <li><b>sign</b>: a lexical sign you recognise.</li>
+    <li><b>fingerspelled</b>: a name or word spelled letter by letter. Type the whole word, e.g. <span class="np">पोखरा</span>.</li>
+    <li><b>pointing / gesture</b>: pointing at a person, place or the screen; a shrug; a gesture any hearing person would make.</li>
+    <li><b>rest / not signing</b>: hands down or still for more than about a second. No word needed.</li>
+  </ul></div>
+  <div class="card"><h4>When you are not sure</h4><ul>
+    <li><b>Still mark it</b> and untick <b>I'm sure</b>. An unsure mark is far more useful than a gap.</li>
+    <li>Recognise the meaning but not the exact word? Write your best word and add a note.</li>
+    <li>No idea at all? Type <span class="np">?</span>, untick sure. It tells us a sign is there.</li>
+    <li>A regional or unusual sign: write the word and note "variant".</li>
+  </ul></div>
+  <div class="card"><h4>A good session</h4><ul>
+    <li>Watch 20–30 seconds at 1× first, then go back and mark at 0.5×.</li>
+    <li>Work in 10–15 minute stretches. Everything saves as you go.</li>
+    <li>Finish one stretch completely before moving on: mark every sign in it, not just the easy ones.</li>
+    <li>At the end, press <b>Download annotations</b> and send the file to the team.</li>
+  </ul></div>
+</div>
+<div class="card" style="margin-top:14px"><h4 style="margin:0 0 6px;font:700 17px Georgia,serif">News-specific</h4><ul>
+  <li>The bulletin opens and closes with <span class="np">नमस्कार</span>, <span class="np">सार्वजनिक सेवा प्रसारण नेपाल</span> and <span class="np">धन्यवाद</span>. Mark them every time: they are our easiest anchors.</li>
+  <li>Skip adverts and music breaks: mark them as rest once and jump ahead.</li>
+  <li>Numbers, dates and money (<span class="np">हजार, लाख, करोड</span>) are useful: write the number as the word.</li>
+</ul></div>
+<footer><span>ampixa labs · news annotation · videos stream from YouTube or your own computer; nothing is re-hosted</span><span><a href="../../">all tools</a></span></footer>
 </div>
 <div class="toast" id="toast" role="status"></div>
 <script src="../../assets/vocab.js"></script>
+<script src="../../assets/player.js"></script>
 <script src="../../assets/annotate.js"></script>
 </body>
 </html>
