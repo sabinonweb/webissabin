@@ -38,7 +38,7 @@
 
 <div id="setup" class="setup card">
   <label for="who">Your name or ID / तपाईंको नाम<input id="who" placeholder="e.g. dua"></label>
-  <div class="presets"><h3 style="margin:0">Start a list</h3><p class="mono" style="margin:0">No word list yet. The team publishes one here once the spans have their word labels; until then use a list they send you.</p></div>
+  <div class="presets"><h3 style="margin:0">Start a list</h3><button data-preset="../../assets/data/yt_teaching_words.json" data-name="words_yt_teaching" class="good">YouTube teaching words: 100 clips (one word from each timing-checked span)</button><p class="mono" style="margin:0">Each clip is about 2 seconds around where our pipeline thinks the word is. The word labels come from automatic alignment, which is exactly what this check measures.</p></div>
   <details><summary class="mono" style="cursor:pointer">Use a list the team sent you</summary>
     <div style="display:grid;gap:10px;margin-top:10px">
       <label for="list">Clip list (.json)<input id="list" type="file" accept=".json,application/json"></label>

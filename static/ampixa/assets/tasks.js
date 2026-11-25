@@ -3,26 +3,26 @@
   const TASKS = [
     { id: 'timing_yt', title: 'Timing check: YouTube teaching spans', data: 'Hari Adhikari lessons', who: 'anyone', size: 100, tool: 'check/timing/',
       progress: () => checkCount('timing', 'review'), def: 'done', result: 'Done: 92 of 99 spans hold signing (93%).',
-      steps: ['Get review.json and the web/ clip folder from the team.', 'Open the timing tool, pick both, answer each clip.', 'Download the answers and send them back.'] },
+      steps: ['Open the timing tool and click “YouTube teaching spans”.', 'Each clip plays in the page: signing or not.', 'Download the answers and send them back.'] },
     { id: 'word_yt', title: 'Word check: same YouTube spans', data: 'Hari Adhikari lessons', who: 'signer', size: 100, tool: 'check/word/',
       progress: () => checkCount('word', ''),
-      steps: ['Get the word list (.json) and the same clip folder from the team.', 'For each clip: is it the labelled word? Type the real word if not.', 'Download the answers and send them back.'] },
+      steps: ['Open the word tool and click “YouTube teaching words”.', 'Each 2-second clip plays in the page: is it the word shown? Type the real word if not.', 'Download the answers and send them back.'] },
     { id: 'record', title: 'Record words, letters, sentences and phrases', data: 'new recordings', who: 'signer', size: 400, tool: 'record/',
       progress: recordCount,
       steps: ['Sign the consent form first.', 'Open the checklist, enter your signer ID, and tap each take as you record it.', 'Download the recording log and send it with the videos.'] },
     { id: 'annot_news', title: 'Annotate the news interpreter', data: 'NTV news', who: 'signer', size: 30, unit: 'min', tool: 'annotate/news/',
       progress: () => annotMinutes('news'),
-      steps: ['Get 1–2 minute NTV segments from the team.', 'Open each video in the news tool and mark every sign with [ and ].', 'Download each video\'s annotations and send them back.'] },
+      steps: ['Open the news tool and pick a bulletin from the list; it plays in the page.', 'Take 1–2 minutes from each of 15–20 bulletins; mark every sign with [ and ].', 'Download each bulletin\'s annotations and send them back.'] },
     { id: 'timing_news', title: 'Timing check: news spans', data: 'NTV news', who: 'anyone', size: 100, tool: 'check/timing/',
       progress: () => checkCount('timing', 'news'),
       steps: ['Get the news clip list and clip folder from the team.', 'Answer each clip: signing or not.', 'Download the answers and send them back.'] },
     { id: 'annot_parl', title: 'Annotate the parliament interpreter', data: 'parliament 112 h', who: 'signer', size: 30, unit: 'min', tool: 'annotate/parliament/', def: 'later',
       progress: () => annotMinutes('parliament'),
-      steps: ['Start after the news annotation is finished.', 'Same tool and keys as news; mark repeated formal phrases as one sign if signed as one.', 'Download and send back.'] },
+      steps: ['Start after the news annotation is finished.', 'Pick a sitting from the list of 57; it plays in the page. Same keys as news.', 'Download and send back.'] },
     { id: 'timing_tiers', title: 'Timing check per tier (gold / g2 / silver)', data: 'parliament 112 h', who: 'anyone', size: 300, tool: 'check/timing/', def: 'later',
       progress: () => checkCount('timing', 'tier'),
       steps: ['The team sends three lists, one per tier, 100 clips each.', 'Check each list separately so each tier gets its own score.', 'Download each and send back. Tiers under 50% are dropped.'] },
-    { id: 'mining', title: 'Confirm mined hits', data: 'news + parliament', who: 'signer', size: 200, tool: 'check/mining/', def: 'later',
+    { id: 'mining', title: 'Confirm mined hits', data: 'news + parliament', who: 'signer', size: 200, tool: 'check/mining/', def: 'later', blocked: 'Waiting on our side: mining round 0 needs news pose extraction and the K=2 model run.',
       progress: () => checkCount('mining', ''),
       steps: ['Starts after mining round 0.', 'For each hit: is it the word the model says? Is the sign inside the clip?', 'Download and send back. Only confirmed hits become training data.'] },
   ];
@@ -64,7 +64,7 @@
       el.innerHTML = `<div>
           <h4>${esc(t.title)}</h4>
           <div class="meta"><span>${esc(t.data)}</span><span>${t.who === 'signer' ? 'needs a signer' : 'anyone'}</span><span>${t.size} ${t.unit || 'items'}</span></div>
-          ${t.result && status === 'done' ? `<p style="margin:6px 0 0">${esc(t.result)}</p>` : ''}
+          ${t.result && status === 'done' ? `<p style="margin:6px 0 0">${esc(t.result)}</p>` : ''}${t.blocked ? `<p class="mono" style="margin:6px 0 0;color:var(--amber)">${esc(t.blocked)}</p>` : ''}
           <ol>${t.steps.map((s) => '<li>' + esc(s) + '</li>').join('')}</ol>
         </div>
         <div class="side">
