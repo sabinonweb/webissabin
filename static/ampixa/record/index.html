@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Recording checklist · ampixa labs</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+Devanagari:wght@500;700&family=Rubik+Vinyl&display=swap">
+<link rel="stylesheet" href="../assets/ampixa.css">
+<style>
+.grp{border:2px solid var(--ink);background:var(--card);margin:12px 0}
+.grp summary{cursor:pointer;padding:12px 14px;display:flex;justify-content:space-between;gap:10px;font:700 18px Georgia,serif}
+.grp .why{padding:0 14px;color:var(--ink2);font-size:15px}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0;border-top:1px solid var(--rule)}
+.item{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid var(--rule)}
+.item .w{font-size:19px;min-width:0}
+.takes{display:flex;gap:6px}
+.take{width:36px;height:36px;padding:0}
+.take.on{background:var(--lane);border-color:var(--lane);color:#fff}
+.item .gl{flex:1 1 100%;font-size:15px}
+.prog{height:10px;background:var(--rule);margin:8px 0}.prog i{display:block;height:100%;background:var(--lane);width:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="brand"><a href="../">ampixa labs</a></div>
+  <nav class="mono"><a href="../">all tools</a><a href="../annotate/news/">news</a><a href="../annotate/parliament/">parliament</a><a href="../check/timing/">timing</a><a href="../check/word/">word</a><a href="../check/mining/">mining</a><a href="./">recording</a></nav>
+</header>
+<section class="hero">
+  <div class="kicker">NSL · what to record this week · tick each take</div>
+  <h1>Recording <span class="accent">checklist</span></h1>
+  <p class="sub">Tap a number when that take is recorded. Everything saves in this browser. When the day is done, download the log and send it with the videos.</p>
+</section>
+<div class="card" style="display:grid;gap:10px">
+  <label for="signer">Signer ID / संकेतकर्ताको नाम<input id="signer" placeholder="e.g. dua"></label>
+  <span class="stat" id="total"></span>
+  <div class="prog"><i id="tbar"></i></div>
+  <p class="note"><b>Every take:</b> phone on a stand, front view, chest-up, plain wall, good light. Hands down, sign, hands down. No talking. Name the file <code>signer_word_take.mp4</code> using the exact spelling shown here.</p>
+</div>
+<div id="groups"></div>
+<div class="row" style="margin-top:16px"><button id="download" class="good">Download recording log</button></div>
+<footer><span>ampixa labs · recording checklist · consent first, recordings are never published</span><span><a href="../nsl-collection-dua/">why each item matters</a></span></footer>
+</div>
+<script src="record.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mining check · ampixa labs</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+Devanagari:wght@500;700&family=Rubik+Vinyl&display=swap">
+<link rel="stylesheet" href="../../assets/ampixa.css">
+<style>
+.stage{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start}
+@media(max-width:820px){.stage{grid-template-columns:1fr}}
+#answers{display:grid;gap:10px}#answers button{font-size:16px;padding:14px}
+.big{font:700 44px/1.1 "Noto Sans Devanagari",sans-serif;margin:4px 0}
+.prog{height:8px;background:var(--rule);margin:8px 0}.prog i{display:block;height:100%;background:var(--lane);width:0}
+.setup{display:grid;gap:14px;max-width:620px;padding:20px 0}
+</style>
+</head>
+<body data-mode="mining">
+<div class="wrap">
+<header class="top">
+  <div class="brand"><a href="../../">ampixa labs</a></div>
+  <nav class="mono"><a href="../../">all tools</a><a href="../../annotate/news/">news</a><a href="../../annotate/parliament/">parliament</a><a href="../../check/timing/">timing</a><a href="../../check/word/">word</a><a href="../../check/mining/">mining</a><a href="../../record/">recording</a></nav>
+</header>
+<section class="hero">
+  <div class="kicker">NSL · confirm what the model found in the broadcast · needs a signer</div>
+  <h1>Mining check</h1>
+  <p class="sub">The model scanned news and parliament video and found these hits. Only the ones you confirm join the training data, so wrong guesses never get in.</p>
+</section>
+
+<div id="setup" class="setup card">
+  <label for="who">Your name or ID / तपाईंको नाम<input id="who" placeholder="e.g. dua"></label>
+  <label for="list">1. The clip list the team sent you (.json)<input id="list" type="file" accept=".json,application/json"></label>
+  <span class="mono" id="listInfo"></span>
+  <label for="folder">2. The folder of clips on your computer<input id="folder" type="file" accept="video/*" multiple webkitdirectory></label>
+  <span class="mono" id="folderInfo"></span>
+  <p class="note"><b>Private by design.</b> Clips play from your own computer and are never uploaded. Answers save in this browser as you go.</p>
+</div>
+
+<div id="work" hidden>
+  <p class="mono">Clip <span id="pos"></span> · <span id="cid"></span> · <span id="prog"></span></p>
+  <div class="prog"><i id="pbar"></i></div>
+  <div class="stage">
+    <div>
+      <video id="video" controls loop playsinline muted></video>
+      <p class="mono" id="missing" hidden></p>
+      <div class="row" style="margin-top:10px"><button id="prev">← Back</button><button id="replay">Replay <kbd>r</kbd></button><button id="slow">Slow 0.5×</button><button id="next">Skip →</button></div>
+    </div>
+    <div class="card" style="display:grid;gap:12px">
+      <h3 style="margin:0">The model thinks this sign is: / मोडेलको अनुमान:</h3>
+      <div class="big" id="word"></div><span class="mono" id="score"></span><label style="display:flex;gap:6px;align-items:center;font-size:13px"><input id="timeok" type="checkbox" checked> The sign is inside the clip (not cut off)</label><label for="actual">If wrong, what was signed? (optional)<input id="actual" class="np" placeholder="सही शब्द"></label>
+      <div id="answers"></div>
+    </div>
+  </div>
+  <p class="stat" id="summary" style="margin-top:14px"></p>
+  <h2>Send your answers</h2>
+  <div class="row"><button id="download" class="good">Download answers</button><button id="copy">Copy as text</button></div>
+  <textarea id="out" hidden rows="5" style="width:100%;margin-top:10px"></textarea>
+  <h2>How to decide</h2>
+  <ul><li><b>Correct</b>: the interpreter signs this word in the clip.</li><li><b>Wrong</b>: a different sign, or no sign. Type the real word if you know it; that becomes a new example too.</li><li>Untick <b>inside the clip</b> if the sign is cut off at the start or end.</li><li>About 100–200 clips per round, about one hour.</li></ul>
+</div>
+<footer><span>ampixa labs · mining check · clips never leave your computer</span><span><a href="../../">all tools</a></span></footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="../../assets/check.js"></script>
+</body>
+</html>

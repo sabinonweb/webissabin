@@ -52,7 +52,7 @@ footer{margin:56px 0 0;padding:16px 0 42px;border-top:2px solid var(--ink);font:
 
 <header class="top">
   <div class="brand"><a href="https://ampixa.com">ampixa labs</a></div>
-  <nav class="mono"><a href="../nsl-l2/">experiments</a><a href="../nsl-data/">data needs</a><a href="#words">words</a><a href="#letters">letters</a><a href="#sentences">sentences</a><a href="#news">ntv news</a><a href="#week">schedule</a></nav>
+  <nav class="mono"><a href="../nsl-l2/">experiments</a><a href="../nsl-data/">data needs</a><a href="#words">words</a><a href="#letters">letters</a><a href="#sentences">sentences</a><a href="#continuous">continuous</a><a href="#seed">112 h seed</a><a href="#news">ntv news</a><a href="#week">schedule</a></nav>
 </header>
 
 <section class="hero">
@@ -67,6 +67,7 @@ footer{margin:56px 0 0;padding:16px 0 42px;border-top:2px solid var(--ink);font:
     <div><span class="k">WORDS</span><b>45</b><span>10 pilot + 35 news/parliament words</span></div>
     <div><span class="k">LETTERS</span><b>49 × 3</b><span>full alphabet, plus 20 spelled names</span></div>
     <div><span class="k">SENTENCES</span><b>20</b><span>short sentences, sign order written down</span></div>
+    <div><span class="k">CONTINUOUS</span><b>30 + 30 min</b><span>10 news phrases, 20 news sentences, 30 min of NTV annotated</span></div>
     <div><span class="k">CHECKS</span><b>100</b><span>word check on YouTube spans (1 hour)</span></div>
   </div>
   <div class="note"><p><b>One signer means one new person.</b> That helps, but the model's real problem is too few <i>different</i> people per sign. Treat this week as the first signer, not the whole answer. Record the signer ID on every clip, and keep this signer's clips out of any test set they would also be trained on.</p></div>
@@ -125,6 +126,62 @@ footer{margin:56px 0 0;padding:16px 0 42px;border-top:2px solid var(--ink);font:
   <div class="tbl"><table><thead><tr><th>#</th><th>Nepali sentence</th><th>Signs it uses</th></tr></thead><tbody><tr><td class="num">1</td><td class="np">म भात खान्छु।</td><td class="np gloss">म · भात · खानु</td></tr><tr><td class="num">2</td><td class="np">म पानी पिउँछु।</td><td class="np gloss">म · पानी · पिउनु</td></tr><tr><td class="num">3</td><td class="np">आमाले दाल पकाउनुभयो।</td><td class="np gloss">आमा · दाल</td></tr><tr><td class="num">4</td><td class="np">बिरालो सुतेको छ।</td><td class="np gloss">बिरालो · सुत्नु</td></tr><tr><td class="num">5</td><td class="np">आज घाम लागेको छ।</td><td class="np gloss">आज · घाम</td></tr><tr><td class="num">6</td><td class="np">भाइ खेल्दै छ।</td><td class="np gloss">भाइ · खेल्नु</td></tr><tr><td class="num">7</td><td class="np">म बिरामी छु।</td><td class="np gloss">म · बिरामी</td></tr><tr><td class="num">8</td><td class="np">नमस्ते साथी।</td><td class="np gloss">नमस्ते · साथी</td></tr><tr><td class="num">9</td><td class="np">धन्यवाद आमा।</td><td class="np gloss">धन्यवाद · आमा</td></tr><tr><td class="num">10</td><td class="np">आज पानी परिरहेको छ।</td><td class="np gloss">आज · पानीपर्नु</td></tr><tr><td class="num">11</td><td class="np">मेरो घर सानो छ।</td><td class="np gloss">मेरो · घर · सानो</td></tr><tr><td class="num">12</td><td class="np">दिदी विद्यालयमा पढ्नुहुन्छ।</td><td class="np gloss">दिदी · विद्यालय · पढ्नु</td></tr><tr><td class="num">13</td><td class="np">बुबा बसमा बजार जानुभयो।</td><td class="np gloss">बुबा · बस · बजार</td></tr><tr><td class="num">14</td><td class="np">भोलि म डाक्टरकहाँ अस्पताल जान्छु।</td><td class="np gloss">भोलि · म · अस्पताल · डाक्टर</td></tr><tr><td class="num">15</td><td class="np">हिजो चिसो थियो, आज तातो छ।</td><td class="np gloss">हिजो · चिसो · आज · तातो</td></tr><tr><td class="num">16</td><td class="np">मलाई भोक लाग्यो, भात खान्छु।</td><td class="np gloss">म · भोक · भात · खानु</td></tr><tr><td class="num">17</td><td class="np">बहिनीलाई तिर्खा लाग्यो, पानी चाहियो।</td><td class="np gloss">बहिनी · तिर्खा · पानी</td></tr><tr><td class="num">18</td><td class="np">तिमी कहाँ छौ?</td><td class="np gloss">तिमी · कहाँ</td></tr><tr><td class="num">19</td><td class="np">तिमी के खान्छौ?</td><td class="np gloss">तिमी · के · खानु</td></tr><tr><td class="num">20</td><td class="np">म आमालाई माया गर्छु।</td><td class="np gloss">म · आमा · माया</td></tr></tbody></table></div>
 </section>
 
+<section id="continuous">
+  <h2><span class="tag">3b</span> Continuous signing, news style</h2>
+  <div class="why">
+    <div><b>Why</b>The NTV and parliament interpreters sign continuously about government, health, roads and elections. Our dictionary clips are slow citation signs about animals and food. The model has never seen a labelled example of news signing.</div>
+    <div><b>What we do with it</b>Use these as the reference for news spotting, as the first labelled news-style test set, and to set the confidence threshold for mining the broadcast.</div>
+    <div><b>What it proves</b>Whether our word model can find news words inside fluent signing, which decides whether mining the 112 h can work at all.</div>
+  </div>
+
+  <h3>A. Repeated news phrases: 10 phrases × 3 takes</h3>
+  <p>These phrases repeat in hundreds of broadcast captions. Signed as one unit they are the easiest things to spot, so they are the first anchors for labelling the broadcast.</p>
+  <div class="tbl"><table><thead><tr><th>#</th><th>Phrase</th><th>Where it appears</th></tr></thead><tbody><tr><td class="num">1</td><td class="np">सार्वजनिक सेवा प्रसारण नेपाल</td><td>NTV station line, opens and closes bulletins</td></tr><tr><td class="num">2</td><td class="np">नेपाल सरकार</td><td>government announcements</td></tr><tr><td class="num">3</td><td class="np">प्रदेश सभा सदस्य</td><td>provincial assembly members</td></tr><tr><td class="num">4</td><td class="np">प्रतिनिधि सभा</td><td>House of Representatives</td></tr><tr><td class="num">5</td><td class="np">जिल्ला सुरक्षा समिति</td><td>district security news</td></tr><tr><td class="num">6</td><td class="np">स्थानीय तह</td><td>local government</td></tr><tr><td class="num">7</td><td class="np">स्वास्थ्य र शिक्षा</td><td>health and education</td></tr><tr><td class="num">8</td><td class="np">सामाजिक सुरक्षा</td><td>social security</td></tr><tr><td class="num">9</td><td class="np">प्रधानमन्त्री</td><td>prime minister</td></tr><tr><td class="num">10</td><td class="np">नमस्कार … धन्यवाद</td><td>every bulletin&#x27;s greeting and close</td></tr></tbody></table></div>
+
+  <h3>B. News-style sentences: 20, signed the way an interpreter would</h3>
+  <p>The signer reads each sentence, then signs it at news speed without stopping between signs. Write down the signs in the order signed, and rough start and end times.</p>
+  <div class="tbl"><table><thead><tr><th>#</th><th>Sentence</th></tr></thead><tbody><tr><td class="num">1</td><td class="np">नमस्कार, सार्वजनिक सेवा प्रसारण नेपाल टेलिभिजनमा स्वागत छ।</td></tr><tr><td class="num">2</td><td class="np">आज नेपाल सरकारले नयाँ स्वास्थ्य नीति घोषणा गर्‍यो।</td></tr><tr><td class="num">3</td><td class="np">प्रधानमन्त्रीले मन्त्रालयका अधिकारीसँग छलफल गर्नुभयो।</td></tr><tr><td class="num">4</td><td class="np">प्रदेश सभा सदस्यहरूले सडक निर्माणको माग गरे।</td></tr><tr><td class="num">5</td><td class="np">स्थानीय तहले विद्यालयमा पानीको व्यवस्था गर्‍यो।</td></tr><tr><td class="num">6</td><td class="np">जिल्ला सुरक्षा समितिको बैठक आज बस्यो।</td></tr><tr><td class="num">7</td><td class="np">सरकारले महिला र बालबालिकाको सुरक्षामा ध्यान दिएको छ।</td></tr><tr><td class="num">8</td><td class="np">प्रतिनिधि सभामा आज बजेटमाथि छलफल भयो।</td></tr><tr><td class="num">9</td><td class="np">भोलि काठमाडौँमा पानी पर्ने सम्भावना छ।</td></tr><tr><td class="num">10</td><td class="np">अस्पतालमा डाक्टर र नर्सको कमी छ।</td></tr><tr><td class="num">11</td><td class="np">नागरिकले सार्वजनिक सेवामा सुधार माग गरे।</td></tr><tr><td class="num">12</td><td class="np">शिक्षा मन्त्रालयले परीक्षाको मिति सार्वजनिक गर्‍यो।</td></tr><tr><td class="num">13</td><td class="np">बैंकले किसानलाई सहयोग गर्ने योजना ल्यायो।</td></tr><tr><td class="num">14</td><td class="np">पार्टीका नेताहरूले देशको विकासबारे कुरा गरे।</td></tr><tr><td class="num">15</td><td class="np">सडक दुर्घटनामा दुई जनाको मृत्यु भयो।</td></tr><tr><td class="num">16</td><td class="np">नगरपालिकाले सफा पानीको काम सुरु गर्‍यो।</td></tr><tr><td class="num">17</td><td class="np">राष्ट्रपतिले आज नयाँ मन्त्रीलाई शपथ गराउनुभयो।</td></tr><tr><td class="num">18</td><td class="np">स्वास्थ्य सेवा सबै जिल्लामा पुर्‍याउने सरकारको योजना छ।</td></tr><tr><td class="num">19</td><td class="np">आर्थिक र सामाजिक विकासका लागि नयाँ कार्यक्रम सुरु भयो।</td></tr><tr><td class="num">20</td><td class="np">हेर्नुभएकोमा धन्यवाद, नमस्कार।</td></tr></tbody></table></div>
+
+  <h3>C. Annotate real broadcast: 30 minutes of NTV interpreter video</h3>
+  <p>The signer watches short NTV segments (1–2 minutes each) and writes down every sign they recognise, with a rough time. Use the pose-only replay or a local player; the video stays on our machine.</p>
+  <ul>
+    <li>This is the only way to get <b>labelled real broadcast signing</b>. Everything else is a stand-in.</li>
+    <li>30 minutes of fluent signing is roughly several hundred signs. It becomes the ruler for every mining round.</li>
+    <li>Mark signs as <i>sure</i> or <i>unsure</i>. Note fingerspelled names.</li>
+  </ul>
+</section>
+
+<section id="seed">
+  <h2><span class="tag">6</span> The smallest seed that can label the 112 h and NTV</h2>
+  <p>No amount of recording labels every second of 112 hours by hand. The goal is a <b>seed</b>: enough clean data that the model can find words in the broadcast by itself, so a signer only has to confirm, not annotate. These sizes are estimates, set by what our measurements suggest; each mining round tells us whether they are enough.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Seed piece</th><th>Size</th><th>Why that size</th></tr></thead>
+    <tbody>
+      <tr><td>Broadcast vocabulary</td><td>Top ~100 news words, each with clips from <b>2+ different signers</b> (~200–300 clips)</td><td>Words with 2+ clips score 52% vs 35% (filmstrip K=2). A word with one clip is hard to spot even in isolation.</td></tr>
+      <tr><td>Repeated phrases</td><td>10 phrases × 3 takes</td><td>Phrases repeat hundreds of times, so a few good references cover a lot of broadcast time.</td></tr>
+      <tr><td>Annotated broadcast</td><td>~30 minutes, glossed with rough times</td><td>The ruler: measures what fraction of confident spots are right, and sets the confidence cut-off.</td></tr>
+      <tr><td>Confirmations per round</td><td>100–200 mined hits, about 1 signer-hour</td><td>Each confirmed hit is a new real example from a new signer, which is exactly what the model lacks.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>How it improves the model</h3>
+  <ol>
+    <li><b>Round 0.</b> Seed recorded. The model scans the 112 h + NTV pose for the seed words and phrases; only very confident hits are kept.</li>
+    <li><b>Check.</b> The signer confirms or rejects 100–200 hits. Measure precision against the annotated 30 minutes.</li>
+    <li><b>Grow.</b> Confirmed hits join the pile. The pile now holds <i>broadcast-style</i> examples, so the next scan finds more, including words signed fast or blended.</li>
+    <li><b>Repeat.</b> Each round adds examples from the broadcast itself. Coverage grows round by round; the 112 h become labelled a little at a time, never all at once.</li>
+    <li><b>Then train.</b> Once a few thousand confirmed spots exist, the broadcast becomes real continuous training data with labels that match the signing, unlike the caption text that made sign-to-text collapse.</li>
+  </ol>
+
+  <h3>Decide after each round</h3>
+  <ul>
+    <li>Precision of confident hits <b>≥ 70%</b>: keep mining with this threshold.</li>
+    <li><b>40–70%</b>: raise the threshold or add references for the failing words before the next round.</li>
+    <li><b>Under 40%</b>: stop mining. The word model is not ready; record more vocabulary first.</li>
+  </ul>
+  <p>Track one number across rounds: <b>minutes of broadcast with at least one confirmed sign</b>. If it stops growing, the seed is too small.</p>
+</section>
+
 <section id="checks">
   <h2><span class="tag">4</span> One hour of checking</h2>
   <div class="why">
@@ -152,9 +209,10 @@ footer{margin:56px 0 0;padding:16px 0 42px;border-top:2px solid var(--ink);font:
   <p>About 90 minutes with the signer per session. Short sessions keep signing natural.</p>
   <div class="day"><b>Day 1</b><p>Consent form, signer ID. Pilot 10 words, 2 takes each. 49 letters, 3 takes each.</p></div>
   <div class="day"><b>Day 2</b><p>15 news words already in the dictionary. 20 new news words.</p></div>
-  <div class="day"><b>Day 3</b><p>20 sentences. 20 spelled names.</p></div>
-  <div class="day"><b>Day 4</b><p>One hour: word check on the 100 YouTube spans. Re-take anything that failed.</p></div>
-  <div class="day"><b>Day 5 (no signer)</b><p>Pose extraction. Pilot re-run with the paired check. Webcam letter test. Record results on the experiments page.</p></div>
+  <div class="day"><b>Day 3</b><p>20 everyday sentences. 20 spelled names.</p></div>
+  <div class="day"><b>Day 4</b><p>10 news phrases × 3 takes. 20 news-style sentences at news speed.</p></div>
+  <div class="day"><b>Day 5</b><p>Annotate 30 minutes of NTV interpreter video. One hour: word check on the 100 YouTube spans.</p></div>
+  <div class="day"><b>Day 6 (no signer)</b><p>Pose extraction. Pilot re-run with the paired check. Webcam letter test. Mining round 0 on the broadcast pose, queue for next week's confirmations.</p></div>
   <h3>Decide before Day 5</h3>
   <ul>
     <li>Pilot words: keep filming if the filmed words improve with the paired check REAL; stop if they don't.</li>

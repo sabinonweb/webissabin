@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ampixa labs · NSL</title>
+<meta name="description" content="Nepali Sign Language at ampixa labs: experiments, data plans, and the annotation, checking and recording tools.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+Devanagari:wght@500;700&family=Rubik+Vinyl&display=swap">
+<link rel="stylesheet" href="assets/ampixa.css">
+<style>
+.routes{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin:12px 0}
+.route{display:grid;gap:6px;text-decoration:none;color:var(--ink)}
+.route:hover{background:#fff}
+.route .path{font:600 13px "IBM Plex Mono",monospace;color:var(--crimson)}
+.route b{font:700 20px Georgia,serif}
+.route span{color:var(--ink2);font-size:15px}
+.who{font:11px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="brand"><a href="./">ampixa labs</a></div>
+  <nav class="mono"><a href="#tools">tools</a><a href="#pages">pages</a><a href="#todo">what needs doing</a></nav>
+</header>
+
+<section class="hero">
+  <div class="kicker">Nepali Sign Language · sign to text</div>
+  <h1>ampixa <span class="accent">NSL</span></h1>
+  <p class="sub">Experiments, data plans, and the tools our signers and team use to record, annotate and check NSL data. Every tool plays videos from your own computer; nothing is uploaded.</p>
+</section>
+
+<h2 id="tools">Tools</h2>
+<h3>For the signer</h3>
+<div class="routes">
+  <a class="route card" href="record/"><span class="path">/ampixa/record/</span><b>Recording checklist</b><span>Words, letters, sentences and news phrases to record, with a take counter for each.</span><span class="who">signer · this week</span></a>
+  <a class="route card" href="annotate/news/"><span class="path">/ampixa/annotate/news/</span><b>News annotation</b><span>Mark each sign the NTV news interpreter makes, with start and end. Do this one first.</span><span class="who">signer · ~30 min of video</span></a>
+  <a class="route card" href="annotate/parliament/"><span class="path">/ampixa/annotate/parliament/</span><b>Parliament annotation</b><span>The same tool for parliament broadcasts. Longer, more formal signing.</span><span class="who">signer · after news</span></a>
+  <a class="route card" href="check/word/"><span class="path">/ampixa/check/word/</span><b>Word check</b><span>Is this clip really the labelled word? Yes, no or not sure.</span><span class="who">signer · 100 clips, ~1 hour</span></a>
+  <a class="route card" href="check/mining/"><span class="path">/ampixa/check/mining/</span><b>Mining check</b><span>Confirm or reject what the model found in the broadcast. Only confirmed hits become training data.</span><span class="who">signer · 100–200 per round</span></a>
+</div>
+<h3>For anyone on the team</h3>
+<div class="routes">
+  <a class="route card" href="check/timing/"><span class="path">/ampixa/check/timing/</span><b>Timing check</b><span>Is there signing in this span? No NSL needed.</span><span class="who">anyone · 100 clips, ~20 min</span></a>
+</div>
+
+<h2 id="pages">Pages</h2>
+<div class="routes">
+  <a class="route card" href="nsl-l2/"><span class="path">/ampixa/nsl-l2/</span><b>Experiments</b><span>Every word-recognition and sentence experiment, with numbers and plans.</span></a>
+  <a class="route card" href="nsl-data/"><span class="path">/ampixa/nsl-data/</span><b>Data needs</b><span>What data to collect and why: the 388-word list, sentences, parliament words, fingerspelling.</span></a>
+  <a class="route card" href="nsl-collection-dua/"><span class="path">/ampixa/nsl-collection-dua/</span><b>Collection week</b><span>One signer, one week: what to record, why, and how the 112 h get labelled.</span></a>
+</div>
+
+<h2 id="todo">What needs annotating and checking</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Task</th><th>Data</th><th>Who</th><th>Size</th><th>Tool</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>Timing check, YouTube teaching spans</td><td>Hari Adhikari lessons</td><td>anyone</td><td class="num">100</td><td><a href="check/timing/">timing</a></td><td><span class="pill ok">done · 92/99</span></td></tr>
+    <tr><td>Word check, same spans</td><td>Hari Adhikari lessons</td><td>signer</td><td class="num">100</td><td><a href="check/word/">word</a></td><td><span class="pill maybe">to do</span></td></tr>
+    <tr><td>Record words, letters, sentences, phrases</td><td>new recordings</td><td>signer</td><td class="num">~400 takes</td><td><a href="record/">record</a></td><td><span class="pill maybe">to do</span></td></tr>
+    <tr><td>Annotate news interpreter</td><td>NTV news</td><td>signer</td><td class="num">~30 min</td><td><a href="annotate/news/">news</a></td><td><span class="pill maybe">to do</span></td></tr>
+    <tr><td>Timing check, news spans</td><td>NTV news</td><td>anyone</td><td class="num">100</td><td><a href="check/timing/">timing</a></td><td><span class="pill maybe">to do</span></td></tr>
+    <tr><td>Annotate parliament interpreter</td><td>parliament 112 h</td><td>signer</td><td class="num">~30 min</td><td><a href="annotate/parliament/">parliament</a></td><td><span class="pill no">later</span></td></tr>
+    <tr><td>Timing check per tier (gold / g2 / silver)</td><td>parliament 112 h</td><td>anyone</td><td class="num">100 per tier</td><td><a href="check/timing/">timing</a></td><td><span class="pill no">later</span></td></tr>
+    <tr><td>Confirm mined hits</td><td>news + parliament</td><td>signer</td><td class="num">100–200 per round</td><td><a href="check/mining/">mining</a></td><td><span class="pill no">after round 0</span></td></tr>
+  </tbody>
+</table></div>
+
+<h2>How the files move</h2>
+<ol>
+  <li>The team sends a <b>clip list</b> (.json) and a <b>folder of clips</b>, privately, never through this site.</li>
+  <li>The checker opens the tool, picks the list and the folder, and answers. Work saves in the browser.</li>
+  <li>The checker presses <b>Download</b> and sends the file back. The team grades it.</li>
+</ol>
+<p class="note"><b>Why the videos are never online:</b> the broadcast recordings and our signers' recordings are not ours to publish. Our data rules allow keeping body and hand points, not raw video. These pages are public; the videos stay on the computers of the people doing the work.</p>
+
+<footer><span>ampixa labs · NSL</span><span>baseline word recognition: filmstrip K=2, 39.3%</span></footer>
+</div>
+</body>
+</html>

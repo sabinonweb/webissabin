@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>News annotation · ampixa labs</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+Devanagari:wght@500;700&family=Rubik+Vinyl&display=swap">
+<link rel="stylesheet" href="../../assets/ampixa.css">
+<style>
+.bar{position:relative;height:34px;background:var(--card);border:2px solid var(--ink);margin-top:8px;cursor:pointer}
+.bar .tok{position:absolute;top:4px;bottom:4px;background:var(--lane);opacity:.85}
+.bar .tok.fs{background:var(--amber)}.bar .tok.point{background:var(--ink2)}.bar .tok.rest{background:var(--rule)}
+.bar .tok.unsure{opacity:.45}
+.bar .head{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--crimson)}
+.mark{display:grid;gap:10px}
+.marks{display:flex;gap:10px;align-items:center;font:13px "IBM Plex Mono",monospace}
+.marks b{color:var(--crimson)}
+.keys{font-size:13px;color:var(--ink2);line-height:1.9}
+#empty{padding:30px 0}
+.drop{display:grid;gap:12px;max-width:560px}
+</style>
+</head>
+<body data-kind="news">
+<div class="wrap">
+<header class="top">
+  <div class="brand"><a href="../../">ampixa labs</a></div>
+  <nav class="mono"><a href="../../">all tools</a><a href="../../annotate/news/">news</a><a href="../../annotate/parliament/">parliament</a><a href="../../check/timing/">timing</a><a href="../../check/word/">word</a><a href="../../check/mining/">mining</a><a href="../../record/">recording</a></nav>
+</header>
+<section class="hero">
+  <div class="kicker">NSL · NTV news interpreter · sign-by-sign</div>
+  <h1>News <span class="accent">annotation</span></h1>
+  <p class="sub">Mark each sign the news interpreter makes, with its start and end. This gives us the first labelled news signing, the ruler for every mining round.</p>
+</section>
+
+<div id="empty">
+  <div class="drop card">
+    <label for="annotator">Your name or signer ID / तपाईंको नाम
+      <input id="annotator" placeholder="e.g. dua">
+    </label>
+    <label for="file">Open a video from your computer / भिडियो खोल्नुहोस्
+      <input id="file" type="file" accept="video/*">
+    </label>
+    <p class="note"><b>Private by design.</b> The video plays from your own computer. Nothing is uploaded. Your work saves in this browser and you send the exported file to the team.</p>
+  </div>
+</div>
+
+<div id="work" hidden>
+  <p class="mono"><span id="vname"></span> · <span id="now">0:00.0</span> · <span class="stat" id="count"></span></p>
+  <div class="grid2">
+    <div>
+      <video id="video" controls playsinline tabindex="0"></video>
+      <div class="bar" id="bar" title="Click to jump"><div class="head" id="head"></div></div>
+      <div class="row" style="margin-top:10px">
+        <button data-rate="0.5">0.5×</button><button data-rate="0.75">0.75×</button><button data-rate="1">1×</button>
+      </div>
+      <p class="keys"><kbd>Space</kbd> play/pause · <kbd>←</kbd><kbd>→</kbd> 2 s (<kbd>Shift</kbd> 0.2 s) · <kbd>[</kbd> sign starts · <kbd>]</kbd> sign ends · <kbd>Enter</kbd> save · <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> speed</p>
+    </div>
+    <div class="mark card">
+      <h3 style="margin:0">Mark one sign / एउटा संकेत</h3>
+      <div class="marks"><button id="bStart">[ Start</button><b id="mStart">–</b><button id="bEnd">] End</button><b id="mEnd">–</b></div>
+      <label for="gloss">What was signed? / के संकेत गरियो?
+        <input id="gloss" class="np" list="vocab" autocomplete="off" placeholder="सरकार">
+      </label>
+      <datalist id="vocab"></datalist>
+      <div class="row">
+        <label for="ttype">Type
+          <select id="ttype"><option value="sign">sign</option><option value="fs">fingerspelled</option><option value="point">pointing / gesture</option><option value="rest">rest / not signing</option></select>
+        </label>
+        <label style="display:flex;gap:6px;align-items:center;font-size:13px"><input id="sure" type="checkbox" checked> I'm sure</label>
+      </div>
+      <label for="tnote">Note (optional)<input id="tnote" placeholder="e.g. regional variant, mouthing"></label>
+      <button id="bAdd" class="good">Save sign (Enter)</button>
+    </div>
+  </div>
+
+  <h2>Signs in this video</h2>
+  <div class="tbl"><table><thead><tr><th>Start</th><th>Length</th><th>Sign</th><th>Type</th><th></th></tr></thead><tbody id="list"></tbody></table></div>
+
+  <h2>Send your work</h2>
+  <div class="row">
+    <button id="bDownload" class="good">Download annotations</button>
+    <button id="bCopy">Copy as text</button>
+    <label for="imp">Continue from a saved file<input id="imp" type="file" accept=".json,application/json"></label>
+    <label for="vocabFile">Add word suggestions (.txt)<input id="vocabFile" type="file" accept=".txt,.csv"></label>
+  </div>
+  <textarea id="out" hidden rows="6" style="width:100%;margin-top:10px"></textarea>
+
+  <h2>How to annotate</h2>
+  <ul><li>Watch a short stretch first at 1×, then go back and mark at 0.5×.</li>
+<li>Mark every sign you recognise: start when the hand begins the sign, end when it finishes. Don't include the movement to the next sign.</li>
+<li>Write the Nepali word you'd use for the sign, not the caption text.</li>
+<li>Not sure what it is? Still mark it and untick <b>I'm sure</b>. Unsure marks are useful.</li>
+<li>Names and places spelled letter by letter: choose <b>fingerspelled</b> and type the word.</li>
+<li>Work in 10–15 minute stretches. Your work saves automatically in this browser.</li><li>Goal for the first week: about <b>30 minutes</b> of news, in 1–2 minute segments.</li></ul>
+</div>
+
+<footer><span>ampixa labs · news annotation · videos never leave your computer</span><span><a href="../../">all tools</a></span></footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="../../assets/vocab.js"></script>
+<script src="../../assets/annotate.js"></script>
+</body>
+</html>
