@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NSL collection week · ampixa labs</title>
+<meta name="description" content="One week, one signer: which words, letters and sentences to record, why each one matters, and what we do with the NTV news data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+Devanagari:wght@500;700&family=Rubik+Vinyl&display=swap">
+<style>
+:root{--paper:#faf5ea;--card:#fffdf6;--ink:#191817;--ink2:#5e5a57;--rule:#d8d2c2;--crimson:#dc143c;--lane:#1a7f4b;--amber:#b97b00}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 Georgia,serif}
+.wrap{max-width:1020px;margin:0 auto;padding:0 18px}
+header.top{border-bottom:3px solid var(--ink);padding:14px 0;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+.brand{font:400 26px "Rubik Vinyl",cursive}.brand a{color:var(--ink);text-decoration:none}
+nav.mono{font:12px "IBM Plex Mono",monospace}nav.mono a{color:var(--ink2);margin-left:14px;text-decoration:none}nav.mono a:hover{color:var(--crimson)}
+.hero{padding:38px 0 8px}.kicker{font:11px "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+h1{font:400 50px/1.04 "Archivo Black",sans-serif;margin:10px 0 6px}h1 .accent{color:var(--crimson)}
+.sub{font-size:17px;max-width:62ch}
+section{padding:34px 0 0}
+h2{font:700 30px/1.1 Georgia,serif;margin:6px 0 12px;border-bottom:3px solid var(--crimson);display:inline-block;padding-bottom:2px}
+h2 .tag{font:600 14px "IBM Plex Mono",monospace;color:var(--crimson);margin-right:8px;vertical-align:middle}
+h3{font:600 13px "IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.08em;margin:22px 0 6px}
+p{max-width:70ch;margin:8px 0}ol,ul{max-width:70ch}li{margin:6px 0}
+.np{font-family:"Noto Sans Devanagari",sans-serif}
+.cards{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0}
+.cards div{background:var(--card);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:12px 16px;min-width:180px;flex:1}
+.cards b{font:400 28px "Archivo Black",sans-serif;display:block}.cards span{font:12px "IBM Plex Mono",monospace;color:var(--ink2);display:block}.cards .k{color:var(--crimson);letter-spacing:.06em}
+.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:12px 0}
+.why div{background:var(--card);border:2px solid var(--ink);padding:12px 14px}
+.why b{font:600 12px "IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--crimson);display:block;margin-bottom:4px}
+.tbl{overflow-x:auto;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:14.5px;background:var(--card);border:2px solid var(--ink)}
+th{font:11px "IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.08em;text-align:left;background:var(--ink);color:var(--paper);padding:9px 10px}
+td{padding:7px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.num{font:13px "IBM Plex Mono",monospace;color:var(--ink2);white-space:nowrap}
+.gloss{color:var(--ink2)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{background:var(--card);border:1.5px solid var(--ink);padding:2px 9px;font-size:17px}
+.day{display:grid;grid-template-columns:110px 1fr;gap:4px 16px;background:var(--card);border:2px solid var(--ink);padding:12px 16px;margin:10px 0}
+.day b{font:600 13px "IBM Plex Mono",monospace;color:var(--crimson)}
+.day p{margin:0}
+.note{background:var(--card);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:12px 16px;margin:14px 0}
+.note p{max-width:none;margin:0}
+code{font:600 13px "IBM Plex Mono",monospace;background:#efe9d8;padding:2px 6px;overflow-wrap:anywhere}
+footer{margin:56px 0 0;padding:16px 0 42px;border-top:2px solid var(--ink);font:12px "IBM Plex Mono",monospace;color:var(--ink2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media(max-width:600px){h1{font-size:36px}.day{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand"><a href="https://ampixa.com">ampixa labs</a></div>
+  <nav class="mono"><a href="../nsl-l2/">experiments</a><a href="../nsl-data/">data needs</a><a href="#words">words</a><a href="#letters">letters</a><a href="#sentences">sentences</a><a href="#news">ntv news</a><a href="#week">schedule</a></nav>
+</header>
+
+<section class="hero">
+  <div class="kicker">NSL · one signer · one week</div>
+  <h1>Collection <span class="accent">week</span></h1>
+  <p class="sub">What to record with one signer this week, why each piece matters, and what we can do with the NTV news data we are scraping while the signer records.</p>
+</section>
+
+<section>
+  <h2>This week at a glance</h2>
+  <div class="cards">
+    <div><span class="k">WORDS</span><b>45</b><span>10 pilot + 35 news/parliament words</span></div>
+    <div><span class="k">LETTERS</span><b>49 × 3</b><span>full alphabet, plus 20 spelled names</span></div>
+    <div><span class="k">SENTENCES</span><b>20</b><span>short sentences, sign order written down</span></div>
+    <div><span class="k">CHECKS</span><b>100</b><span>word check on YouTube spans (1 hour)</span></div>
+  </div>
+  <div class="note"><p><b>One signer means one new person.</b> That helps, but the model's real problem is too few <i>different</i> people per sign. Treat this week as the first signer, not the whole answer. Record the signer ID on every clip, and keep this signer's clips out of any test set they would also be trained on.</p></div>
+</section>
+
+<section id="words">
+  <h2><span class="tag">1</span> Words</h2>
+  <div class="why">
+    <div><b>Why</b>For 74% of test words the pile holds only one clip of the right word. Words with two or more clips score 43% vs 28% (52% vs 35% with filmstrip K=2).</div>
+    <div><b>What we do with them</b>Add each clip to the pile and re-run the same leave-one-source-out 1-NN eval. Compare the filmed words before and after with the paired check.</div>
+    <div><b>What it proves</b>Whether a real second clip causes the gain. If yes, film more. If no, stop and save weeks of filming.</div>
+  </div>
+
+  <h3>Pilot: 10 words with one clip today</h3>
+  <div class="tbl"><table><thead><tr><th>#</th><th>Word</th><th>Folds helped</th></tr></thead><tbody><tr><td class="num">1</td><td class="np">दुध</td><td class="num">3</td></tr><tr><td class="num">2</td><td class="np">फूल</td><td class="num">3</td></tr><tr><td class="num">3</td><td class="np">समय</td><td class="num">2</td></tr><tr><td class="num">4</td><td class="np">संविधानदिवस</td><td class="num">2</td></tr><tr><td class="num">5</td><td class="np">सम्मान</td><td class="num">2</td></tr><tr><td class="num">6</td><td class="np">सानो</td><td class="num">2</td></tr><tr><td class="num">7</td><td class="np">सारङ्गी</td><td class="num">2</td></tr><tr><td class="num">8</td><td class="np">सारी</td><td class="num">2</td></tr><tr><td class="num">9</td><td class="np">सरिफा</td><td class="num">2</td></tr><tr><td class="num">10</td><td class="np">सासफेर्नु</td><td class="num">2</td></tr></tbody></table></div>
+
+  <h3>News and parliament words already in the dictionary (second clip)</h3>
+  <p>These appear in many captioned broadcast videos but have one clip each. A second clip makes them spottable in the NTV news data.</p>
+  <div class="tbl"><table><thead><tr><th>Word</th><th>Meaning</th><th>Videos with it</th></tr></thead><tbody><tr><td class="np">नेपाल</td><td>Nepal</td><td class="num">130</td></tr><tr><td class="np">नमस्कार</td><td>greeting</td><td class="num">124</td></tr><tr><td class="np">राष्ट्रिय</td><td>national</td><td class="num">122</td></tr><tr><td class="np">समस्या</td><td>problem</td><td class="num">113</td></tr><tr><td class="np">अवस्था</td><td>situation</td><td class="num">112</td></tr><tr><td class="np">व्यवस्था</td><td>arrangement</td><td class="num">109</td></tr><tr><td class="np">समाचार</td><td>news</td><td class="num">108</td></tr><tr><td class="np">सरकार</td><td>government</td><td class="num">106</td></tr><tr><td class="np">विकास</td><td>development</td><td class="num">106</td></tr><tr><td class="np">कार्यक्रम</td><td>programme</td><td class="num">98</td></tr><tr><td class="np">योजना</td><td>plan</td><td class="num">96</td></tr><tr><td class="np">स्थानीय</td><td>local</td><td class="num">96</td></tr><tr><td class="np">सुरक्षा</td><td>security</td><td class="num">91</td></tr><tr><td class="np">निर्णय</td><td>decision</td><td class="num">89</td></tr><tr><td class="np">मन्त्री</td><td>minister</td><td class="num">88</td></tr></tbody></table></div>
+
+  <h3>News and parliament words not in the dictionary (new)</h3>
+  <p>Ask the signer how a news interpreter signs each. Record 2 takes. If the sign is fingerspelled or a compound, note that.</p>
+  <div class="tbl"><table><thead><tr><th>Word</th><th>Meaning</th><th>Videos with it</th></tr></thead><tbody><tr><td class="np">काम</td><td>work</td><td class="num">128</td></tr><tr><td class="np">जानकारी</td><td>information</td><td class="num">123</td></tr><tr><td class="np">निर्माण</td><td>construction</td><td class="num">113</td></tr><tr><td class="np">सहयोग</td><td>support</td><td class="num">109</td></tr><tr><td class="np">सेवा</td><td>service</td><td class="num">107</td></tr><tr><td class="np">सार्वजनिक</td><td>public</td><td class="num">104</td></tr><tr><td class="np">आर्थिक</td><td>economic</td><td class="num">99</td></tr><tr><td class="np">जिल्ला</td><td>district</td><td class="num">96</td></tr><tr><td class="np">अध्यक्ष</td><td>chairperson</td><td class="num">96</td></tr><tr><td class="np">कार्यालय</td><td>office</td><td class="num">94</td></tr><tr><td class="np">प्रदेश</td><td>province</td><td class="num">93</td></tr><tr><td class="np">नागरिक</td><td>citizen</td><td class="num">91</td></tr><tr><td class="np">सामाजिक</td><td>social</td><td class="num">91</td></tr><tr><td class="np">काठमाडौँ</td><td>Kathmandu</td><td class="num">89</td></tr><tr><td class="np">हजार</td><td>thousand</td><td class="num">89</td></tr><tr><td class="np">पार्टी</td><td>party</td><td class="num">88</td></tr><tr><td class="np">सडक</td><td>road</td><td class="num">86</td></tr><tr><td class="np">राजनीतिक</td><td>political</td><td class="num">86</td></tr><tr><td class="np">लाख</td><td>hundred thousand</td><td class="num">86</td></tr><tr><td class="np">जोखिम</td><td>risk</td><td class="num">84</td></tr></tbody></table></div>
+
+  <h3>How to record</h3>
+  <ul>
+    <li>Phone on a stand, front, chest-up, plain wall, good light.</li>
+    <li>Hands down, sign once or twice, 2–3 s, hands down. No talking.</li>
+    <li>File name: <code>&lt;signer&gt;_&lt;word&gt;_&lt;take&gt;.mp4</code>, exact spelling from the table.</li>
+  </ul>
+</section>
+
+<section id="letters">
+  <h2><span class="tag">2</span> Letters (fingerspelling)</h2>
+  <div class="why">
+    <div><b>Why</b>The browser demo reads letters at 78% on clean poses, but its webcam accuracy has never been measured, and every training pose came from beginners.</div>
+    <div><b>What we do with them</b>Run the demo's own pipeline (MediaPipe) on each letter and score it: the first real webcam test. Then add the poses as a 15th signer and retrain.</div>
+    <div><b>What it proves</b>Whether the demo works for a real fluent signer. Spelled names give the first test of letters joined into words.</div>
+  </div>
+  <h3>All 49 letters, 3 takes each</h3>
+  <div class="chips"><span class="chip np">अ</span><span class="chip np">आ</span><span class="chip np">अः</span><span class="chip np">ऐ</span><span class="chip np">अं</span><span class="chip np">औ</span><span class="chip np">ब</span><span class="chip np">भ</span><span class="chip np">च</span><span class="chip np">छ</span><span class="chip np">ड</span><span class="chip np">द</span><span class="chip np">ढ</span><span class="chip np">ध</span><span class="chip np">स</span><span class="chip np">ए</span><span class="chip np">ग</span><span class="chip np">घ</span><span class="chip np">ज्ञ</span><span class="chip np">ह</span><span class="chip np">इ</span><span class="chip np">ई</span><span class="chip np">ज</span><span class="chip np">झ</span><span class="chip np">क</span><span class="chip np">ख</span><span class="chip np">क्ष</span><span class="chip np">ल</span><span class="chip np">म</span><span class="chip np">ष</span><span class="chip np">ण</span><span class="chip np">न</span><span class="chip np">ङ</span><span class="chip np">ओ</span><span class="chip np">प</span><span class="chip np">फ</span><span class="chip np">र</span><span class="chip np">ऋ</span><span class="chip np">ट</span><span class="chip np">त</span><span class="chip np">ठ</span><span class="chip np">थ</span><span class="chip np">त्र</span><span class="chip np">श</span><span class="chip np">उ</span><span class="chip np">ऊ</span><span class="chip np">व</span><span class="chip np">य</span><span class="chip np">ञ</span></div>
+  <p>Hold each handshape still for about 2 seconds. For moving vowels, sign the full movement.</p>
+  <h3>20 names and places, spelled at normal speed, then slowly</h3>
+  <div class="chips"><span class="chip np">काठमाडौँ</span><span class="chip np">पोखरा</span><span class="chip np">ललितपुर</span><span class="chip np">भक्तपुर</span><span class="chip np">चितवन</span><span class="chip np">बुटवल</span><span class="chip np">धरान</span><span class="chip np">विराटनगर</span><span class="chip np">जनकपुर</span><span class="chip np">नेपालगञ्ज</span><span class="chip np">धनगढी</span><span class="chip np">इलाम</span><span class="chip np">मुस्ताङ</span><span class="chip np">गोरखा</span><span class="chip np">झापा</span><span class="chip np">थापा</span><span class="chip np">श्रेष्ठ</span><span class="chip np">गुरुङ</span><span class="chip np">राम</span><span class="chip np">सीता</span></div>
+  <p>Write down the exact spelling used. Interpreters often shorten long names.</p>
+</section>
+
+<section id="sentences">
+  <h2><span class="tag">3</span> Sentences</h2>
+  <div class="why">
+    <div><b>Why</b>Signs inside sentences look different from dictionary signs. Spotting words in sentences scores 27% today, and we have no clean continuous test set.</div>
+    <div><b>What we do with them</b>Build the first continuous test set with labels we trust, and measure word spotting on it.</div>
+    <div><b>What it proves</b>How far we are from continuous sign to text, measured instead of guessed.</div>
+  </div>
+  <p>Every sentence uses only signs already in our dictionary. The signer chooses the natural NSL order. For each one, write down the Nepali sentence, the signs in the order signed, and rough start and end times if possible.</p>
+  <div class="tbl"><table><thead><tr><th>#</th><th>Nepali sentence</th><th>Signs it uses</th></tr></thead><tbody><tr><td class="num">1</td><td class="np">म भात खान्छु।</td><td class="np gloss">म · भात · खानु</td></tr><tr><td class="num">2</td><td class="np">म पानी पिउँछु।</td><td class="np gloss">म · पानी · पिउनु</td></tr><tr><td class="num">3</td><td class="np">आमाले दाल पकाउनुभयो।</td><td class="np gloss">आमा · दाल</td></tr><tr><td class="num">4</td><td class="np">बिरालो सुतेको छ।</td><td class="np gloss">बिरालो · सुत्नु</td></tr><tr><td class="num">5</td><td class="np">आज घाम लागेको छ।</td><td class="np gloss">आज · घाम</td></tr><tr><td class="num">6</td><td class="np">भाइ खेल्दै छ।</td><td class="np gloss">भाइ · खेल्नु</td></tr><tr><td class="num">7</td><td class="np">म बिरामी छु।</td><td class="np gloss">म · बिरामी</td></tr><tr><td class="num">8</td><td class="np">नमस्ते साथी।</td><td class="np gloss">नमस्ते · साथी</td></tr><tr><td class="num">9</td><td class="np">धन्यवाद आमा।</td><td class="np gloss">धन्यवाद · आमा</td></tr><tr><td class="num">10</td><td class="np">आज पानी परिरहेको छ।</td><td class="np gloss">आज · पानीपर्नु</td></tr><tr><td class="num">11</td><td class="np">मेरो घर सानो छ।</td><td class="np gloss">मेरो · घर · सानो</td></tr><tr><td class="num">12</td><td class="np">दिदी विद्यालयमा पढ्नुहुन्छ।</td><td class="np gloss">दिदी · विद्यालय · पढ्नु</td></tr><tr><td class="num">13</td><td class="np">बुबा बसमा बजार जानुभयो।</td><td class="np gloss">बुबा · बस · बजार</td></tr><tr><td class="num">14</td><td class="np">भोलि म डाक्टरकहाँ अस्पताल जान्छु।</td><td class="np gloss">भोलि · म · अस्पताल · डाक्टर</td></tr><tr><td class="num">15</td><td class="np">हिजो चिसो थियो, आज तातो छ।</td><td class="np gloss">हिजो · चिसो · आज · तातो</td></tr><tr><td class="num">16</td><td class="np">मलाई भोक लाग्यो, भात खान्छु।</td><td class="np gloss">म · भोक · भात · खानु</td></tr><tr><td class="num">17</td><td class="np">बहिनीलाई तिर्खा लाग्यो, पानी चाहियो।</td><td class="np gloss">बहिनी · तिर्खा · पानी</td></tr><tr><td class="num">18</td><td class="np">तिमी कहाँ छौ?</td><td class="np gloss">तिमी · कहाँ</td></tr><tr><td class="num">19</td><td class="np">तिमी के खान्छौ?</td><td class="np gloss">तिमी · के · खानु</td></tr><tr><td class="num">20</td><td class="np">म आमालाई माया गर्छु।</td><td class="np gloss">म · आमा · माया</td></tr></tbody></table></div>
+</section>
+
+<section id="checks">
+  <h2><span class="tag">4</span> One hour of checking</h2>
+  <div class="why">
+    <div><b>Why</b>The timing check on 100 YouTube teaching spans came back 92 of 99 right. Whether the word on each span is right is still unknown, and only a signer can tell.</div>
+    <div><b>What we do with it</b>The signer watches the same 100 clips and answers one question per clip: is this the labelled word?</div>
+    <div><b>What it proves</b>If most are right, the YouTube teaching corpus becomes thousands of trustworthy word clips from a new signer.</div>
+  </div>
+</section>
+
+<section id="news">
+  <h2><span class="tag">5</span> NTV news data: what we do without the signer</h2>
+  <p>The scrape keeps running in the background. None of these steps needs NSL knowledge.</p>
+  <ol>
+    <li><b>Extract pose, then delete the video.</b> The models only use body and hand points, and the provenance rules say pose only.</li>
+    <li><b>Drop non-lesson videos.</b> In the timing check, 4 of 7 wrong spans came from one intro video. Filter by title.</li>
+    <li><b>Timing check on news spans.</b> The same 100-clip check, on the news interpreter. Anyone can tick it.</li>
+    <li><b>Count words in captions.</b> Which dictionary words appear in news captions, and how often. This list decides which words to film next.</li>
+    <li><b>Mining run.</b> The best model (filmstrip K=2) scans the news pose for strong words and keeps only very confident hits. These go in a queue for the signer to confirm next week. Only confirmed hits join the pile.</li>
+  </ol>
+  <div class="note"><p>Captions are what the anchor <i>says</i>; the interpreter signs the gist. That is why training directly on caption text failed and collapsed to repeating one phrase. The news data becomes useful through confirmed spots, not through its captions.</p></div>
+</section>
+
+<section id="week">
+  <h2>Schedule</h2>
+  <p>About 90 minutes with the signer per session. Short sessions keep signing natural.</p>
+  <div class="day"><b>Day 1</b><p>Consent form, signer ID. Pilot 10 words, 2 takes each. 49 letters, 3 takes each.</p></div>
+  <div class="day"><b>Day 2</b><p>15 news words already in the dictionary. 20 new news words.</p></div>
+  <div class="day"><b>Day 3</b><p>20 sentences. 20 spelled names.</p></div>
+  <div class="day"><b>Day 4</b><p>One hour: word check on the 100 YouTube spans. Re-take anything that failed.</p></div>
+  <div class="day"><b>Day 5 (no signer)</b><p>Pose extraction. Pilot re-run with the paired check. Webcam letter test. Record results on the experiments page.</p></div>
+  <h3>Decide before Day 5</h3>
+  <ul>
+    <li>Pilot words: keep filming if the filmed words improve with the paired check REAL; stop if they don't.</li>
+    <li>Letters: the demo is usable for real signers if webcam top-1 is close to 78%; if it falls far below, retrain with the new poses before anything else.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Rules</h2>
+  <ul>
+    <li>Consent first, using the forms in the project's consent folder. Recordings are not published; only keypoints may be shared.</li>
+    <li>Every clip records: signer ID, word or sentence, take, camera, date, consent ID.</li>
+    <li>Never test on a signer the model was trained on.</li>
+  </ul>
+</section>
+
+<footer><span>ampixa labs · NSL collection week · word counts from 244 captioned broadcast videos</span><span>baseline K=2 39.3%</span></footer>
+</div>
+</body>
+</html>
